@@ -1,0 +1,19 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+cryptography = "*"
+requests = "*"
+
+[dev-packages]
+black = "*"
+flask = "*"
+importlib_metadata = "*"
+isort = "==5.11.4"
+pylint = "*"
+pyre-check = "*"
+pytest = "*"
+typed-ast = "*"
+unidiff = "*"

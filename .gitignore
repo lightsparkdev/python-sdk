@@ -1,0 +1,5 @@
+*~
+.pyre/
+lightspark.egg-info/
+dist/
+build/

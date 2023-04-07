@@ -1,0 +1,96 @@
+# Changelog
+
+# v0.9.0
+
+Early beta preview of what will be our 1.0.0 release API. This is a major breaking change from the previous version of the SDK with a cleaner API surface and some nice new feature improvements from early feedback.
+
+# v0.5.1
+
+## New Features:
+
+- Added a `commit_fee` field to the channel object to get the amount to be paid in fees for the current set of commitment transactions.
+
+# v0.5.0
+
+Several breaking changes and improvements to the SDK to make it more robust and easier to use.
+
+## Breaking Changes:
+
+- `Edge` objects' entites have been collapsed into `Connection` objects to remove the need for the client to manaually pull out entities from the `edges` field.
+
+  **Before:**
+
+  ```python
+  for edge in account.get_transactions().edges:
+      print(edge.entity.amount)
+  ```
+
+  **After:**
+
+  ```python
+  for transaction in account.get_transactions().entities:
+      print(transaction.amount)
+  ```
+
+- Removed several queries and types which are not needed in the 3P SDK and shouldn't have been exposed. If you were using any of these, please let us know!
+
+## New Features:
+
+- `LightsparkClient.fund_node` to automatically add fake funds to a REGTEST node.
+- `LightsparkClient.create_api_token` and `LightsparkClient.delete_api_token` to create and delete API tokens.
+- `LightsparkClient.send_payment` to send a keysend payment using a destination node's public key which doesn't require an invoice at all.
+
+## Notable fixes:
+
+- Adding a `__FUTURE_VALUE__` value to all enum classes. This allows the SDK to be forward-compatible with new values that may be added to the API in the future, rather than crashing.
+
+# v0.4.3
+
+- Fix instantiation of enums (they were instantiated as `str` objects)
+- Return concrete entities instead of interfaces. This fixes the fact that `Account.get_transactions` did not return all the transactions details.
+  - Spread fragments on GraphQL interfaces to enable fetching the details of each entity.
+  - Conditional JSON loaders to instantiate the right concrete object.
+- Add `__init__.py` files for better module support.
+- Add `setup.py` for PIP repository support.
+
+# v0.4.2
+
+- Adds a way to paginate transactions (and other connections) using `after`.
+- Updates the SDK to match the latest API version (some fields were added, no breaking change)
+
+# v0.4.1
+
+- Fix 2 bugs around `datetime` serialization:
+  - Add the serialization to the JSON encoder
+  - Make sure the `datetime` objects are timezone aware
+
+# v0.4.0
+
+- Fields that take arguments are now fetched lazily and expose a function for the client to specify the arguments. Impacts the following fields:
+  - `Account.blockchain_balance`
+  - `Account.conductivity`
+  - `Account.local_balance`
+  - `Account.remote_balance`
+  - `Account.uptime_percentage`
+  - `Channel.uptime_percentage`
+
+```python
+# Old way to query (example)
+account.blockchain_balance
+
+# New way to query (examples)
+account.get_blockchain_balance()
+account.get_blockchain_balance(bitcoin_networks=[lightspark.BitcoinNetwork.REGTEST])
+```
+
+# v0.3.0
+
+- Eagerly fetch `InvoiceData.destination`
+
+# v0.2.0
+
+SDK and APIs completely refactored. Consider this a new version
+
+# v0.1.0
+
+First draft of the SDK.

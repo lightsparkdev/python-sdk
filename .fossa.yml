@@ -1,0 +1,6 @@
+version: 3
+
+project:
+  id: lightspark/python-sdk
+  name: python-sdk
+  url: https://github.com/lightsparkdev/webdev
