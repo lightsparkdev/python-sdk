@@ -1,5 +1,13 @@
 # Changelog
 
+# v1.0.0
+- Added ability to create amp invoice.
+- Fixed request_withdrawal.
+
+# v0.9.1
+
+Fixed a bug with paying invoices without specifying amount_msats.
+
 # v0.9.0
 
 Early beta preview of what will be our 1.0.0 release API. This is a major breaking change from the previous version of the SDK with a cleaner API surface and some nice new feature improvements from early feedback.

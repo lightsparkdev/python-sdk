@@ -83,7 +83,7 @@ class LightsparkNode(Node, Entity):
     """The sum of the channel balances (online only) that are available to send on this node."""
 
     purpose: Optional[LightsparkNodePurpose]
-    """The main purpose of this node. It is used byh Lightspark for optimizations on the node's channels."""
+    """The main purpose of this node. It is used by Lightspark for optimizations on the node's channels."""
 
     remote_balance: Optional[CurrencyAmount]
     """The sum of the channel balances that are available to receive on this node."""

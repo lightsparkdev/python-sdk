@@ -31,6 +31,7 @@ from lightspark.objects.Invoice import Invoice
 from lightspark.objects.Invoice import from_json as Invoice_from_json
 from lightspark.objects.InvoiceData import FRAGMENT as InvoiceDataFragment
 from lightspark.objects.InvoiceData import from_json as InvoiceData_from_json
+from lightspark.objects.InvoiceType import InvoiceType
 from lightspark.objects.OutgoingPayment import FRAGMENT as OutgoingPaymentFragment
 from lightspark.objects.OutgoingPayment import OutgoingPayment
 from lightspark.objects.OutgoingPayment import from_json as OutgoingPayment_from_json
@@ -112,7 +113,11 @@ mutation CreateApiToken(
         )
 
     def create_invoice(
-        self, node_id: str, amount_msats: int, memo: Optional[str] = None
+        self,
+        node_id: str,
+        amount_msats: int,
+        memo: Optional[str] = None,
+        invoice_type: Optional[InvoiceType] = None,
     ) -> Invoice:
         logger.info("Creating an invoice for node %s.", node_id)
         json = self._requester.execute_graphql(
@@ -121,11 +126,13 @@ mutation CreateInvoice(
     $node_id: ID!
     $amount_msats: Long!
     $memo: String
+    $invoice_type: InvoiceType
 ) {{
     create_invoice(input: {{
         node_id: $node_id
         amount_msats: $amount_msats
         memo: $memo
+        invoice_type: $invoice_type
     }}) {{
         invoice {{
             ...InvoiceFragment
@@ -139,6 +146,7 @@ mutation CreateInvoice(
                 "amount_msats": amount_msats,
                 "node_id": node_id,
                 "memo": memo,
+                "invoice_type": invoice_type,
             },
         )
 
@@ -293,6 +301,12 @@ query BitcoinFeeEstimate(
         encoded_payment_request: str,
         amount_msats: Optional[int] = None,
     ) -> CurrencyAmount:
+        variables: Dict[str, Any] = {
+            "node_id": node_id,
+            "encoded_payment_request": encoded_payment_request,
+        }
+        if amount_msats is not None:
+            variables["amount_msats"] = amount_msats
         json = self._requester.execute_graphql(
             f"""
 query LightningFeeEstimateForInvoice(
@@ -311,11 +325,7 @@ query LightningFeeEstimateForInvoice(
 
 {LightningFeeEstimateFragment}
 """,
-            {
-                "node_id": node_id,
-                "encoded_payment_request": encoded_payment_request,
-                "amount_msats": amount_msats,
-            },
+            variables,
         )
         return LightningFeeEstimateOutput_from_json(
             self._requester, json["lightning_fee_estimate_for_invoice"]
@@ -400,6 +410,14 @@ query RecoverNodeSigningKey(
         maximum_fees_msats: int,
         amount_msats: Optional[int] = None,
     ) -> OutgoingPayment:
+        variables = {
+            "node_id": node_id,
+            "encoded_invoice": encoded_invoice,
+            "timeout_secs": timeout_secs,
+            "maximum_fees_msats": maximum_fees_msats,
+        }
+        if amount_msats is not None:
+            variables["amount_msats"] = amount_msats
         json = self._requester.execute_graphql(
             f"""
 mutation PayInvoice(
@@ -424,13 +442,7 @@ mutation PayInvoice(
 
 {OutgoingPaymentFragment}
 """,
-            {
-                "node_id": node_id,
-                "encoded_invoice": encoded_invoice,
-                "amount_msats": amount_msats,
-                "timeout_secs": timeout_secs,
-                "maximum_fees_msats": maximum_fees_msats,
-            },
+            variables,
             self.get_signing_key(node_id),
         )
         return OutgoingPayment_from_json(
@@ -547,7 +559,7 @@ mutation FundNode(
             f"""
 mutation RequestWithdrawal(
     $node_id: ID!
-    $amount_sats: Int!
+    $amount_sats: Long!
     $bitcoin_address: String!
     $withdrawal_mode: WithdrawalMode!
 ) {{

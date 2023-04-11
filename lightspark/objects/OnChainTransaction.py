@@ -41,7 +41,7 @@ class OnChainTransaction(Transaction, Entity):
     """The amount of money involved in this transaction."""
 
     transaction_hash: Optional[str]
-    """The hash of this transaction, so it can be uniquely identified on the Lightning network."""
+    """The hash of this transaction, so it can be uniquely identified on the Lightning Network."""
 
     fees: Optional[CurrencyAmount]
     """The fees that were paid by the wallet sending the transaction to commit it to the Bitcoin blockchain."""

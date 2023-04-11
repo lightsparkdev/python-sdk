@@ -51,7 +51,7 @@ class OutgoingPayment(LightningTransaction, Transaction, Entity):
     """The amount of money involved in this transaction."""
 
     transaction_hash: Optional[str]
-    """The hash of this transaction, so it can be uniquely identified on the Lightning network."""
+    """The hash of this transaction, so it can be uniquely identified on the Lightning Network."""
 
     origin_id: str
     """The Lightspark node this payment originated from."""

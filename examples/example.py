@@ -23,27 +23,13 @@ logger.setLevel(logging.DEBUG)
 api_token_client_id = os.environ.get("LIGHTSPARK_API_TOKEN_CLIENT_ID")
 api_token_client_secret = os.environ.get("LIGHTSPARK_API_TOKEN_CLIENT_SECRET")
 
-##
-## Using the Lightspark web app, you need to create 2 nodes on the REGTEST
-## network, and open a channel between them. We are going to send and receive
-## payments between those 2 nodes in this example.
-## Enter their names and passwords in the variables below:
-##
-node_1_name = os.environ.get("LIGHTSPARK_EXAMPLE_NODE_1_NAME")
-node_1_password = os.environ.get("LIGHTSPARK_EXAMPLE_NODE_1_PASSWORD")
-node_2_name = os.environ.get("LIGHTSPARK_EXAMPLE_NODE_2_NAME")
-node_2_password = os.environ.get("LIGHTSPARK_EXAMPLE_NODE_2_PASSWORD")
-##
-################################################
+node_password = os.environ.get("LIGHTSPARK_TEST_NODE_PASSWORD")
 
 # Let's start by creating a client
 
 assert api_token_client_secret
 assert api_token_client_id
-assert node_1_name
-assert node_1_password
-assert node_2_name
-assert node_2_password
+assert node_password
 
 client = lightspark.LightsparkSyncClient(
     api_token_client_id=api_token_client_id,
@@ -116,22 +102,16 @@ if nodes_connection is None:
 
 print(f"You have {nodes_connection.count} nodes.")
 
-node_1_id = None
-node_1_public_key = None
-node_2_id = None
+node_id = None
+node_name = None
 
 for node in nodes_connection.entities:
-    if node:
-        print(f"    - {node.display_name} ({node.status})")
-        if node.display_name == node_1_name:
-            node_1_id = node.id
-            node_1_public_key = node.public_key
-        elif node.display_name == node_2_name:
-            node_2_id = node.id
+    node_id = node.id
+    node_name = node.display_name
 print("")
 
-if node_1_id is None or node_2_id is None:
-    raise Exception("Couldn't find the nodes.")
+assert node_id is not None
+assert node_name is not None
 
 # List the transactions for our account
 
@@ -205,11 +185,11 @@ print("")
 # Generate a payment request
 
 invoice = client.create_invoice(
-    node_id=node_1_id,
+    node_id=node_id,
     amount_msats=42000,
     memo="Pizza!",
 )
-print(f"Invoice created from {node_1_name}:")
+print(f"Invoice created from {node_name}:")
 print(f"Encoded invoice = {invoice.data.encoded_payment_request}")
 print("")
 
@@ -232,40 +212,41 @@ print("")
 # Let's send the payment.
 
 # First, we need to recover the signing key.
-client.recover_node_signing_key(node_id=node_2_id, node_password=node_2_password)
-print(f"{node_2_name}'s signing key has been loaded.")
+client.recover_node_signing_key(node_id=node_id, node_password=node_password)
+print(f"{node_name}'s signing key has been loaded.")
 
-# Then we can send the payment
-payment = client.pay_invoice(
-    node_id=node_2_id,
-    encoded_invoice=invoice.data.encoded_payment_request,
-    timeout_secs=60,
-    maximum_fees_msats=500,
-)
-print(f"Payment to the invoice done with ID = {payment.id}")
-print("")
+# Pay invoice sample
+#
+# payment = client.pay_invoice(
+#     node_id=node_id,
+#     encoded_invoice=<Encoded Invoice>
+#     timeout_secs=60,
+#     maximum_fees_msats=500,
+# )
+# print(f"Payment to the invoice done with ID = {payment.id}")
+# print("")
 
-# Next let's try sending a payment to a node without an invoice
-assert node_1_public_key
-payment = client.send_payment(
-    node_id=node_2_id,
-    destination_public_key=node_1_public_key,
-    amount_msats=2000,
-    timeout_secs=60,
-    maximum_fees_msats=500,
-)
-print(f"Payment directly to node without invoice done with ID = {payment.id}")
-print("")
+# Key Send sample
+#
+# payment = client.send_payment(
+#     node_id=node_id,
+#     destination_public_key=<public key>,
+#     amount_msats=2000,
+#     timeout_secs=60,
+#     maximum_fees_msats=500,
+# )
+# print(f"Payment directly to node without invoice done with ID = {payment.id}")
+# print("")
 
 # Get a wallet address
-address = client.create_node_wallet_address(node_id=node_1_id)
-print(f"Got a bitcoin address for {node_1_name}: {address}")
+address = client.create_node_wallet_address(node_id=node_id)
+print(f"Got a bitcoin address for {node_name}: {address}")
 print("")
 
 # Withdraw funds!
 # TODO: Uncomment when withrawals are wroking again.
 # withdrawal = client.request_withdrawal(
-#     node_id=node_2_id,
+#     node_id=node_id,
 #     amount_sats=1000,
 #     bitcoin_address=address,
 #     withdrawal_mode=lightspark.WithdrawalMode.WALLET_THEN_CHANNELS,
@@ -274,15 +255,15 @@ print("")
 # print("")
 
 # Fetch the channels for Node 1
-node_1 = client.get_entity(
-    node_1_id,
+node = client.get_entity(
+    node_id,
     lightspark.LightsparkNode,
 )
-if node_1 is None:
-    raise Exception("Couldn't find node 1!")
+if node is None:
+    raise Exception("Couldn't find node!")
 
-channels_connection = node_1.get_channels(first=10)
-print(f"{node_1_name} has {channels_connection.count} channel(s):")
+channels_connection = node.get_channels(first=10)
+print(f"{node_name} has {channels_connection.count} channel(s):")
 for channel in channels_connection.entities:
     if channel.remote_node_id:
         remote_node = client.get_entity(channel.remote_node_id, lightspark.Node)

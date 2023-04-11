@@ -37,12 +37,6 @@ class Requester:
             api_token_client_id, api_token_client_secret
         )
 
-        # Those headers are here to prevent random people from hitting our APIs
-        # during the closed beta. It's not the end of the world if they leak.
-        self.graphql_session.headers.update(
-            {"X-Lightspark-Beta": "z2h0BBYxTA83cjW7fi8QwWtBPCzkQKiemcuhKY08LOo"}
-        )
-
         if http_host:
             self.graphql_session.mount("https://", HTTPSAdapter(http_host))
             self.graphql_session.headers.update({"Host": http_host})
