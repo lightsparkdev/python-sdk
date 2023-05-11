@@ -44,6 +44,7 @@ fragment PaymentRequestDataFragment on PaymentRequestData {
         }
         invoice_data_created_at: created_at
         invoice_data_expires_at: expires_at
+        invoice_data_memo: memo
         invoice_data_destination: destination {
             __typename
             ... on GraphNode {
@@ -164,7 +165,6 @@ fragment PaymentRequestDataFragment on PaymentRequestData {
                 lightspark_node_status: status
             }
         }
-        invoice_data_memo: memo
     }
 }
 """
@@ -186,8 +186,8 @@ def from_json(requester: Requester, obj: Mapping[str, Any]) -> PaymentRequestDat
             amount=CurrencyAmount_from_json(requester, obj["invoice_data_amount"]),
             created_at=obj["invoice_data_created_at"],
             expires_at=obj["invoice_data_expires_at"],
-            destination=Node_from_json(requester, obj["invoice_data_destination"]),
             memo=obj["invoice_data_memo"],
+            destination=Node_from_json(requester, obj["invoice_data_destination"]),
         )
     graphql_typename = obj["__typename"]
     raise LightsparkException(

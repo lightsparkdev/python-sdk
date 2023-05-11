@@ -24,6 +24,10 @@ from .AccountToTransactionsConnection import AccountToTransactionsConnection
 from .AccountToTransactionsConnection import (
     from_json as AccountToTransactionsConnection_from_json,
 )
+from .AccountToWalletsConnection import AccountToWalletsConnection
+from .AccountToWalletsConnection import (
+    from_json as AccountToWalletsConnection_from_json,
+)
 from .BitcoinNetwork import BitcoinNetwork
 from .BlockchainBalance import BlockchainBalance
 from .BlockchainBalance import from_json as BlockchainBalance_from_json
@@ -769,6 +773,7 @@ query FetchAccountToTransactionsConnection($entity_id: ID!, $first: Int, $after:
                                 }
                                 invoice_data_created_at: created_at
                                 invoice_data_expires_at: expires_at
+                                invoice_data_memo: memo
                                 invoice_data_destination: destination {
                                     __typename
                                     ... on GraphNode {
@@ -889,7 +894,6 @@ query FetchAccountToTransactionsConnection($entity_id: ID!, $first: Int, $after:
                                         lightspark_node_status: status
                                     }
                                 }
-                                invoice_data_memo: memo
                             }
                         }
                         outgoing_payment_failure_reason: failure_reason
@@ -1034,6 +1038,7 @@ query FetchAccountToPaymentRequestsConnection($entity_id: ID!, $first: Int, $aft
                             }
                             invoice_data_created_at: created_at
                             invoice_data_expires_at: expires_at
+                            invoice_data_memo: memo
                             invoice_data_destination: destination {
                                 __typename
                                 ... on GraphNode {
@@ -1154,7 +1159,6 @@ query FetchAccountToPaymentRequestsConnection($entity_id: ID!, $first: Int, $aft
                                     lightspark_node_status: status
                                 }
                             }
-                            invoice_data_memo: memo
                         }
                         invoice_status: status
                         invoice_amount_paid: amount_paid {
@@ -1191,6 +1195,67 @@ query FetchAccountToPaymentRequestsConnection($entity_id: ID!, $first: Int, $aft
         )
         connection = json["entity"]["payment_requests"]
         return AccountToPaymentRequestsConnection_from_json(self.requester, connection)
+
+    def get_wallets(self, first: Optional[int] = None) -> AccountToWalletsConnection:
+        json = self.requester.execute_graphql(
+            """
+query FetchAccountToWalletsConnection($entity_id: ID!, $first: Int) {
+    entity(id: $entity_id) {
+        ... on Account {
+            wallets(, first: $first) {
+                __typename
+                account_to_wallets_connection_page_info: page_info {
+                    __typename
+                    page_info_has_next_page: has_next_page
+                    page_info_has_previous_page: has_previous_page
+                    page_info_start_cursor: start_cursor
+                    page_info_end_cursor: end_cursor
+                }
+                account_to_wallets_connection_count: count
+                account_to_wallets_connection_entities: entities {
+                    __typename
+                    wallet_id: id
+                    wallet_created_at: created_at
+                    wallet_updated_at: updated_at
+                    wallet_last_login_at: last_login_at
+                    wallet_balances: balances {
+                        __typename
+                        balances_owned_balance: owned_balance {
+                            __typename
+                            currency_amount_original_value: original_value
+                            currency_amount_original_unit: original_unit
+                            currency_amount_preferred_currency_unit: preferred_currency_unit
+                            currency_amount_preferred_currency_value_rounded: preferred_currency_value_rounded
+                            currency_amount_preferred_currency_value_approx: preferred_currency_value_approx
+                        }
+                        balances_available_to_send_balance: available_to_send_balance {
+                            __typename
+                            currency_amount_original_value: original_value
+                            currency_amount_original_unit: original_unit
+                            currency_amount_preferred_currency_unit: preferred_currency_unit
+                            currency_amount_preferred_currency_value_rounded: preferred_currency_value_rounded
+                            currency_amount_preferred_currency_value_approx: preferred_currency_value_approx
+                        }
+                        balances_available_to_withdraw_balance: available_to_withdraw_balance {
+                            __typename
+                            currency_amount_original_value: original_value
+                            currency_amount_original_unit: original_unit
+                            currency_amount_preferred_currency_unit: preferred_currency_unit
+                            currency_amount_preferred_currency_value_rounded: preferred_currency_value_rounded
+                            currency_amount_preferred_currency_value_approx: preferred_currency_value_approx
+                        }
+                    }
+                    wallet_third_party_identifier: third_party_identifier
+                }
+            }
+        }
+    }
+}
+            """,
+            {"entity_id": self.id, "first": first},
+        )
+        connection = json["entity"]["wallets"]
+        return AccountToWalletsConnection_from_json(self.requester, connection)
 
 
 FRAGMENT = """

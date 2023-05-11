@@ -44,6 +44,9 @@ class WithdrawalRequest(Entity):
     amount: CurrencyAmount
     """The amount of money that should be withdrawn in this request."""
 
+    estimated_amount: Optional[CurrencyAmount]
+    """If the requested amount is `-1` (i.e. everything), this field may contain an estimate of the amount for the withdrawal."""
+
     bitcoin_address: str
     """The bitcoin address where the funds should be sent."""
 
@@ -199,6 +202,14 @@ fragment WithdrawalRequestFragment on WithdrawalRequest {
         currency_amount_preferred_currency_value_rounded: preferred_currency_value_rounded
         currency_amount_preferred_currency_value_approx: preferred_currency_value_approx
     }
+    withdrawal_request_estimated_amount: estimated_amount {
+        __typename
+        currency_amount_original_value: original_value
+        currency_amount_original_unit: original_unit
+        currency_amount_preferred_currency_unit: preferred_currency_unit
+        currency_amount_preferred_currency_value_rounded: preferred_currency_value_rounded
+        currency_amount_preferred_currency_value_approx: preferred_currency_value_approx
+    }
     withdrawal_request_bitcoin_address: bitcoin_address
     withdrawal_request_withdrawal_mode: withdrawal_mode
     withdrawal_request_status: status
@@ -218,6 +229,11 @@ def from_json(requester: Requester, obj: Mapping[str, Any]) -> WithdrawalRequest
         created_at=obj["withdrawal_request_created_at"],
         updated_at=obj["withdrawal_request_updated_at"],
         amount=CurrencyAmount_from_json(requester, obj["withdrawal_request_amount"]),
+        estimated_amount=CurrencyAmount_from_json(
+            requester, obj["withdrawal_request_estimated_amount"]
+        )
+        if obj["withdrawal_request_estimated_amount"]
+        else None,
         bitcoin_address=obj["withdrawal_request_bitcoin_address"],
         withdrawal_mode=parse_enum(
             WithdrawalMode, obj["withdrawal_request_withdrawal_mode"]

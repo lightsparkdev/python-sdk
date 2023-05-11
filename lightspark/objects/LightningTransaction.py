@@ -125,6 +125,7 @@ fragment LightningTransactionFragment on LightningTransaction {
                 }
                 invoice_data_created_at: created_at
                 invoice_data_expires_at: expires_at
+                invoice_data_memo: memo
                 invoice_data_destination: destination {
                     __typename
                     ... on GraphNode {
@@ -245,7 +246,6 @@ fragment LightningTransactionFragment on LightningTransaction {
                         lightspark_node_status: status
                     }
                 }
-                invoice_data_memo: memo
             }
         }
         outgoing_payment_failure_reason: failure_reason

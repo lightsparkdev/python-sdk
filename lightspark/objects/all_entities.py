@@ -88,6 +88,9 @@ from lightspark.objects.RoutingTransaction import (
 from lightspark.objects.Transaction import FRAGMENT as TransactionFragment
 from lightspark.objects.Transaction import Transaction
 from lightspark.objects.Transaction import from_json as Transaction_from_json
+from lightspark.objects.Wallet import FRAGMENT as WalletFragment
+from lightspark.objects.Wallet import Wallet
+from lightspark.objects.Wallet import from_json as Wallet_from_json
 from lightspark.objects.Withdrawal import FRAGMENT as WithdrawalFragment
 from lightspark.objects.Withdrawal import Withdrawal
 from lightspark.objects.Withdrawal import from_json as Withdrawal_from_json
@@ -185,6 +188,10 @@ ALL_QUERIES: Mapping[Type, str] = {
             ...TransactionFragment
         }
 """,
+    Wallet: """        ... on Wallet {
+            ...WalletFragment
+        }
+""",
     Withdrawal: """        ... on Withdrawal {
             ...WithdrawalFragment
         }
@@ -216,6 +223,7 @@ ALL_FRAGMENTS: Mapping[Type, str] = {
     PaymentRequest: PaymentRequestFragment,
     RoutingTransaction: RoutingTransactionFragment,
     Transaction: TransactionFragment,
+    Wallet: WalletFragment,
     Withdrawal: WithdrawalFragment,
     WithdrawalRequest: WithdrawalRequestFragment,
 }
@@ -240,6 +248,7 @@ ALL_JSON_LOADERS: Mapping[Type, Callable] = {
     PaymentRequest: PaymentRequest_from_json,
     RoutingTransaction: RoutingTransaction_from_json,
     Transaction: Transaction_from_json,
+    Wallet: Wallet_from_json,
     Withdrawal: Withdrawal_from_json,
     WithdrawalRequest: WithdrawalRequest_from_json,
 }

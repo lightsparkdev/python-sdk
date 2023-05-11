@@ -5,11 +5,12 @@ name = "pypi"
 
 [packages]
 cryptography = "*"
+pyjwt = "*"
 requests = "*"
 
 [dev-packages]
 black = "*"
-flask = "*"
+flask = "<2.3"
 importlib_metadata = "*"
 isort = "==5.11.4"
 pylint = "*"

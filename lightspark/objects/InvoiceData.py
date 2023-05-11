@@ -27,17 +27,22 @@ class InvoiceData(PaymentRequestData):
     bitcoin_network: BitcoinNetwork
 
     payment_hash: str
+    """The payment hash of this invoice."""
 
     amount: CurrencyAmount
+    """The requested amount in this invoice. If it is equal to 0, the sender should choose the amount to send."""
 
     created_at: datetime
+    """The date and time when this invoice was created."""
 
     expires_at: datetime
-
-    destination: Node
+    """The date and time when this invoice will expire."""
 
     memo: Optional[str]
+    """A short, UTF-8 encoded, description of the purpose of this invoice."""
 
+    destination: Node
+    """The lightning node that will be paid when fulfilling this invoice."""
     typename: str
 
 
@@ -57,6 +62,7 @@ fragment InvoiceDataFragment on InvoiceData {
     }
     invoice_data_created_at: created_at
     invoice_data_expires_at: expires_at
+    invoice_data_memo: memo
     invoice_data_destination: destination {
         __typename
         ... on GraphNode {
@@ -177,7 +183,6 @@ fragment InvoiceDataFragment on InvoiceData {
             lightspark_node_status: status
         }
     }
-    invoice_data_memo: memo
 }
 """
 
@@ -192,6 +197,6 @@ def from_json(requester: Requester, obj: Mapping[str, Any]) -> InvoiceData:
         amount=CurrencyAmount_from_json(requester, obj["invoice_data_amount"]),
         created_at=obj["invoice_data_created_at"],
         expires_at=obj["invoice_data_expires_at"],
-        destination=Node_from_json(requester, obj["invoice_data_destination"]),
         memo=obj["invoice_data_memo"],
+        destination=Node_from_json(requester, obj["invoice_data_destination"]),
     )

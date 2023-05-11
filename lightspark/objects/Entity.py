@@ -337,6 +337,7 @@ fragment EntityFragment on Entity {
             }
             invoice_data_created_at: created_at
             invoice_data_expires_at: expires_at
+            invoice_data_memo: memo
             invoice_data_destination: destination {
                 __typename
                 ... on GraphNode {
@@ -457,7 +458,6 @@ fragment EntityFragment on Entity {
                     lightspark_node_status: status
                 }
             }
-            invoice_data_memo: memo
         }
         invoice_status: status
         invoice_amount_paid: amount_paid {
@@ -621,6 +621,7 @@ fragment EntityFragment on Entity {
                 }
                 invoice_data_created_at: created_at
                 invoice_data_expires_at: expires_at
+                invoice_data_memo: memo
                 invoice_data_destination: destination {
                     __typename
                     ... on GraphNode {
@@ -741,7 +742,6 @@ fragment EntityFragment on Entity {
                         lightspark_node_status: status
                     }
                 }
-                invoice_data_memo: memo
             }
         }
         outgoing_payment_failure_reason: failure_reason
@@ -815,6 +815,41 @@ fragment EntityFragment on Entity {
         }
         routing_transaction_failure_reason: failure_reason
     }
+    ... on Wallet {
+        __typename
+        wallet_id: id
+        wallet_created_at: created_at
+        wallet_updated_at: updated_at
+        wallet_last_login_at: last_login_at
+        wallet_balances: balances {
+            __typename
+            balances_owned_balance: owned_balance {
+                __typename
+                currency_amount_original_value: original_value
+                currency_amount_original_unit: original_unit
+                currency_amount_preferred_currency_unit: preferred_currency_unit
+                currency_amount_preferred_currency_value_rounded: preferred_currency_value_rounded
+                currency_amount_preferred_currency_value_approx: preferred_currency_value_approx
+            }
+            balances_available_to_send_balance: available_to_send_balance {
+                __typename
+                currency_amount_original_value: original_value
+                currency_amount_original_unit: original_unit
+                currency_amount_preferred_currency_unit: preferred_currency_unit
+                currency_amount_preferred_currency_value_rounded: preferred_currency_value_rounded
+                currency_amount_preferred_currency_value_approx: preferred_currency_value_approx
+            }
+            balances_available_to_withdraw_balance: available_to_withdraw_balance {
+                __typename
+                currency_amount_original_value: original_value
+                currency_amount_original_unit: original_unit
+                currency_amount_preferred_currency_unit: preferred_currency_unit
+                currency_amount_preferred_currency_value_rounded: preferred_currency_value_rounded
+                currency_amount_preferred_currency_value_approx: preferred_currency_value_approx
+            }
+        }
+        wallet_third_party_identifier: third_party_identifier
+    }
     ... on Withdrawal {
         __typename
         withdrawal_id: id
@@ -853,6 +888,14 @@ fragment EntityFragment on Entity {
         withdrawal_request_created_at: created_at
         withdrawal_request_updated_at: updated_at
         withdrawal_request_amount: amount {
+            __typename
+            currency_amount_original_value: original_value
+            currency_amount_original_unit: original_unit
+            currency_amount_preferred_currency_unit: preferred_currency_unit
+            currency_amount_preferred_currency_value_rounded: preferred_currency_value_rounded
+            currency_amount_preferred_currency_value_approx: preferred_currency_value_approx
+        }
+        withdrawal_request_estimated_amount: estimated_amount {
             __typename
             currency_amount_original_value: original_value
             currency_amount_original_unit: original_unit

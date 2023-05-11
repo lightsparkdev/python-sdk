@@ -2,8 +2,17 @@
 
 import logging
 from dataclasses import dataclass
+from datetime import datetime, timedelta, timezone
 from typing import Any, Dict, Mapping, Optional, Tuple, Type, TypeVar
 
+import jwt
+from cryptography.hazmat.primitives.asymmetric.ed448 import Ed448PrivateKey
+from cryptography.hazmat.primitives.serialization import (
+    Encoding,
+    NoEncryption,
+    PrivateFormat,
+    PublicFormat,
+)
 from lightspark.exceptions import LightsparkException
 from lightspark.objects.Account import FRAGMENT as AccountFragment
 from lightspark.objects.Account import Account
@@ -20,18 +29,18 @@ from lightspark.objects.Entity import Entity
 from lightspark.objects.FeeEstimate import FRAGMENT as FeeEstimateFragment
 from lightspark.objects.FeeEstimate import FeeEstimate
 from lightspark.objects.FeeEstimate import from_json as FeeEstimate_from_json
-from lightspark.objects.LightningFeeEstimateOutput import (
-    FRAGMENT as LightningFeeEstimateFragment,
-)
-from lightspark.objects.LightningFeeEstimateOutput import (
-    from_json as LightningFeeEstimateOutput_from_json,
-)
 from lightspark.objects.Invoice import FRAGMENT as InvoiceFragment
 from lightspark.objects.Invoice import Invoice
 from lightspark.objects.Invoice import from_json as Invoice_from_json
 from lightspark.objects.InvoiceData import FRAGMENT as InvoiceDataFragment
 from lightspark.objects.InvoiceData import from_json as InvoiceData_from_json
 from lightspark.objects.InvoiceType import InvoiceType
+from lightspark.objects.LightningFeeEstimateOutput import (
+    FRAGMENT as LightningFeeEstimateFragment,
+)
+from lightspark.objects.LightningFeeEstimateOutput import (
+    from_json as LightningFeeEstimateOutput_from_json,
+)
 from lightspark.objects.OutgoingPayment import FRAGMENT as OutgoingPaymentFragment
 from lightspark.objects.OutgoingPayment import OutgoingPayment
 from lightspark.objects.OutgoingPayment import from_json as OutgoingPayment_from_json
@@ -216,6 +225,34 @@ mutation DeleteApiToken(
         """
         logger.info("Executing arbitrary GraphQL request with document=%s", document)
         return self._requester.execute_graphql(query=document, variables=variables)
+
+    def generate_jwt_key(self) -> Tuple[str, str]:
+        key = Ed448PrivateKey.generate()
+        return (
+            key.public_key()
+            .public_bytes(Encoding.PEM, PublicFormat.SubjectPublicKeyInfo)
+            .decode(),
+            key.private_bytes(
+                Encoding.PEM, PrivateFormat.PKCS8, NoEncryption()
+            ).decode(),
+        )
+
+    def generate_wallet_jwt(
+        self,
+        private_key_pem: str,
+        third_party_id: str,
+        test_mode: bool = False,
+        duration: timedelta = timedelta(minutes=1),
+        algorithm: str = "EdDSA",
+    ) -> str:
+        payload = {
+            "aud": "https://api.lightspark.com",
+            "exp": datetime.now(timezone.utc) + duration,
+            "iat": datetime.now(timezone.utc),
+            "sub": third_party_id,
+            "test": test_mode,
+        }
+        return jwt.encode(payload, private_key_pem, algorithm)
 
     def get_current_account(
         self,

@@ -244,7 +244,7 @@ print(f"Got a bitcoin address for {node_name}: {address}")
 print("")
 
 # Withdraw funds!
-# TODO: Uncomment when withrawals are wroking again.
+# TODO: Uncomment when withrawals are working again.
 # withdrawal = client.request_withdrawal(
 #     node_id=node_id,
 #     amount_sats=1000,

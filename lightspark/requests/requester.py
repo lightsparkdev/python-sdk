@@ -18,7 +18,7 @@ from lightspark.requests.encoder import Encoder
 from lightspark.utils.crypto import sign_payload
 from lightspark.version import __version__
 
-DEFAULT_BASE_URL = "https://api.lightspark.com/graphql/2023-04-04"
+DEFAULT_BASE_URL = "https://api.lightspark.com/graphql/server/2023-04-04"
 
 logger = logging.getLogger("lightspark")
 
