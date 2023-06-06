@@ -1,0 +1,33 @@
+name: "Release SDK"
+
+on:
+  release:
+    types: ["released"]
+
+jobs:
+  pypi-publish:
+    name: Upload release to PyPI
+    runs-on: ubuntu-latest
+    environment:
+      name: publish
+      url: https://pypi.org/p/lightspark
+    permissions:
+      id-token: write
+    steps:
+      - name: "Checkout"
+        uses: "actions/checkout@v3"
+        with:
+          fetch-depth: 10
+      - name: "Setup Python"
+        uses: "actions/setup-python@v4"
+        with:
+          cache: "pipenv"
+          cache-dependency-path: "sdk/Pipfile.lock"
+      - name: "Install pipenv"
+        run: "pip install pipenv wheel"
+      - name: "Install dependencies"
+        run: "rm -rf $(pipenv --venv) && pipenv install --dev"
+      - name: "Build dist"
+        run: "pipenv run python setup.py sdist --format=zip"
+      - name: Publish package distributions to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
