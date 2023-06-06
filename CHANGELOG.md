@@ -1,5 +1,11 @@
 # Changelog
 
+# v1.2.0
+
+- Adding 2 new functions for test mode:
+  - `create_test_mode_invoice` which can give you an encoded lightning invoice that can be paid from your test wallet via the payInvoice function
+  - `create_test_mode_payment` to pay an invoice created from your test wallet via createInvoice
+
 # v1.1.0
 
 - Adding the ability to manage wallets tied to the current account. See `Account.get_wallets()` and the `Wallet` object.

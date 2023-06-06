@@ -1,4 +1,4 @@
-# Lightspark Python SDK - v1.1.0
+# Lightspark Python SDK
 
 The Lightspark Python SDK provides a convenient way to interact with the Lightspark services from applications written in the Python language.
 
