@@ -209,22 +209,38 @@ print(
 print("    memo = " + str(decoded_request.memo))
 print("")
 
-# Let's send the payment.
+# Let's simulate a payment to the invoice just created
 
 # First, we need to recover the signing key.
 client.recover_node_signing_key(node_id=node_id, node_password=node_password)
 print(f"{node_name}'s signing key has been loaded.")
+print("")
+
+# Simulate a payment from other node to my generated invoice
+payment = client.create_test_mode_payment(
+    local_node_id=node_id,
+    encoded_invoice=invoice.data.encoded_payment_request,
+)
+print(f"Simulated payment to the invoice done with ID = {payment.id}")
+print("")
 
 # Pay invoice sample
 #
-# payment = client.pay_invoice(
-#     node_id=node_id,
-#     encoded_invoice=<Encoded Invoice>
-#     timeout_secs=60,
-#     maximum_fees_msats=500,
-# )
-# print(f"Payment to the invoice done with ID = {payment.id}")
-# print("")
+test_invoice = client.create_test_mode_invoice(
+    local_node_id=node_id,
+    amount_msats=42000,
+    memo="Pizza!",
+)
+print(f"Test invoice created: {test_invoice}")
+print("")
+payment = client.pay_invoice(
+    node_id=node_id,
+    encoded_invoice=test_invoice,  # replace test_invoice with real encoded invoice in non-test mode
+    timeout_secs=60,
+    maximum_fees_msats=500,
+)
+print(f"Payment to the invoice done with ID = {payment.id}")
+print("")
 
 # Key Send sample
 #

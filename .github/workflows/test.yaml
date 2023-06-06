@@ -1,0 +1,41 @@
+name: "Python SDK test"
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  sdk-test:
+    runs-on: "ubuntu-22.04"
+    strategy:
+      matrix:
+        python_version: ["3.7", "3.10"]
+    steps:
+      - name: "Checkout"
+        uses: "actions/checkout@v3"
+        with:
+          fetch-depth: 10
+      - name: "Setup Python"
+        uses: "actions/setup-python@v4"
+        with:
+          python-version: "${{ matrix.python_version }}"
+          cache: "pipenv"
+          cache-dependency-path: "Pipfile.lock"
+      - name: "Install pipenv"
+        run: "pip install pipenv wheel"
+      - name: "Install dependencies"
+        run: "rm -rf $(pipenv --venv) && pipenv --python ${{ matrix.python_version }} install --dev"
+      - name: "Run pyre"
+        run: |
+          set -o pipefail
+          pipenv run pyre | tee >(sed 's, ,:,' | awk -F: '{sub(" ", "", $5); print "::error file=" ENVIRON["PWD"] "/" $1 ",line=" $2 ",col=" $3 ",title=" $4 "::" $5}')
+      - name: "Run pytest"
+        run: "PYTHONPATH=. pipenv run pytest"
+      - name: "Run pylint"
+        run: "PYTHONPATH=. pipenv run pylint --jobs 0 --score n --msg-template='::{category} file={abspath},line={line},col={column},title={msg_id} {symbol}::{msg}' lightspark"
+      - name: "Run black"
+        run: |
+          set -o pipefail
+          pipenv run black --check --diff . | tee >(pipenv run ../scripts/diff2annotation.py)

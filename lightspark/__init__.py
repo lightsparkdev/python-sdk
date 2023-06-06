@@ -32,6 +32,10 @@ from lightspark.objects.CreateNodeWalletAddressInput import CreateNodeWalletAddr
 from lightspark.objects.CreateNodeWalletAddressOutput import (
     CreateNodeWalletAddressOutput,
 )
+from lightspark.objects.CreateTestModeInvoiceInput import CreateTestModeInvoiceInput
+from lightspark.objects.CreateTestModeInvoiceOutput import CreateTestModeInvoiceOutput
+from lightspark.objects.CreateTestModePaymentInput import CreateTestModePaymentInput
+from lightspark.objects.CreateTestModePaymentoutput import CreateTestModePaymentoutput
 from lightspark.objects.CurrencyAmount import CurrencyAmount
 from lightspark.objects.CurrencyUnit import CurrencyUnit
 from lightspark.objects.DeleteApiTokenInput import DeleteApiTokenInput

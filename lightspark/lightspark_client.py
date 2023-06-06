@@ -182,6 +182,81 @@ mutation CreateNodeWalletAddress(
         )
         return json["create_node_wallet_address"]["wallet_address"]
 
+    def create_test_mode_invoice(
+        self,
+        local_node_id: str,
+        amount_msats: int,
+        memo: Optional[str] = None,
+        invoice_type: Optional[InvoiceType] = None,
+    ) -> str:
+        logger.info("Creating a test invoice for node %s.", local_node_id)
+        json = self._requester.execute_graphql(
+            """
+mutation CreateTestModeInvoice(
+    $local_node_id: ID!
+    $amount_msats: Long!
+    $memo: String
+    $invoice_type: InvoiceType
+) {
+    create_test_mode_invoice(input: {
+        local_node_id: $local_node_id
+        amount_msats: $amount_msats
+        memo: $memo
+        invoice_type: $invoice_type
+    }) {
+        encoded_payment_request
+    }
+}
+""",
+            {
+                "amount_msats": amount_msats,
+                "local_node_id": local_node_id,
+                "memo": memo,
+                "invoice_type": invoice_type,
+            },
+        )
+
+        return json["create_test_mode_invoice"]["encoded_payment_request"]
+
+    def create_test_mode_payment(
+        self,
+        local_node_id: str,
+        encoded_invoice: str,
+        amount_msats: Optional[int] = None,
+    ) -> OutgoingPayment:
+        variables = {
+            "local_node_id": local_node_id,
+            "encoded_invoice": encoded_invoice,
+            "amount_msats": amount_msats,
+        }
+
+        json = self._requester.execute_graphql(
+            f"""
+mutation CreateTestModePayment(
+    $local_node_id: ID!
+    $encoded_invoice: String!
+    $amount_msats: Long
+) {{
+    create_test_mode_payment(input: {{
+        local_node_id: $local_node_id
+        encoded_invoice: $encoded_invoice
+        amount_msats: $amount_msats
+    }}) {{
+        payment {{
+            ...OutgoingPaymentFragment
+        }}
+    }}
+}}
+
+{OutgoingPaymentFragment}
+""",
+            variables,
+            self.get_signing_key(local_node_id),
+        )
+        return OutgoingPayment_from_json(
+            self._requester, json["create_test_mode_payment"]["payment"]
+        )
+
     def delete_api_token(self, api_token_id: str) -> None:
         logger.info("Deleting API token %s.", api_token_id)
         self._requester.execute_graphql(
