@@ -22,7 +22,7 @@ jobs:
         with:
           python-version: "${{ matrix.python_version }}"
           cache: "pipenv"
-          cache-dependency-path: "sdk/Pipfile.lock"
+          cache-dependency-path: "Pipfile.lock"
       - name: "Install pipenv"
         run: "pip install pipenv wheel"
       - name: "Install dependencies"
