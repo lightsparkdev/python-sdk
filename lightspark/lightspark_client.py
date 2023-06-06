@@ -224,11 +224,9 @@ mutation CreateTestModeInvoice(
         encoded_invoice: str,
         amount_msats: Optional[int] = None,
     ) -> OutgoingPayment:
-        variables = {
-            "local_node_id": local_node_id,
-            "encoded_invoice": encoded_invoice,
-            "amount_msats": amount_msats,
-        }
+        variables = {"local_node_id": local_node_id, "encoded_invoice": encoded_invoice}
+        if amount_msats is not None:
+            variables["amount_msats"] = amount_msats
 
         json = self._requester.execute_graphql(
             f"""
