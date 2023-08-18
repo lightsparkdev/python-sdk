@@ -13,6 +13,8 @@ from .Permission import Permission
 
 @dataclass
 class ApiToken(Entity):
+    """This is an object representing a Lightspark API token, that can be used to authenticate this account when making API calls or using our SDKs. See the “Authentication” section of our API docs for more details on its usage."""
+
     requester: Requester
 
     id: str

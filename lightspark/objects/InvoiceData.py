@@ -18,7 +18,7 @@ from .PaymentRequestData import PaymentRequestData
 
 @dataclass
 class InvoiceData(PaymentRequestData):
-    """This object represents the BOLT #11 invoice protocol for Lightning Payments. See https://github.com/lightning/bolts/blob/master/11-payment-encoding.md."""
+    """This object represents the data associated with a BOLT #11 invoice. You can retrieve this object to receive the relevant data associated with a specific invoice."""
 
     requester: Requester
 
@@ -89,6 +89,9 @@ fragment InvoiceDataFragment on InvoiceData {
             lightspark_node_display_name: display_name
             lightspark_node_public_key: public_key
             lightspark_node_account: account {
+                id
+            }
+            lightspark_node_owner: owner {
                 id
             }
             lightspark_node_blockchain_balance: blockchain_balance {

@@ -24,7 +24,7 @@ from .OutgoingPaymentAttemptToHopsConnection import (
 
 @dataclass
 class OutgoingPaymentAttempt(Entity):
-    """An attempt for a payment over a route from sender node to recipient node."""
+    """This object represents an attempted Lightning Network payment sent from a Lightspark Node. You can retrieve this object to receive payment related information about any payment attempt sent from your Lightspark Node on the Lightning Network, including any potential reasons the payment may have failed."""
 
     requester: Requester
 
@@ -60,16 +60,23 @@ class OutgoingPaymentAttempt(Entity):
     typename: str
 
     def get_hops(
-        self, first: Optional[int] = None
+        self, first: Optional[int] = None, after: Optional[str] = None
     ) -> OutgoingPaymentAttemptToHopsConnection:
         json = self.requester.execute_graphql(
             """
-query FetchOutgoingPaymentAttemptToHopsConnection($entity_id: ID!, $first: Int) {
+query FetchOutgoingPaymentAttemptToHopsConnection($entity_id: ID!, $first: Int, $after: String) {
     entity(id: $entity_id) {
         ... on OutgoingPaymentAttempt {
-            hops(, first: $first) {
+            hops(, first: $first, after: $after) {
                 __typename
                 outgoing_payment_attempt_to_hops_connection_count: count
+                outgoing_payment_attempt_to_hops_connection_page_info: page_info {
+                    __typename
+                    page_info_has_next_page: has_next_page
+                    page_info_has_previous_page: has_previous_page
+                    page_info_start_cursor: start_cursor
+                    page_info_end_cursor: end_cursor
+                }
                 outgoing_payment_attempt_to_hops_connection_entities: entities {
                     __typename
                     hop_id: id
@@ -103,7 +110,7 @@ query FetchOutgoingPaymentAttemptToHopsConnection($entity_id: ID!, $first: Int) 
     }
 }
             """,
-            {"entity_id": self.id, "first": first},
+            {"entity_id": self.id, "first": first, "after": after},
         )
         connection = json["entity"]["hops"]
         return OutgoingPaymentAttemptToHopsConnection_from_json(

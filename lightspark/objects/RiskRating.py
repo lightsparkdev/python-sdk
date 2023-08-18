@@ -3,10 +3,11 @@
 from enum import Enum
 
 
-class WithdrawalMode(Enum):
-    """This is an enum of the potential modes that your Bitcoin withdrawal can take."""
+class RiskRating(Enum):
+    """This is an enum of the potential risk ratings related to a transaction made over the Lightning Network. These risk ratings are returned from the CryptoSanctionScreeningProvider."""
 
     ___FUTURE_VALUE___ = "___FUTURE_VALUE___"
     """This is an enum value that represents future values that could be added in the future. Clients should support unknown values as more of them could be added without notice."""
-    WALLET_ONLY = "WALLET_ONLY"
-    WALLET_THEN_CHANNELS = "WALLET_THEN_CHANNELS"
+    HIGH_RISK = "HIGH_RISK"
+    LOW_RISK = "LOW_RISK"
+    UNKNOWN = "UNKNOWN"

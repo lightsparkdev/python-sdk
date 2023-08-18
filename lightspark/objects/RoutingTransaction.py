@@ -24,7 +24,7 @@ from .TransactionStatus import TransactionStatus
 
 @dataclass
 class RoutingTransaction(LightningTransaction, Transaction, Entity):
-    """A transaction that was forwarded through a Lightspark node on the Lightning Network."""
+    """This object represents a transaction that was forwarded through a Lightspark node on the Lightning Network, i.e., a routed transaction. You can retrieve this object to receive information about any transaction routed through your Lightspark Node."""
 
     requester: Requester
 

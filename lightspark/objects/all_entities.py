@@ -59,6 +59,13 @@ from lightspark.objects.LightningTransaction import (
 from lightspark.objects.LightsparkNode import FRAGMENT as LightsparkNodeFragment
 from lightspark.objects.LightsparkNode import LightsparkNode
 from lightspark.objects.LightsparkNode import from_json as LightsparkNode_from_json
+from lightspark.objects.LightsparkNodeOwner import (
+    FRAGMENT as LightsparkNodeOwnerFragment,
+)
+from lightspark.objects.LightsparkNodeOwner import LightsparkNodeOwner
+from lightspark.objects.LightsparkNodeOwner import (
+    from_json as LightsparkNodeOwner_from_json,
+)
 from lightspark.objects.Node import FRAGMENT as NodeFragment
 from lightspark.objects.Node import Node
 from lightspark.objects.Node import from_json as Node_from_json
@@ -160,6 +167,10 @@ ALL_QUERIES: Mapping[Type, str] = {
             ...LightsparkNodeFragment
         }
 """,
+    LightsparkNodeOwner: """        ... on LightsparkNodeOwner {
+            ...LightsparkNodeOwnerFragment
+        }
+""",
     Node: """        ... on Node {
             ...NodeFragment
         }
@@ -216,6 +227,7 @@ ALL_FRAGMENTS: Mapping[Type, str] = {
     Invoice: InvoiceFragment,
     LightningTransaction: LightningTransactionFragment,
     LightsparkNode: LightsparkNodeFragment,
+    LightsparkNodeOwner: LightsparkNodeOwnerFragment,
     Node: NodeFragment,
     OnChainTransaction: OnChainTransactionFragment,
     OutgoingPayment: OutgoingPaymentFragment,
@@ -241,6 +253,7 @@ ALL_JSON_LOADERS: Mapping[Type, Callable] = {
     Invoice: Invoice_from_json,
     LightningTransaction: LightningTransaction_from_json,
     LightsparkNode: LightsparkNode_from_json,
+    LightsparkNodeOwner: LightsparkNodeOwner_from_json,
     Node: Node_from_json,
     OnChainTransaction: OnChainTransaction_from_json,
     OutgoingPayment: OutgoingPayment_from_json,

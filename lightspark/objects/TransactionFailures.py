@@ -11,6 +11,8 @@ from .RoutingTransactionFailureReason import RoutingTransactionFailureReason
 
 @dataclass
 class TransactionFailures:
+    """This object represents payment failures associated with your Lightspark Node."""
+
     payment_failures: Optional[List[PaymentFailureReason]]
 
     routing_transaction_failures: Optional[List[RoutingTransactionFailureReason]]

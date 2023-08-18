@@ -24,6 +24,8 @@ from .TransactionStatus import TransactionStatus
 
 @dataclass
 class LightningTransaction(Transaction, Entity):
+    """This is an object representing a transaction made over the Lightning Network. You can retrieve this object to receive information about a specific transaction made over Lightning for a Lightspark node."""
+
     requester: Requester
 
     id: str
@@ -152,6 +154,9 @@ fragment LightningTransactionFragment on LightningTransaction {
                         lightspark_node_display_name: display_name
                         lightspark_node_public_key: public_key
                         lightspark_node_account: account {
+                            id
+                        }
+                        lightspark_node_owner: owner {
                             id
                         }
                         lightspark_node_blockchain_balance: blockchain_balance {

@@ -67,6 +67,9 @@ class LightsparkNode(Node, Entity):
     account_id: str
     """The account that owns this LightsparkNode."""
 
+    owner_id: str
+    """The owner of this LightsparkNode."""
+
     blockchain_balance: Optional[BlockchainBalance]
     """The details of the balance of this node on the Bitcoin Network."""
 
@@ -122,14 +125,16 @@ query FetchNodeToAddressesConnection($entity_id: ID!, $first: Int, $types: [Node
         self,
         first: Optional[int] = None,
         statuses: Optional[List[ChannelStatus]] = None,
+        after: Optional[str] = None,
     ) -> LightsparkNodeToChannelsConnection:
         json = self.requester.execute_graphql(
             """
-query FetchLightsparkNodeToChannelsConnection($entity_id: ID!, $first: Int, $statuses: [ChannelStatus!]) {
+query FetchLightsparkNodeToChannelsConnection($entity_id: ID!, $first: Int, $statuses: [ChannelStatus!], $after: String) {
     entity(id: $entity_id) {
         ... on LightsparkNode {
-            channels(, first: $first, statuses: $statuses) {
+            channels(, first: $first, statuses: $statuses, after: $after) {
                 __typename
+                lightspark_node_to_channels_connection_count: count
                 lightspark_node_to_channels_connection_page_info: page_info {
                     __typename
                     page_info_has_next_page: has_next_page
@@ -137,7 +142,6 @@ query FetchLightsparkNodeToChannelsConnection($entity_id: ID!, $first: Int, $sta
                     page_info_start_cursor: start_cursor
                     page_info_end_cursor: end_cursor
                 }
-                lightspark_node_to_channels_connection_count: count
                 lightspark_node_to_channels_connection_entities: entities {
                     __typename
                     channel_id: id
@@ -237,7 +241,12 @@ query FetchLightsparkNodeToChannelsConnection($entity_id: ID!, $first: Int, $sta
     }
 }
             """,
-            {"entity_id": self.id, "first": first, "statuses": statuses},
+            {
+                "entity_id": self.id,
+                "first": first,
+                "statuses": statuses,
+                "after": after,
+            },
         )
         connection = json["entity"]["channels"]
         return LightsparkNodeToChannelsConnection_from_json(self.requester, connection)
@@ -256,6 +265,9 @@ fragment LightsparkNodeFragment on LightsparkNode {
     lightspark_node_display_name: display_name
     lightspark_node_public_key: public_key
     lightspark_node_account: account {
+        id
+    }
+    lightspark_node_owner: owner {
         id
     }
     lightspark_node_blockchain_balance: blockchain_balance {
@@ -368,6 +380,7 @@ def from_json(requester: Requester, obj: Mapping[str, Any]) -> LightsparkNode:
         display_name=obj["lightspark_node_display_name"],
         public_key=obj["lightspark_node_public_key"],
         account_id=obj["lightspark_node_account"]["id"],
+        owner_id=obj["lightspark_node_owner"]["id"],
         blockchain_balance=BlockchainBalance_from_json(
             requester, obj["lightspark_node_blockchain_balance"]
         )

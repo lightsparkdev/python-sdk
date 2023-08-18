@@ -23,6 +23,8 @@ from .TransactionStatus import TransactionStatus
 
 @dataclass
 class Transaction(Entity):
+    """This object represents a payment transaction. The transaction can occur either on a Bitcoin Network, or over the Lightning Network. You can retrieve this object to receive specific information about a particular transaction tied to your Lightspark Node."""
+
     requester: Requester
 
     id: str
@@ -247,6 +249,9 @@ fragment TransactionFragment on Transaction {
                         lightspark_node_display_name: display_name
                         lightspark_node_public_key: public_key
                         lightspark_node_account: account {
+                            id
+                        }
+                        lightspark_node_owner: owner {
                             id
                         }
                         lightspark_node_blockchain_balance: blockchain_balance {

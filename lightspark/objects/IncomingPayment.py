@@ -23,7 +23,7 @@ from .TransactionStatus import TransactionStatus
 
 @dataclass
 class IncomingPayment(LightningTransaction, Transaction, Entity):
-    """A transaction that was sent to a Lightspark node on the Lightning Network."""
+    """This object represents any payment sent to a Lightspark node on the Lightning Network. You can retrieve this object to receive payment related information about a specific payment received by a Lightspark node."""
 
     requester: Requester
 
@@ -62,15 +62,23 @@ class IncomingPayment(LightningTransaction, Transaction, Entity):
         self,
         first: Optional[int] = None,
         statuses: Optional[List[IncomingPaymentAttemptStatus]] = None,
+        after: Optional[str] = None,
     ) -> IncomingPaymentToAttemptsConnection:
         json = self.requester.execute_graphql(
             """
-query FetchIncomingPaymentToAttemptsConnection($entity_id: ID!, $first: Int, $statuses: [IncomingPaymentAttemptStatus!]) {
+query FetchIncomingPaymentToAttemptsConnection($entity_id: ID!, $first: Int, $statuses: [IncomingPaymentAttemptStatus!], $after: String) {
     entity(id: $entity_id) {
         ... on IncomingPayment {
-            attempts(, first: $first, statuses: $statuses) {
+            attempts(, first: $first, statuses: $statuses, after: $after) {
                 __typename
                 incoming_payment_to_attempts_connection_count: count
+                incoming_payment_to_attempts_connection_page_info: page_info {
+                    __typename
+                    page_info_has_next_page: has_next_page
+                    page_info_has_previous_page: has_previous_page
+                    page_info_start_cursor: start_cursor
+                    page_info_end_cursor: end_cursor
+                }
                 incoming_payment_to_attempts_connection_entities: entities {
                     __typename
                     incoming_payment_attempt_id: id
@@ -95,7 +103,12 @@ query FetchIncomingPaymentToAttemptsConnection($entity_id: ID!, $first: Int, $st
     }
 }
             """,
-            {"entity_id": self.id, "first": first, "statuses": statuses},
+            {
+                "entity_id": self.id,
+                "first": first,
+                "statuses": statuses,
+                "after": after,
+            },
         )
         connection = json["entity"]["attempts"]
         return IncomingPaymentToAttemptsConnection_from_json(self.requester, connection)

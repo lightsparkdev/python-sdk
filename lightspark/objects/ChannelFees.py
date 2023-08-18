@@ -11,6 +11,8 @@ from .CurrencyAmount import from_json as CurrencyAmount_from_json
 
 @dataclass
 class ChannelFees:
+    """This represents the fee policies set for a channel on the Lightning Network."""
+
     requester: Requester
 
     base_fee: Optional[CurrencyAmount]

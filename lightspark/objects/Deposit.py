@@ -18,7 +18,7 @@ from .TransactionStatus import TransactionStatus
 
 @dataclass
 class Deposit(OnChainTransaction, Transaction, Entity):
-    """The transaction on Bitcoin blockchain to fund the Lightspark node's wallet."""
+    """This object represents a Deposit made to a Lightspark node wallet. This operation occurs for any L1 funding transaction to the wallet. You can retrieve this object to receive detailed information about the deposit."""
 
     requester: Requester
 

@@ -18,7 +18,7 @@ from .TransactionStatus import TransactionStatus
 
 @dataclass
 class OnChainTransaction(Transaction, Entity):
-    """Transaction happened on Bitcoin blockchain."""
+    """This object represents an L1 transaction that occurred on the Bitcoin Network. You can retrieve this object to receive information about a specific on-chain transaction made on the Lightning Network associated with your Lightspark Node."""
 
     requester: Requester
 

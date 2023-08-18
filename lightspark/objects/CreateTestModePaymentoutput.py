@@ -8,6 +8,8 @@ from lightspark.requests.requester import Requester
 
 @dataclass
 class CreateTestModePaymentoutput:
+    """This is an object identifying the output of a test mode payment. This object can be used to retrieve the associated payment made from a Test Mode Payment call."""
+
     requester: Requester
 
     payment_id: str

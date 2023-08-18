@@ -4,6 +4,8 @@ from enum import Enum
 
 
 class BitcoinNetwork(Enum):
+    """This is an enum identifying a particular Bitcoin Network."""
+
     ___FUTURE_VALUE___ = "___FUTURE_VALUE___"
     """This is an enum value that represents future values that could be added in the future. Clients should support unknown values as more of them could be added without notice."""
     MAINNET = "MAINNET"
@@ -13,4 +15,4 @@ class BitcoinNetwork(Enum):
     SIGNET = "SIGNET"
     """A test version of the Bitcoin Blockchain, maintained by a centralized organization. Not in use at Lightspark."""
     TESTNET = "TESTNET"
-    """A test version of the Bitcoin Blockchain, publically available."""
+    """A test version of the Bitcoin Blockchain, publicly available."""

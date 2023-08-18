@@ -11,7 +11,7 @@ from .CurrencyAmount import from_json as CurrencyAmount_from_json
 
 @dataclass
 class BlockchainBalance:
-    """This object provides a detailed breakdown of a `LightsparkNode`'s current balance on the Bitcoin Network."""
+    """This is an object representing a detailed breakdown of the balance for a Lightspark Node."""
 
     requester: Requester
 

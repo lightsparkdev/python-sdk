@@ -18,7 +18,7 @@ from .TransactionStatus import TransactionStatus
 
 @dataclass
 class ChannelClosingTransaction(OnChainTransaction, Transaction, Entity):
-    """The transaction on Bitcoin blockchain to close a channel on Lightning Network where the balances are allocated back to local and remote nodes."""
+    """This is an object representing a transaction which closes a channel on the Lightning Network. This operation allocates balances back to the local and remote nodes."""
 
     requester: Requester
 

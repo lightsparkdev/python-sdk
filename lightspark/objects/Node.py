@@ -23,7 +23,7 @@ from .Secret import from_json as Secret_from_json
 
 @dataclass
 class Node(Entity):
-    """This interface represents a lightning node that can be connected to the Lightning Network to send and receive transactions."""
+    """This object is an interface representing a Lightning Node on the Lightning Network, and could either be a Lightspark node or a node managed by a third party."""
 
     requester: Requester
 
@@ -109,6 +109,9 @@ fragment NodeFragment on Node {
         lightspark_node_display_name: display_name
         lightspark_node_public_key: public_key
         lightspark_node_account: account {
+            id
+        }
+        lightspark_node_owner: owner {
             id
         }
         lightspark_node_blockchain_balance: blockchain_balance {
@@ -245,6 +248,7 @@ def from_json(requester: Requester, obj: Mapping[str, Any]) -> Node:
             display_name=obj["lightspark_node_display_name"],
             public_key=obj["lightspark_node_public_key"],
             account_id=obj["lightspark_node_account"]["id"],
+            owner_id=obj["lightspark_node_owner"]["id"],
             blockchain_balance=BlockchainBalance_from_json(
                 requester, obj["lightspark_node_blockchain_balance"]
             )

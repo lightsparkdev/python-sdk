@@ -73,6 +73,9 @@ class TestEnumSerialization:
             "create_invoice_input_amount_msats": "100000",
             "create_invoice_input_memo": "memo",
             "create_invoice_input_invoice_type": "AMP",
+            "create_invoice_input_expiry_secs": "100",
+            "create_invoice_input_payment_hash": "payment_hash",
+            "create_invoice_input_preimage_nonce": "preimage_nonce",
         }
 
         invoice_input = CreateInvoiceInput.from_json(serialzed_invoice_input)
@@ -83,6 +86,9 @@ class TestEnumSerialization:
             "create_invoice_input_amount_msats": "100000",
             "create_invoice_input_memo": "memo",
             "create_invoice_input_invoice_type": "ON_FIRE",
+            "create_invoice_input_expiry_secs": None,
+            "create_invoice_input_payment_hash": None,
+            "create_invoice_input_preimage_nonce": None,
         }
 
         invoice_input = CreateInvoiceInput.from_json(serialzed_invoice_input)
@@ -93,6 +99,9 @@ class TestEnumSerialization:
             "create_invoice_input_amount_msats": "100000",
             "create_invoice_input_memo": "memo",
             "create_invoice_input_invoice_type": None,
+            "create_invoice_input_expiry_secs": None,
+            "create_invoice_input_payment_hash": None,
+            "create_invoice_input_preimage_nonce": None,
         }
 
         invoice_input = CreateInvoiceInput.from_json(serialzed_invoice_input)

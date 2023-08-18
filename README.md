@@ -15,3 +15,12 @@ Open the file `example.py` and make sure to update the variables at the top of t
 pipenv install
 pipenv run python -m examples.example
 ```
+
+There are also a few examples of webservers for demonstrating webhooks and LNURLs. These can similarly be run through Flask:
+
+```python
+pipenv install -d
+pipenv run flask --app examples.flask_lnurl_server run
+```
+
+Note that Flask requires Python >= 3.8, so these examples will not work if running Python 3.7.

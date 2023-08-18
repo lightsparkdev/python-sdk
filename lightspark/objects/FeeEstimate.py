@@ -11,6 +11,8 @@ from .CurrencyAmount import from_json as CurrencyAmount_from_json
 
 @dataclass
 class FeeEstimate:
+    """This object represents the estimated L1 transaction fees for the Bitcoin network. Fee estimates are separated by potential confirmation speeds for settlement."""
+
     requester: Requester
 
     fee_fast: CurrencyAmount

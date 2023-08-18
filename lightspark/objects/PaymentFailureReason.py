@@ -4,6 +4,8 @@ from enum import Enum
 
 
 class PaymentFailureReason(Enum):
+    """This is an enum of the potential reasons why an OutgoingPayment sent from a Lightspark Node may have failed."""
+
     ___FUTURE_VALUE___ = "___FUTURE_VALUE___"
     """This is an enum value that represents future values that could be added in the future. Clients should support unknown values as more of them could be added without notice."""
     NONE = "NONE"
@@ -15,3 +17,4 @@ class PaymentFailureReason(Enum):
     INVOICE_ALREADY_PAID = "INVOICE_ALREADY_PAID"
     SELF_PAYMENT = "SELF_PAYMENT"
     INVOICE_EXPIRED = "INVOICE_EXPIRED"
+    RISK_SCREENING_FAILED = "RISK_SCREENING_FAILED"

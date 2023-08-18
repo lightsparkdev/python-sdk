@@ -18,7 +18,7 @@ from .TransactionStatus import TransactionStatus
 
 @dataclass
 class ChannelOpeningTransaction(OnChainTransaction, Transaction, Entity):
-    """The transaction on Bitcoin blockchain to open a channel on Lightning Network funded by the local Lightspark node."""
+    """This is an object representing a transaction which opens a channel on the Lightning Network. This object occurs only for channels funded by the local Lightspark node."""
 
     requester: Requester
 

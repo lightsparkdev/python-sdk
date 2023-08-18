@@ -4,6 +4,8 @@ from enum import Enum
 
 
 class HtlcAttemptFailureCode(Enum):
+    """This is an enum representing a particular reason why an htlc sent over the Lightning Network may have failed."""
+
     ___FUTURE_VALUE___ = "___FUTURE_VALUE___"
     """This is an enum value that represents future values that could be added in the future. Clients should support unknown values as more of them could be added without notice."""
     INCORRECT_OR_UNKNOWN_PAYMENT_DETAILS = "INCORRECT_OR_UNKNOWN_PAYMENT_DETAILS"

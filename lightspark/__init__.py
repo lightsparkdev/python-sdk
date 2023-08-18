@@ -24,10 +24,12 @@ from lightspark.objects.ChannelStatus import ChannelStatus
 from lightspark.objects.ChannelToTransactionsConnection import (
     ChannelToTransactionsConnection,
 )
+from lightspark.objects.Connection import Connection
 from lightspark.objects.CreateApiTokenInput import CreateApiTokenInput
 from lightspark.objects.CreateApiTokenOutput import CreateApiTokenOutput
 from lightspark.objects.CreateInvoiceInput import CreateInvoiceInput
 from lightspark.objects.CreateInvoiceOutput import CreateInvoiceOutput
+from lightspark.objects.CreateLnurlInvoiceInput import CreateLnurlInvoiceInput
 from lightspark.objects.CreateNodeWalletAddressInput import CreateNodeWalletAddressInput
 from lightspark.objects.CreateNodeWalletAddressOutput import (
     CreateNodeWalletAddressOutput,
@@ -36,6 +38,9 @@ from lightspark.objects.CreateTestModeInvoiceInput import CreateTestModeInvoiceI
 from lightspark.objects.CreateTestModeInvoiceOutput import CreateTestModeInvoiceOutput
 from lightspark.objects.CreateTestModePaymentInput import CreateTestModePaymentInput
 from lightspark.objects.CreateTestModePaymentoutput import CreateTestModePaymentoutput
+from lightspark.objects.CryptoSanctionsScreeningProvider import (
+    CryptoSanctionsScreeningProvider,
+)
 from lightspark.objects.CurrencyAmount import CurrencyAmount
 from lightspark.objects.CurrencyUnit import CurrencyUnit
 from lightspark.objects.DeleteApiTokenInput import DeleteApiTokenInput
@@ -66,6 +71,7 @@ from lightspark.objects.LightningFeeEstimateForNodeInput import (
 from lightspark.objects.LightningFeeEstimateOutput import LightningFeeEstimateOutput
 from lightspark.objects.LightningTransaction import LightningTransaction
 from lightspark.objects.LightsparkNode import LightsparkNode
+from lightspark.objects.LightsparkNodeOwner import LightsparkNodeOwner
 from lightspark.objects.LightsparkNodePurpose import LightsparkNodePurpose
 from lightspark.objects.LightsparkNodeStatus import LightsparkNodeStatus
 from lightspark.objects.LightsparkNodeToChannelsConnection import (
@@ -96,10 +102,13 @@ from lightspark.objects.Permission import Permission
 from lightspark.objects.RequestWithdrawalInput import RequestWithdrawalInput
 from lightspark.objects.RequestWithdrawalOutput import RequestWithdrawalOutput
 from lightspark.objects.RichText import RichText
+from lightspark.objects.RiskRating import RiskRating
 from lightspark.objects.RoutingTransaction import RoutingTransaction
 from lightspark.objects.RoutingTransactionFailureReason import (
     RoutingTransactionFailureReason,
 )
+from lightspark.objects.ScreenBitcoinAddressesInput import ScreenBitcoinAddressesInput
+from lightspark.objects.ScreenBitcoinAddressesOutput import ScreenBitcoinAddressesOutput
 from lightspark.objects.Secret import Secret
 from lightspark.objects.SendPaymentInput import SendPaymentInput
 from lightspark.objects.SendPaymentOutput import SendPaymentOutput
@@ -108,6 +117,13 @@ from lightspark.objects.TransactionFailures import TransactionFailures
 from lightspark.objects.TransactionStatus import TransactionStatus
 from lightspark.objects.TransactionType import TransactionType
 from lightspark.objects.Wallet import Wallet
+from lightspark.objects.WalletStatus import WalletStatus
+from lightspark.objects.WalletToPaymentRequestsConnection import (
+    WalletToPaymentRequestsConnection,
+)
+from lightspark.objects.WalletToTransactionsConnection import (
+    WalletToTransactionsConnection,
+)
 from lightspark.objects.WebhookEventType import WebhookEventType
 from lightspark.objects.Withdrawal import Withdrawal
 from lightspark.objects.WithdrawalMode import WithdrawalMode

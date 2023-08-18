@@ -34,13 +34,16 @@ from .BlockchainBalance import from_json as BlockchainBalance_from_json
 from .CurrencyAmount import CurrencyAmount
 from .CurrencyAmount import from_json as CurrencyAmount_from_json
 from .Entity import Entity
+from .LightsparkNodeOwner import LightsparkNodeOwner
 from .TransactionFailures import TransactionFailures
 from .TransactionStatus import TransactionStatus
 from .TransactionType import TransactionType
 
 
 @dataclass
-class Account(Entity):
+class Account(LightsparkNodeOwner, Entity):
+    """This is an object representing the connected Lightspark account. You can retrieve this object to see your account information and objects tied to your account."""
+
     requester: Requester
 
     id: str
@@ -57,15 +60,16 @@ class Account(Entity):
     typename: str
 
     def get_api_tokens(
-        self, first: Optional[int] = None
+        self, first: Optional[int] = None, after: Optional[str] = None
     ) -> AccountToApiTokensConnection:
         json = self.requester.execute_graphql(
             """
-query FetchAccountToApiTokensConnection($entity_id: ID!, $first: Int) {
+query FetchAccountToApiTokensConnection($entity_id: ID!, $first: Int, $after: String) {
     entity(id: $entity_id) {
         ... on Account {
-            api_tokens(, first: $first) {
+            api_tokens(, first: $first, after: $after) {
                 __typename
+                account_to_api_tokens_connection_count: count
                 account_to_api_tokens_connection_page_info: page_info {
                     __typename
                     page_info_has_next_page: has_next_page
@@ -73,7 +77,6 @@ query FetchAccountToApiTokensConnection($entity_id: ID!, $first: Int) {
                     page_info_start_cursor: start_cursor
                     page_info_end_cursor: end_cursor
                 }
-                account_to_api_tokens_connection_count: count
                 account_to_api_tokens_connection_entities: entities {
                     __typename
                     api_token_id: id
@@ -88,7 +91,7 @@ query FetchAccountToApiTokensConnection($entity_id: ID!, $first: Int) {
     }
 }
             """,
-            {"entity_id": self.id, "first": first},
+            {"entity_id": self.id, "first": first, "after": after},
         )
         connection = json["entity"]["api_tokens"]
         return AccountToApiTokensConnection_from_json(self.requester, connection)
@@ -233,14 +236,16 @@ query FetchAccountLocalBalance($entity_id: ID!, $bitcoin_networks: [BitcoinNetwo
         first: Optional[int] = None,
         bitcoin_networks: Optional[List[BitcoinNetwork]] = None,
         node_ids: Optional[List[str]] = None,
+        after: Optional[str] = None,
     ) -> AccountToNodesConnection:
         json = self.requester.execute_graphql(
             """
-query FetchAccountToNodesConnection($entity_id: ID!, $first: Int, $bitcoin_networks: [BitcoinNetwork!], $node_ids: [ID!]) {
+query FetchAccountToNodesConnection($entity_id: ID!, $first: Int, $bitcoin_networks: [BitcoinNetwork!], $node_ids: [ID!], $after: String) {
     entity(id: $entity_id) {
         ... on Account {
-            nodes(, first: $first, bitcoin_networks: $bitcoin_networks, node_ids: $node_ids) {
+            nodes(, first: $first, bitcoin_networks: $bitcoin_networks, node_ids: $node_ids, after: $after) {
                 __typename
+                account_to_nodes_connection_count: count
                 account_to_nodes_connection_page_info: page_info {
                     __typename
                     page_info_has_next_page: has_next_page
@@ -248,7 +253,6 @@ query FetchAccountToNodesConnection($entity_id: ID!, $first: Int, $bitcoin_netwo
                     page_info_start_cursor: start_cursor
                     page_info_end_cursor: end_cursor
                 }
-                account_to_nodes_connection_count: count
                 account_to_nodes_connection_purpose: purpose
                 account_to_nodes_connection_entities: entities {
                     __typename
@@ -262,6 +266,9 @@ query FetchAccountToNodesConnection($entity_id: ID!, $first: Int, $bitcoin_netwo
                     lightspark_node_display_name: display_name
                     lightspark_node_public_key: public_key
                     lightspark_node_account: account {
+                        id
+                    }
+                    lightspark_node_owner: owner {
                         id
                     }
                     lightspark_node_blockchain_balance: blockchain_balance {
@@ -365,6 +372,7 @@ query FetchAccountToNodesConnection($entity_id: ID!, $first: Int, $bitcoin_netwo
                 "first": first,
                 "bitcoin_networks": bitcoin_networks,
                 "node_ids": node_ids,
+                "after": after,
             },
         )
         connection = json["entity"]["nodes"]
@@ -577,6 +585,14 @@ query FetchAccountToTransactionsConnection($entity_id: ID!, $first: Int, $after:
         ... on Account {
             transactions(, first: $first, after: $after, types: $types, after_date: $after_date, before_date: $before_date, bitcoin_network: $bitcoin_network, lightning_node_id: $lightning_node_id, statuses: $statuses, exclude_failures: $exclude_failures) {
                 __typename
+                account_to_transactions_connection_count: count
+                account_to_transactions_connection_page_info: page_info {
+                    __typename
+                    page_info_has_next_page: has_next_page
+                    page_info_has_previous_page: has_previous_page
+                    page_info_start_cursor: start_cursor
+                    page_info_end_cursor: end_cursor
+                }
                 account_to_transactions_connection_profit_loss: profit_loss {
                     __typename
                     currency_amount_original_value: original_value
@@ -593,7 +609,6 @@ query FetchAccountToTransactionsConnection($entity_id: ID!, $first: Int, $after:
                     currency_amount_preferred_currency_value_rounded: preferred_currency_value_rounded
                     currency_amount_preferred_currency_value_approx: preferred_currency_value_approx
                 }
-                account_to_transactions_connection_count: count
                 account_to_transactions_connection_total_amount_transacted: total_amount_transacted {
                     __typename
                     currency_amount_original_value: original_value
@@ -802,6 +817,9 @@ query FetchAccountToTransactionsConnection($entity_id: ID!, $first: Int, $after:
                                         lightspark_node_account: account {
                                             id
                                         }
+                                        lightspark_node_owner: owner {
+                                            id
+                                        }
                                         lightspark_node_blockchain_balance: blockchain_balance {
                                             __typename
                                             blockchain_balance_total_balance: total_balance {
@@ -971,13 +989,6 @@ query FetchAccountToTransactionsConnection($entity_id: ID!, $first: Int, $after:
                         }
                     }
                 }
-                account_to_transactions_connection_page_info: page_info {
-                    __typename
-                    page_info_has_next_page: has_next_page
-                    page_info_has_previous_page: has_previous_page
-                    page_info_start_cursor: start_cursor
-                    page_info_end_cursor: end_cursor
-                }
             }
         }
     }
@@ -1016,6 +1027,13 @@ query FetchAccountToPaymentRequestsConnection($entity_id: ID!, $first: Int, $aft
             payment_requests(, first: $first, after: $after, after_date: $after_date, before_date: $before_date, bitcoin_network: $bitcoin_network, lightning_node_id: $lightning_node_id) {
                 __typename
                 account_to_payment_requests_connection_count: count
+                account_to_payment_requests_connection_page_info: page_info {
+                    __typename
+                    page_info_has_next_page: has_next_page
+                    page_info_has_previous_page: has_previous_page
+                    page_info_start_cursor: start_cursor
+                    page_info_end_cursor: end_cursor
+                }
                 account_to_payment_requests_connection_entities: entities {
                     __typename
                     ... on Invoice {
@@ -1065,6 +1083,9 @@ query FetchAccountToPaymentRequestsConnection($entity_id: ID!, $first: Int, $aft
                                     lightspark_node_display_name: display_name
                                     lightspark_node_public_key: public_key
                                     lightspark_node_account: account {
+                                        id
+                                    }
+                                    lightspark_node_owner: owner {
                                         id
                                     }
                                     lightspark_node_blockchain_balance: blockchain_balance {
@@ -1171,13 +1192,6 @@ query FetchAccountToPaymentRequestsConnection($entity_id: ID!, $first: Int, $aft
                         }
                     }
                 }
-                account_to_payment_requests_connection_page_info: page_info {
-                    __typename
-                    page_info_has_next_page: has_next_page
-                    page_info_has_previous_page: has_previous_page
-                    page_info_start_cursor: start_cursor
-                    page_info_end_cursor: end_cursor
-                }
             }
         }
     }
@@ -1196,14 +1210,20 @@ query FetchAccountToPaymentRequestsConnection($entity_id: ID!, $first: Int, $aft
         connection = json["entity"]["payment_requests"]
         return AccountToPaymentRequestsConnection_from_json(self.requester, connection)
 
-    def get_wallets(self, first: Optional[int] = None) -> AccountToWalletsConnection:
+    def get_wallets(
+        self,
+        first: Optional[int] = None,
+        after: Optional[str] = None,
+        third_party_ids: Optional[List[str]] = None,
+    ) -> AccountToWalletsConnection:
         json = self.requester.execute_graphql(
             """
-query FetchAccountToWalletsConnection($entity_id: ID!, $first: Int) {
+query FetchAccountToWalletsConnection($entity_id: ID!, $first: Int, $after: String, $third_party_ids: [String!]) {
     entity(id: $entity_id) {
         ... on Account {
-            wallets(, first: $first) {
+            wallets(, first: $first, after: $after, third_party_ids: $third_party_ids) {
                 __typename
+                account_to_wallets_connection_count: count
                 account_to_wallets_connection_page_info: page_info {
                     __typename
                     page_info_has_next_page: has_next_page
@@ -1211,7 +1231,6 @@ query FetchAccountToWalletsConnection($entity_id: ID!, $first: Int) {
                     page_info_start_cursor: start_cursor
                     page_info_end_cursor: end_cursor
                 }
-                account_to_wallets_connection_count: count
                 account_to_wallets_connection_entities: entities {
                     __typename
                     wallet_id: id
@@ -1246,13 +1265,19 @@ query FetchAccountToWalletsConnection($entity_id: ID!, $first: Int) {
                         }
                     }
                     wallet_third_party_identifier: third_party_identifier
+                    wallet_status: status
                 }
             }
         }
     }
 }
             """,
-            {"entity_id": self.id, "first": first},
+            {
+                "entity_id": self.id,
+                "first": first,
+                "after": after,
+                "third_party_ids": third_party_ids,
+            },
         )
         connection = json["entity"]["wallets"]
         return AccountToWalletsConnection_from_json(self.requester, connection)

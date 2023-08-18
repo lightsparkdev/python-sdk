@@ -28,7 +28,7 @@ from .TransactionStatus import TransactionStatus
 
 @dataclass
 class OutgoingPayment(LightningTransaction, Transaction, Entity):
-    """A transaction that was sent from a Lightspark node on the Lightning Network."""
+    """This object represents a Lightning Network payment sent from a Lightspark Node. You can retrieve this object to receive payment related information about any payment sent from your Lightspark Node on the Lightning Network."""
 
     requester: Requester
 
@@ -73,16 +73,23 @@ class OutgoingPayment(LightningTransaction, Transaction, Entity):
     typename: str
 
     def get_attempts(
-        self, first: Optional[int] = None
+        self, first: Optional[int] = None, after: Optional[str] = None
     ) -> OutgoingPaymentToAttemptsConnection:
         json = self.requester.execute_graphql(
             """
-query FetchOutgoingPaymentToAttemptsConnection($entity_id: ID!, $first: Int) {
+query FetchOutgoingPaymentToAttemptsConnection($entity_id: ID!, $first: Int, $after: String) {
     entity(id: $entity_id) {
         ... on OutgoingPayment {
-            attempts(, first: $first) {
+            attempts(, first: $first, after: $after) {
                 __typename
                 outgoing_payment_to_attempts_connection_count: count
+                outgoing_payment_to_attempts_connection_page_info: page_info {
+                    __typename
+                    page_info_has_next_page: has_next_page
+                    page_info_has_previous_page: has_previous_page
+                    page_info_start_cursor: start_cursor
+                    page_info_end_cursor: end_cursor
+                }
                 outgoing_payment_to_attempts_connection_entities: entities {
                     __typename
                     outgoing_payment_attempt_id: id
@@ -117,7 +124,7 @@ query FetchOutgoingPaymentToAttemptsConnection($entity_id: ID!, $first: Int) {
     }
 }
             """,
-            {"entity_id": self.id, "first": first},
+            {"entity_id": self.id, "first": first, "after": after},
         )
         connection = json["entity"]["attempts"]
         return OutgoingPaymentToAttemptsConnection_from_json(self.requester, connection)
@@ -198,6 +205,9 @@ fragment OutgoingPaymentFragment on OutgoingPayment {
                     lightspark_node_display_name: display_name
                     lightspark_node_public_key: public_key
                     lightspark_node_account: account {
+                        id
+                    }
+                    lightspark_node_owner: owner {
                         id
                     }
                     lightspark_node_blockchain_balance: blockchain_balance {

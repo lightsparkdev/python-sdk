@@ -1,5 +1,6 @@
 # Copyright ©, 2022-present, Lightspark Group, Inc. - All Rights Reserved
 
+from hashlib import sha256
 import logging
 from dataclasses import dataclass
 from datetime import datetime, timedelta, timezone
@@ -160,6 +161,59 @@ mutation CreateInvoice(
         )
 
         return Invoice_from_json(self._requester, json["create_invoice"]["invoice"])
+
+    def create_lnurl_invoice(
+        self,
+        node_id: str,
+        amount_msats: int,
+        metadata: str,
+    ) -> Invoice:
+        """Generates a Lightning Invoice (follows the Bolt 11 specification) to request a payment
+        from another Lightning Node. This should only be used for generating invoices for LNURLs,
+        with `create_invoice` preferred in the general case.
+
+        Args:
+            node_id (str): The ID of the node from which to create the invoice.
+            amount_sats (int): The amount for which the invoice should be created, in millisatoshis.
+            will be added.
+            metadata (str): The LNURL metadata payload field in the initial payreq response. This
+            will be hashed and present in the h-tag (SHA256 purpose of payment) of the resulting
+            Bolt 11 invoice.
+
+        Returns:
+            Invoice: An `Invoice` object representing the generated invoice.
+        """
+        logger.info("Creating an invoice for node %s.", node_id)
+        json = self._requester.execute_graphql(
+            f"""
+mutation CreateLnurlInvoice(
+    $node_id: ID!
+    $amount_msats: Long!
+    $metadata_hash: String!
+) {{
+    create_lnurl_invoice(input: {{
+        node_id: $node_id
+        amount_msats: $amount_msats
+        metadata_hash: $metadata_hash
+    }}) {{
+        invoice {{
+            ...InvoiceFragment
+        }}
+    }}
+}}
+
+{InvoiceFragment}
+""",
+            {
+                "amount_msats": amount_msats,
+                "node_id": node_id,
+                "metadata_hash": sha256(metadata.encode("utf-8")).hexdigest(),
+            },
+        )
+
+        return Invoice_from_json(
+            self._requester, json["create_lnurl_invoice"]["invoice"]
+        )
 
     def create_node_wallet_address(
         self,

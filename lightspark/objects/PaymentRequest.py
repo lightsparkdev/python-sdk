@@ -18,6 +18,8 @@ from .PaymentRequestStatus import PaymentRequestStatus
 
 @dataclass
 class PaymentRequest(Entity):
+    """This object contains information related to a payment request generated or received by a LightsparkNode. You can retrieve this object to receive payment information about a specific invoice."""
+
     requester: Requester
 
     id: str
@@ -87,6 +89,9 @@ fragment PaymentRequestFragment on PaymentRequest {
                     lightspark_node_display_name: display_name
                     lightspark_node_public_key: public_key
                     lightspark_node_account: account {
+                        id
+                    }
+                    lightspark_node_owner: owner {
                         id
                     }
                     lightspark_node_blockchain_balance: blockchain_balance {

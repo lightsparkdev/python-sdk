@@ -5,6 +5,7 @@ import hmac
 import json
 from dataclasses import dataclass
 from datetime import datetime
+from typing import Optional
 
 from lightspark.objects.WebhookEventType import WebhookEventType
 
@@ -17,6 +18,7 @@ class WebhookEvent:
     event_id: str
     timestamp: datetime
     entity_id: str
+    wallet_id: Optional[str] = None
 
     @classmethod
     def verify_and_parse(
@@ -71,4 +73,5 @@ class WebhookEvent:
             event_id=event["event_id"],
             timestamp=datetime.fromisoformat(event["timestamp"]),
             entity_id=event["entity_id"],
+            wallet_id=event["wallet_id"] if "wallet_id" in event else None,
         )

@@ -3,7 +3,7 @@
 
 Install Flask (pip install flask) and then run this like:
 
-  flask --app flask_webhook_server run --port 5001
+  pipenv run flask --app examples.flask_webhook_server run --port 5001
 """
 
 import lightspark

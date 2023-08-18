@@ -18,7 +18,7 @@ from .NodeToAddressesConnection import from_json as NodeToAddressesConnection_fr
 
 @dataclass
 class GraphNode(Node, Entity):
-    """This is a node on the Lightning Network, managed by a third party. The information about this node is public data that has been obtained by observing the Lightning Network."""
+    """This object represents a node that exists on the Lightning Network, including nodes not managed by Lightspark. You can retrieve this object to get publicly available information about any node on the Lightning Network."""
 
     requester: Requester
 

@@ -12,7 +12,7 @@ from .NodeAddressType import NodeAddressType
 
 @dataclass
 class NodeAddress:
-    """An object that represents the address of a node on the Lightning Network."""
+    """This object represents the address of a node on the Lightning Network."""
 
     requester: Requester
 

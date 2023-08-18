@@ -11,6 +11,8 @@ from .CurrencyAmount import from_json as CurrencyAmount_from_json
 
 @dataclass
 class Balances:
+    """This is an object representing the balance associated with your Lightspark account. You can retrieve this object to see your balance, which can be broken down into several different categorizations."""
+
     requester: Requester
 
     owned_balance: CurrencyAmount

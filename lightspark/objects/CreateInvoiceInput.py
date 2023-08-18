@@ -12,12 +12,21 @@ from .InvoiceType import InvoiceType
 @dataclass
 class CreateInvoiceInput:
     node_id: str
+    """The node from which to create the invoice."""
 
     amount_msats: int
+    """The amount for which the invoice should be created, in millisatoshis."""
 
     memo: Optional[str]
 
     invoice_type: Optional[InvoiceType]
+
+    expiry_secs: Optional[int]
+    """The expiry of the invoice in seconds. Default value is 86400 (1 day)."""
+
+    payment_hash: Optional[str]
+
+    preimage_nonce: Optional[str]
 
 
 def from_json(obj: Mapping[str, Any]) -> CreateInvoiceInput:
@@ -28,4 +37,7 @@ def from_json(obj: Mapping[str, Any]) -> CreateInvoiceInput:
         invoice_type=parse_enum_optional(
             InvoiceType, obj["create_invoice_input_invoice_type"]
         ),
+        expiry_secs=obj["create_invoice_input_expiry_secs"],
+        payment_hash=obj["create_invoice_input_payment_hash"],
+        preimage_nonce=obj["create_invoice_input_preimage_nonce"],
     )

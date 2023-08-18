@@ -30,6 +30,8 @@ from .WithdrawalRequestToChannelOpeningTransactionsConnection import (
 
 @dataclass
 class WithdrawalRequest(Entity):
+    """This object represents a request made for an L1 withdrawal from your Lightspark Node to any Bitcoin wallet. You can retrieve this object to receive detailed information about any withdrawal request made from your Lightspark account."""
+
     requester: Requester
 
     id: str

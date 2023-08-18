@@ -13,7 +13,7 @@ from .CurrencyUnit import CurrencyUnit
 
 @dataclass
 class CurrencyAmount:
-    """Represents the value and unit for an amount of currency."""
+    """This object represents the value and unit for an amount of currency."""
 
     requester: Requester
 

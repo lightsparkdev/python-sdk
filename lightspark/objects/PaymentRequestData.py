@@ -15,7 +15,7 @@ from .Node import from_json as Node_from_json
 
 @dataclass
 class PaymentRequestData:
-    """The interface of a payment request on the Lightning Network (a.k.a. Lightning Invoice)."""
+    """This object is an interface of a payment request on the Lightning Network (i.e., a Lightning Invoice). It contains data related to parsing the payment details of a Lightning Invoice."""
 
     requester: Requester
 
@@ -71,6 +71,9 @@ fragment PaymentRequestDataFragment on PaymentRequestData {
                 lightspark_node_display_name: display_name
                 lightspark_node_public_key: public_key
                 lightspark_node_account: account {
+                    id
+                }
+                lightspark_node_owner: owner {
                     id
                 }
                 lightspark_node_blockchain_balance: blockchain_balance {
