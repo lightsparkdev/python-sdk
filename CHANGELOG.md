@@ -1,5 +1,17 @@
 # Changelog
 
+# v1.4.0
+
+- Adding UMA protocol support
+- Adding some compliance-related client functions to support UMA
+
+# v1.3.0
+
+- Add invoice expirySecs to the invoice creation functions
+- Return Invoice object instead of InvoiceData so that you can store the Invoice ID if needed
+- Lots of docs improvements
+- Allow fetching transactions and invoices for a wallet tied to the current account.
+
 # v1.2.0
 
 - Adding 2 new functions for test mode:
