@@ -1,5 +1,9 @@
 # Changelog
 
+# v1.4.1
+
+- Fix deserializing nullable lists
+
 # v1.4.0
 
 - Adding UMA protocol support

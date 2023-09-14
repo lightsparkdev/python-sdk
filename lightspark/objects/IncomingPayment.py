@@ -184,5 +184,7 @@ def from_json(requester: Requester, obj: Mapping[str, Any]) -> IncomingPayment:
                 lambda e: PostTransactionData_from_json(requester, e),
                 obj["incoming_payment_uma_post_transaction_data"],
             )
-        ),
+        )
+        if obj["incoming_payment_uma_post_transaction_data"]
+        else None,
     )

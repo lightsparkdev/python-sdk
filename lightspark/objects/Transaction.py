@@ -573,7 +573,9 @@ def from_json(requester: Requester, obj: Mapping[str, Any]) -> Transaction:
                     lambda e: PostTransactionData_from_json(requester, e),
                     obj["incoming_payment_uma_post_transaction_data"],
                 )
-            ),
+            )
+            if obj["incoming_payment_uma_post_transaction_data"]
+            else None,
         )
     if obj["__typename"] == "OutgoingPayment":
         # pylint: disable=import-outside-toplevel
@@ -614,7 +616,9 @@ def from_json(requester: Requester, obj: Mapping[str, Any]) -> Transaction:
                     lambda e: PostTransactionData_from_json(requester, e),
                     obj["outgoing_payment_uma_post_transaction_data"],
                 )
-            ),
+            )
+            if obj["outgoing_payment_uma_post_transaction_data"]
+            else None,
         )
     if obj["__typename"] == "RoutingTransaction":
         # pylint: disable=import-outside-toplevel
