@@ -103,7 +103,7 @@ def sign_payload(payload: bytes, signing_key: bytes) -> str:
         payload,
         asymmetric_padding.PSS(
             mgf=asymmetric_padding.MGF1(hashes.SHA256()),
-            salt_length=asymmetric_padding.PSS.MAX_LENGTH,
+            salt_length=asymmetric_padding.PSS.DIGEST_LENGTH,
         ),
         hashes.SHA256(),
     )

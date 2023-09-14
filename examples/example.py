@@ -1,7 +1,6 @@
 # Copyright ©, 2022-present, Lightspark Group, Inc. - All Rights Reserved
 
 import logging
-import math
 import os
 from datetime import datetime, timedelta
 
@@ -9,7 +8,6 @@ import lightspark
 
 logger = logging.getLogger("lightspark")
 logger.setLevel(logging.DEBUG)
-
 
 #################################################################
 ## MODIFY THOSE VARIABLES BEFORE RUNNING THE EXAMPLE
@@ -288,6 +286,26 @@ for channel in channels_connection.entities:
             print(
                 f"    - With {alias}. Local/remote balance = {channel.local_balance.preferred_currency_value_approx} {channel.local_balance.preferred_currency_unit}/{channel.remote_balance.preferred_currency_value_approx} {channel.remote_balance.preferred_currency_unit}"
             )
+print("")
+
+# Screen a node
+node_pubkey = "bc1qj4mfcgej3wxp8eundzq7sq8f80wps02kk38sgadrer39mr5l7ncqrgmp89"
+rating = client.screen_node(
+    provider=lightspark.ComplianceProvider.CHAINALYSIS, node_pubkey=node_pubkey
+)
+print(f"Got risk rating for node with pubkey {node_pubkey}: {rating}")
+print("")
+
+# Register a successful payment
+node_pubkey = "bc1qj4mfcgej3wxp8eundzq7sq8f80wps02kk38sgadrer39mr5l7ncqrgmp89"
+payment_id = "<Your successful outgoing payment id>"
+client.register_payment(
+    provider=lightspark.ComplianceProvider.CHAINALYSIS,
+    node_pubkey=node_pubkey,
+    payment_id=payment_id,
+    direction=lightspark.PaymentDirection.SENT,
+)
+print(f"Successfully registered payment {payment_id}")
 print("")
 
 # Issue an arbitrary GraphQL request

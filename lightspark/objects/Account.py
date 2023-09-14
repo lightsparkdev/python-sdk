@@ -361,6 +361,7 @@ query FetchAccountToNodesConnection($entity_id: ID!, $first: Int, $bitcoin_netwo
                         currency_amount_preferred_currency_value_approx: preferred_currency_value_approx
                     }
                     lightspark_node_status: status
+                    lightspark_node_uma_prescreening_utxos: uma_prescreening_utxos
                 }
             }
         }
@@ -740,6 +741,18 @@ query FetchAccountToTransactionsConnection($entity_id: ID!, $first: Int, $after:
                         incoming_payment_payment_request: payment_request {
                             id
                         }
+                        incoming_payment_uma_post_transaction_data: uma_post_transaction_data {
+                            __typename
+                            post_transaction_data_utxo: utxo
+                            post_transaction_data_amount: amount {
+                                __typename
+                                currency_amount_original_value: original_value
+                                currency_amount_original_unit: original_unit
+                                currency_amount_preferred_currency_unit: preferred_currency_unit
+                                currency_amount_preferred_currency_value_rounded: preferred_currency_value_rounded
+                                currency_amount_preferred_currency_value_approx: preferred_currency_value_approx
+                            }
+                        }
                     }
                     ... on OutgoingPayment {
                         __typename
@@ -910,6 +923,7 @@ query FetchAccountToTransactionsConnection($entity_id: ID!, $first: Int, $after:
                                             currency_amount_preferred_currency_value_approx: preferred_currency_value_approx
                                         }
                                         lightspark_node_status: status
+                                        lightspark_node_uma_prescreening_utxos: uma_prescreening_utxos
                                     }
                                 }
                             }
@@ -918,6 +932,18 @@ query FetchAccountToTransactionsConnection($entity_id: ID!, $first: Int, $after:
                         outgoing_payment_failure_message: failure_message {
                             __typename
                             rich_text_text: text
+                        }
+                        outgoing_payment_uma_post_transaction_data: uma_post_transaction_data {
+                            __typename
+                            post_transaction_data_utxo: utxo
+                            post_transaction_data_amount: amount {
+                                __typename
+                                currency_amount_original_value: original_value
+                                currency_amount_original_unit: original_unit
+                                currency_amount_preferred_currency_unit: preferred_currency_unit
+                                currency_amount_preferred_currency_value_rounded: preferred_currency_value_rounded
+                                currency_amount_preferred_currency_value_approx: preferred_currency_value_approx
+                            }
                         }
                     }
                     ... on RoutingTransaction {
@@ -1178,6 +1204,7 @@ query FetchAccountToPaymentRequestsConnection($entity_id: ID!, $first: Int, $aft
                                         currency_amount_preferred_currency_value_approx: preferred_currency_value_approx
                                     }
                                     lightspark_node_status: status
+                                    lightspark_node_uma_prescreening_utxos: uma_prescreening_utxos
                                 }
                             }
                         }
@@ -1265,6 +1292,9 @@ query FetchAccountToWalletsConnection($entity_id: ID!, $first: Int, $after: Stri
                         }
                     }
                     wallet_third_party_identifier: third_party_identifier
+                    wallet_account: account {
+                        id
+                    }
                     wallet_status: status
                 }
             }

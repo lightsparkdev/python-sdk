@@ -65,10 +65,10 @@ class LightsparkNode(Node, Entity):
     """The public key of this node. It acts as a unique identifier of this node in the Lightning Network."""
 
     account_id: str
-    """The account that owns this LightsparkNode."""
+    """The account that this node ultimately belongs to, which can be either the direct owner of the node if the node is owned by an account, or the account that owns the wallet if the node is owned by a wallet."""
 
     owner_id: str
-    """The owner of this LightsparkNode."""
+    """The owner of this node which can be either an Account or a Wallet."""
 
     blockchain_balance: Optional[BlockchainBalance]
     """The details of the balance of this node on the Bitcoin Network."""
@@ -93,6 +93,9 @@ class LightsparkNode(Node, Entity):
 
     status: Optional[LightsparkNodeStatus]
     """The current status of this node."""
+
+    uma_prescreening_utxos: List[str]
+    """The utxos of the channels that are connected to this node. This is used in uma flow for pre-screening."""
     typename: str
 
     def get_addresses(
@@ -360,6 +363,7 @@ fragment LightsparkNodeFragment on LightsparkNode {
         currency_amount_preferred_currency_value_approx: preferred_currency_value_approx
     }
     lightspark_node_status: status
+    lightspark_node_uma_prescreening_utxos: uma_prescreening_utxos
 }
 """
 
@@ -415,4 +419,5 @@ def from_json(requester: Requester, obj: Mapping[str, Any]) -> LightsparkNode:
         if obj["lightspark_node_remote_balance"]
         else None,
         status=parse_enum_optional(LightsparkNodeStatus, obj["lightspark_node_status"]),
+        uma_prescreening_utxos=obj["lightspark_node_uma_prescreening_utxos"],
     )

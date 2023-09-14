@@ -166,6 +166,7 @@ fragment PaymentRequestDataFragment on PaymentRequestData {
                     currency_amount_preferred_currency_value_approx: preferred_currency_value_approx
                 }
                 lightspark_node_status: status
+                lightspark_node_uma_prescreening_utxos: uma_prescreening_utxos
             }
         }
     }

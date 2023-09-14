@@ -297,6 +297,18 @@ fragment EntityFragment on Entity {
         incoming_payment_payment_request: payment_request {
             id
         }
+        incoming_payment_uma_post_transaction_data: uma_post_transaction_data {
+            __typename
+            post_transaction_data_utxo: utxo
+            post_transaction_data_amount: amount {
+                __typename
+                currency_amount_original_value: original_value
+                currency_amount_original_unit: original_unit
+                currency_amount_preferred_currency_unit: preferred_currency_unit
+                currency_amount_preferred_currency_value_rounded: preferred_currency_value_rounded
+                currency_amount_preferred_currency_value_approx: preferred_currency_value_approx
+            }
+        }
     }
     ... on IncomingPaymentAttempt {
         __typename
@@ -459,6 +471,7 @@ fragment EntityFragment on Entity {
                         currency_amount_preferred_currency_value_approx: preferred_currency_value_approx
                     }
                     lightspark_node_status: status
+                    lightspark_node_uma_prescreening_utxos: uma_prescreening_utxos
                 }
             }
         }
@@ -579,6 +592,7 @@ fragment EntityFragment on Entity {
             currency_amount_preferred_currency_value_approx: preferred_currency_value_approx
         }
         lightspark_node_status: status
+        lightspark_node_uma_prescreening_utxos: uma_prescreening_utxos
     }
     ... on OutgoingPayment {
         __typename
@@ -749,6 +763,7 @@ fragment EntityFragment on Entity {
                             currency_amount_preferred_currency_value_approx: preferred_currency_value_approx
                         }
                         lightspark_node_status: status
+                        lightspark_node_uma_prescreening_utxos: uma_prescreening_utxos
                     }
                 }
             }
@@ -757,6 +772,18 @@ fragment EntityFragment on Entity {
         outgoing_payment_failure_message: failure_message {
             __typename
             rich_text_text: text
+        }
+        outgoing_payment_uma_post_transaction_data: uma_post_transaction_data {
+            __typename
+            post_transaction_data_utxo: utxo
+            post_transaction_data_amount: amount {
+                __typename
+                currency_amount_original_value: original_value
+                currency_amount_original_unit: original_unit
+                currency_amount_preferred_currency_unit: preferred_currency_unit
+                currency_amount_preferred_currency_value_rounded: preferred_currency_value_rounded
+                currency_amount_preferred_currency_value_approx: preferred_currency_value_approx
+            }
         }
     }
     ... on OutgoingPaymentAttempt {
@@ -858,6 +885,9 @@ fragment EntityFragment on Entity {
             }
         }
         wallet_third_party_identifier: third_party_identifier
+        wallet_account: account {
+            id
+        }
         wallet_status: status
     }
     ... on Withdrawal {

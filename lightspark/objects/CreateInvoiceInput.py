@@ -24,10 +24,6 @@ class CreateInvoiceInput:
     expiry_secs: Optional[int]
     """The expiry of the invoice in seconds. Default value is 86400 (1 day)."""
 
-    payment_hash: Optional[str]
-
-    preimage_nonce: Optional[str]
-
 
 def from_json(obj: Mapping[str, Any]) -> CreateInvoiceInput:
     return CreateInvoiceInput(
@@ -38,6 +34,4 @@ def from_json(obj: Mapping[str, Any]) -> CreateInvoiceInput:
             InvoiceType, obj["create_invoice_input_invoice_type"]
         ),
         expiry_secs=obj["create_invoice_input_expiry_secs"],
-        payment_hash=obj["create_invoice_input_payment_hash"],
-        preimage_nonce=obj["create_invoice_input_preimage_nonce"],
     )

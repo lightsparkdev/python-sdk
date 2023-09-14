@@ -17,6 +17,7 @@ from .CurrencyAmount import CurrencyAmount
 from .CurrencyAmount import from_json as CurrencyAmount_from_json
 from .Entity import Entity
 from .PaymentRequestData import from_json as PaymentRequestData_from_json
+from .PostTransactionData import from_json as PostTransactionData_from_json
 from .RichText import from_json as RichText_from_json
 from .Transaction import Transaction
 from .TransactionStatus import TransactionStatus
@@ -78,6 +79,18 @@ fragment LightningTransactionFragment on LightningTransaction {
         }
         incoming_payment_payment_request: payment_request {
             id
+        }
+        incoming_payment_uma_post_transaction_data: uma_post_transaction_data {
+            __typename
+            post_transaction_data_utxo: utxo
+            post_transaction_data_amount: amount {
+                __typename
+                currency_amount_original_value: original_value
+                currency_amount_original_unit: original_unit
+                currency_amount_preferred_currency_unit: preferred_currency_unit
+                currency_amount_preferred_currency_value_rounded: preferred_currency_value_rounded
+                currency_amount_preferred_currency_value_approx: preferred_currency_value_approx
+            }
         }
     }
     ... on OutgoingPayment {
@@ -249,6 +262,7 @@ fragment LightningTransactionFragment on LightningTransaction {
                             currency_amount_preferred_currency_value_approx: preferred_currency_value_approx
                         }
                         lightspark_node_status: status
+                        lightspark_node_uma_prescreening_utxos: uma_prescreening_utxos
                     }
                 }
             }
@@ -257,6 +271,18 @@ fragment LightningTransactionFragment on LightningTransaction {
         outgoing_payment_failure_message: failure_message {
             __typename
             rich_text_text: text
+        }
+        outgoing_payment_uma_post_transaction_data: uma_post_transaction_data {
+            __typename
+            post_transaction_data_utxo: utxo
+            post_transaction_data_amount: amount {
+                __typename
+                currency_amount_original_value: original_value
+                currency_amount_original_unit: original_unit
+                currency_amount_preferred_currency_unit: preferred_currency_unit
+                currency_amount_preferred_currency_value_rounded: preferred_currency_value_rounded
+                currency_amount_preferred_currency_value_approx: preferred_currency_value_approx
+            }
         }
     }
     ... on RoutingTransaction {
@@ -321,6 +347,12 @@ def from_json(requester: Requester, obj: Mapping[str, Any]) -> LightningTransact
             payment_request_id=obj["incoming_payment_payment_request"]["id"]
             if obj["incoming_payment_payment_request"]
             else None,
+            uma_post_transaction_data=list(
+                map(
+                    lambda e: PostTransactionData_from_json(requester, e),
+                    obj["incoming_payment_uma_post_transaction_data"],
+                )
+            ),
         )
     if obj["__typename"] == "OutgoingPayment":
         # pylint: disable=import-outside-toplevel
@@ -356,6 +388,12 @@ def from_json(requester: Requester, obj: Mapping[str, Any]) -> LightningTransact
             )
             if obj["outgoing_payment_failure_message"]
             else None,
+            uma_post_transaction_data=list(
+                map(
+                    lambda e: PostTransactionData_from_json(requester, e),
+                    obj["outgoing_payment_uma_post_transaction_data"],
+                )
+            ),
         )
     if obj["__typename"] == "RoutingTransaction":
         # pylint: disable=import-outside-toplevel

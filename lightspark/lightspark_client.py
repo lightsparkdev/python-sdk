@@ -1,9 +1,9 @@
 # Copyright ©, 2022-present, Lightspark Group, Inc. - All Rights Reserved
 
-from hashlib import sha256
 import logging
 from dataclasses import dataclass
 from datetime import datetime, timedelta, timezone
+from hashlib import sha256
 from typing import Any, Dict, Mapping, Optional, Tuple, Type, TypeVar
 
 import jwt
@@ -15,46 +15,72 @@ from cryptography.hazmat.primitives.serialization import (
     PublicFormat,
 )
 from lightspark.exceptions import LightsparkException
-from lightspark.objects.Account import FRAGMENT as AccountFragment
 from lightspark.objects.Account import Account
 from lightspark.objects.Account import from_json as Account_from_json
 from lightspark.objects.all_entities import get_entity
-from lightspark.objects.ApiToken import FRAGMENT as ApiTokenFragment
 from lightspark.objects.ApiToken import ApiToken
 from lightspark.objects.ApiToken import from_json as ApiToken_from_json
 from lightspark.objects.BitcoinNetwork import BitcoinNetwork
-from lightspark.objects.CurrencyAmount import FRAGMENT as CurrencyAmountFragment
+from lightspark.objects.ComplianceProvider import ComplianceProvider
 from lightspark.objects.CurrencyAmount import CurrencyAmount
 from lightspark.objects.CurrencyAmount import from_json as CurrencyAmount_from_json
 from lightspark.objects.Entity import Entity
-from lightspark.objects.FeeEstimate import FRAGMENT as FeeEstimateFragment
 from lightspark.objects.FeeEstimate import FeeEstimate
 from lightspark.objects.FeeEstimate import from_json as FeeEstimate_from_json
-from lightspark.objects.Invoice import FRAGMENT as InvoiceFragment
 from lightspark.objects.Invoice import Invoice
 from lightspark.objects.Invoice import from_json as Invoice_from_json
-from lightspark.objects.InvoiceData import FRAGMENT as InvoiceDataFragment
 from lightspark.objects.InvoiceData import from_json as InvoiceData_from_json
 from lightspark.objects.InvoiceType import InvoiceType
 from lightspark.objects.LightningFeeEstimateOutput import (
-    FRAGMENT as LightningFeeEstimateFragment,
-)
-from lightspark.objects.LightningFeeEstimateOutput import (
     from_json as LightningFeeEstimateOutput_from_json,
 )
-from lightspark.objects.OutgoingPayment import FRAGMENT as OutgoingPaymentFragment
+from lightspark.objects.LightningTransaction import LightningTransaction
+from lightspark.objects.LightningTransaction import (
+    from_json as LightningTransaction_from_json,
+)
 from lightspark.objects.OutgoingPayment import OutgoingPayment
 from lightspark.objects.OutgoingPayment import from_json as OutgoingPayment_from_json
+from lightspark.objects.PaymentDirection import PaymentDirection
 from lightspark.objects.PaymentRequestData import PaymentRequestData
 from lightspark.objects.Permission import Permission
+from lightspark.objects.RiskRating import RiskRating
 from lightspark.objects.WithdrawalMode import WithdrawalMode
-from lightspark.objects.WithdrawalRequest import FRAGMENT as WithdrawalRequestFragment
 from lightspark.objects.WithdrawalRequest import WithdrawalRequest
 from lightspark.objects.WithdrawalRequest import (
     from_json as WithdrawalRequest_from_json,
 )
 from lightspark.requests.requester import Requester
+from lightspark.scripts.bitcoin_fee_estimate import BITCOIN_FEE_ESTIMATE_QUERY
+from lightspark.scripts.create_api_token import CREATE_API_TOKEN_MUTATION
+from lightspark.scripts.create_invoice import CREATE_INVOICE_MUTATION
+from lightspark.scripts.create_lnurl_invoice import CREATE_LNURL_INVOICE_MUTATION
+from lightspark.scripts.create_node_address import CREATE_NODE_ADDRESS_MUTATION
+from lightspark.scripts.create_test_mode_invoice import (
+    CREATE_TEST_MODE_INVOICE_MUTATION,
+)
+from lightspark.scripts.create_test_mode_payment import (
+    CREATE_TEST_MODE_PAYMENT_MUTATION,
+)
+from lightspark.scripts.create_uma_invoice import CREATE_UMA_INVOICE_MUTATION
+from lightspark.scripts.current_account import CURRENT_ACCOUNT_QUERY
+from lightspark.scripts.decoded_payment_request import DECODED_PAYMENT_REQUEST_QUERY
+from lightspark.scripts.delete_api_token import DELETE_API_TOKEN_MUTATION
+from lightspark.scripts.fund_node import FUND_NODE_MUTATION
+from lightspark.scripts.lightning_fee_estimate_for_invoice import (
+    LIGHTNING_FEE_ESTIMATE_FOR_INVOICE_QUERY,
+)
+from lightspark.scripts.lightning_fee_estimate_for_node import (
+    LIGHTNING_FEE_ESTIMATE_FOR_NODE_QUERY,
+)
+from lightspark.scripts.pay_invoice import PAY_INVOICE_MUTATION
+from lightspark.scripts.pay_uma_invoice import PAY_UMA_INVOICE_MUTATION
+from lightspark.scripts.recover_node_signing_key import RECOVER_NODE_SIGNING_KEY_QUERY
+from lightspark.scripts.register_payment import REGISTER_PAYMENT_MUTATION
+from lightspark.scripts.request_withdrawal import REQUEST_WITHDRAWAL_MUTATION
+from lightspark.scripts.screen_node import SCREEN_NODE_MUTATION
+from lightspark.scripts.send_payment import SEND_PAYMENT_MUTATION
 from lightspark.utils.crypto import decrypt_private_key
+from lightspark.utils.enums import parse_enum
 
 logger = logging.getLogger("lightspark")
 
@@ -96,24 +122,7 @@ class LightsparkSyncClient:
         }[(test_mode, transact)]
 
         json = self._requester.execute_graphql(
-            f"""
-mutation CreateApiToken(
-    $name: String!
-    $permissions: [Permission!]!
-) {{
-    create_api_token(input: {{
-        name: $name
-        permissions: $permissions
-    }}) {{
-        api_token {{
-            ...ApiTokenFragment
-        }}
-        client_secret
-    }}
-}}
-
-{ApiTokenFragment}
-""",
+            CREATE_API_TOKEN_MUTATION,
             {"name": name, "permissions": permissions},
         )
 
@@ -131,27 +140,7 @@ mutation CreateApiToken(
     ) -> Invoice:
         logger.info("Creating an invoice for node %s.", node_id)
         json = self._requester.execute_graphql(
-            f"""
-mutation CreateInvoice(
-    $node_id: ID!
-    $amount_msats: Long!
-    $memo: String
-    $invoice_type: InvoiceType
-) {{
-    create_invoice(input: {{
-        node_id: $node_id
-        amount_msats: $amount_msats
-        memo: $memo
-        invoice_type: $invoice_type
-    }}) {{
-        invoice {{
-            ...InvoiceFragment
-        }}
-    }}
-}}
-
-{InvoiceFragment}
-""",
+            CREATE_INVOICE_MUTATION,
             {
                 "amount_msats": amount_msats,
                 "node_id": node_id,
@@ -183,27 +172,9 @@ mutation CreateInvoice(
         Returns:
             Invoice: An `Invoice` object representing the generated invoice.
         """
-        logger.info("Creating an invoice for node %s.", node_id)
+        logger.info("Creating an lnurl invoice for node %s.", node_id)
         json = self._requester.execute_graphql(
-            f"""
-mutation CreateLnurlInvoice(
-    $node_id: ID!
-    $amount_msats: Long!
-    $metadata_hash: String!
-) {{
-    create_lnurl_invoice(input: {{
-        node_id: $node_id
-        amount_msats: $amount_msats
-        metadata_hash: $metadata_hash
-    }}) {{
-        invoice {{
-            ...InvoiceFragment
-        }}
-    }}
-}}
-
-{InvoiceFragment}
-""",
+            CREATE_LNURL_INVOICE_MUTATION,
             {
                 "amount_msats": amount_msats,
                 "node_id": node_id,
@@ -221,17 +192,7 @@ mutation CreateLnurlInvoice(
     ) -> str:
         logger.info("Creating a wallet address for node %s.", node_id)
         json = self._requester.execute_graphql(
-            """
-mutation CreateNodeWalletAddress(
-    $node_id: ID!
-) {
-    create_node_wallet_address(input: {
-        node_id: $node_id
-    }) {
-        wallet_address
-    }
-}
-""",
+            CREATE_NODE_ADDRESS_MUTATION,
             {"node_id": node_id},
         )
         return json["create_node_wallet_address"]["wallet_address"]
@@ -245,23 +206,7 @@ mutation CreateNodeWalletAddress(
     ) -> str:
         logger.info("Creating a test invoice for node %s.", local_node_id)
         json = self._requester.execute_graphql(
-            """
-mutation CreateTestModeInvoice(
-    $local_node_id: ID!
-    $amount_msats: Long!
-    $memo: String
-    $invoice_type: InvoiceType
-) {
-    create_test_mode_invoice(input: {
-        local_node_id: $local_node_id
-        amount_msats: $amount_msats
-        memo: $memo
-        invoice_type: $invoice_type
-    }) {
-        encoded_payment_request
-    }
-}
-""",
+            CREATE_TEST_MODE_INVOICE_MUTATION,
             {
                 "amount_msats": amount_msats,
                 "local_node_id": local_node_id,
@@ -286,25 +231,7 @@ mutation CreateTestModeInvoice(
             variables["amount_msats"] = amount_msats
 
         json = self._requester.execute_graphql(
-            f"""
-mutation CreateTestModePayment(
-    $local_node_id: ID!
-    $encoded_invoice: String!
-    $amount_msats: Long
-) {{
-    create_test_mode_payment(input: {{
-        local_node_id: $local_node_id
-        encoded_invoice: $encoded_invoice
-        amount_msats: $amount_msats
-    }}) {{
-        payment {{
-            ...OutgoingPaymentFragment
-        }}
-    }}
-}}
-
-{OutgoingPaymentFragment}
-""",
+            CREATE_TEST_MODE_PAYMENT_MUTATION,
             variables,
             self.get_signing_key(local_node_id),
         )
@@ -312,20 +239,30 @@ mutation CreateTestModePayment(
             self._requester, json["create_test_mode_payment"]["payment"]
         )
 
+    def create_uma_invoice(
+        self,
+        node_id: str,
+        amount_msats: int,
+        metadata: str,
+    ) -> Invoice:
+        logger.info("Creating an uma invoice for node %s.", node_id)
+        json = self._requester.execute_graphql(
+            CREATE_UMA_INVOICE_MUTATION,
+            {
+                "amount_msats": amount_msats,
+                "node_id": node_id,
+                "metadata_hash": sha256(metadata.encode("utf-8")).hexdigest(),
+            },
+        )
+
+        return Invoice_from_json(
+            self._requester, json["create_lnurl_invoice"]["invoice"]
+        )
+
     def delete_api_token(self, api_token_id: str) -> None:
         logger.info("Deleting API token %s.", api_token_id)
         self._requester.execute_graphql(
-            """
-mutation DeleteApiToken(
-    $api_token_id: ID!
-) {
-    delete_api_token(input: {
-        api_token_id: $api_token_id
-    }) {
-        __typename
-    }
-}
-""",
+            DELETE_API_TOKEN_MUTATION,
             {"api_token_id": api_token_id},
         )
 
@@ -389,15 +326,7 @@ mutation DeleteApiToken(
     ) -> Account:
         logger.info("Fetching current account.")
         json = self._requester.execute_graphql(
-            f"""
-query GetCurrentAccount {{
-    current_account {{
-        ...AccountFragment
-    }}
-}}
-
-{AccountFragment}
-""",
+            CURRENT_ACCOUNT_QUERY,
             {},
         )
         return Account_from_json(self._requester, json["current_account"])
@@ -410,20 +339,7 @@ query GetCurrentAccount {{
             encoded_payment_request[0:10],
         )
         json = self._requester.execute_graphql(
-            f"""
-query DecodedPaymentRequest(
-    $encoded_payment_request: String!
-) {{
-    decoded_payment_request(encoded_payment_request: $encoded_payment_request) {{
-        __typename
-        ... on InvoiceData {{
-            ...InvoiceDataFragment
-        }}
-    }}
-}}
-
-{InvoiceDataFragment}
-""",
+            DECODED_PAYMENT_REQUEST_QUERY,
             {"encoded_payment_request": encoded_payment_request},
         )
         data = json["decoded_payment_request"]
@@ -447,17 +363,7 @@ query DecodedPaymentRequest(
     def get_bitcoin_fee_estimate(self, bitcoin_network: BitcoinNetwork) -> FeeEstimate:
         logger.info("Querying the fee estimate for network %s.", bitcoin_network)
         json = self._requester.execute_graphql(
-            f"""
-query BitcoinFeeEstimate(
-    $bitcoin_network: BitcoinNetwork!
-) {{
-    bitcoin_fee_estimate(network: $bitcoin_network) {{
-        ...FeeEstimateFragment
-    }}
-}}
-
-{FeeEstimateFragment}
-""",
+            BITCOIN_FEE_ESTIMATE_QUERY,
             {"bitcoin_network": bitcoin_network},
         )
         return FeeEstimate_from_json(self._requester, json["bitcoin_fee_estimate"])
@@ -475,23 +381,7 @@ query BitcoinFeeEstimate(
         if amount_msats is not None:
             variables["amount_msats"] = amount_msats
         json = self._requester.execute_graphql(
-            f"""
-query LightningFeeEstimateForInvoice(
-    $node_id: ID!
-    $encoded_payment_request: String!
-    $amount_msats: Long
-  ) {{
-    lightning_fee_estimate_for_invoice(input: {{
-      node_id: $node_id,
-      encoded_payment_request: $encoded_payment_request,
-      amount_msats: $amount_msats
-    }}) {{
-      ...LightningFeeEstimateOutputFragment
-    }}
-  }}
-
-{LightningFeeEstimateFragment}
-""",
+            LIGHTNING_FEE_ESTIMATE_FOR_INVOICE_QUERY,
             variables,
         )
         return LightningFeeEstimateOutput_from_json(
@@ -505,23 +395,7 @@ query LightningFeeEstimateForInvoice(
         amount_msats: int,
     ) -> CurrencyAmount:
         json = self._requester.execute_graphql(
-            f"""
-query LightningFeeEstimateForNode(
-    $node_id: ID!
-    $destination_node_public_key: String!
-    $amount_msats: Long!
-  ) {{
-    lightning_fee_estimate_for_node(input: {{
-      node_id: $node_id,
-      destination_node_public_key: $destination_node_public_key,
-      amount_msats: $amount_msats
-    }}) {{
-      ...LightningFeeEstimateOutputFragment
-    }}
-  }}
-
-{LightningFeeEstimateFragment}
-""",
+            LIGHTNING_FEE_ESTIMATE_FOR_NODE_QUERY,
             {
                 "node_id": node_id,
                 "destination_node_public_key": destination_node_public_key,
@@ -539,20 +413,7 @@ query LightningFeeEstimateForNode(
     def recover_node_signing_key(self, node_id: str, node_password: str) -> bytes:
         logger.info("Recovering the signing key for node %s", node_id)
         json = self._requester.execute_graphql(
-            """
-query RecoverNodeSigningKey(
-    $node_id: ID!
-) {
-    entity(id: $node_id) {
-        ... on LightsparkNode {
-            encrypted_signing_private_key {
-                encrypted_value
-                cipher
-            }
-        }
-    }
-}
-""",
+            RECOVER_NODE_SIGNING_KEY_QUERY,
             {"node_id": node_id},
         )
         encrypted_key = json["entity"]["encrypted_signing_private_key"][
@@ -586,29 +447,32 @@ query RecoverNodeSigningKey(
         if amount_msats is not None:
             variables["amount_msats"] = amount_msats
         json = self._requester.execute_graphql(
-            f"""
-mutation PayInvoice(
-    $node_id: ID!
-    $encoded_invoice: String!
-    $timeout_secs: Int!
-    $maximum_fees_msats: Long!
-    $amount_msats: Long
-) {{
-    pay_invoice(input: {{
-        node_id: $node_id
-        encoded_invoice: $encoded_invoice
-        timeout_secs: $timeout_secs
-        maximum_fees_msats: $maximum_fees_msats
-        amount_msats: $amount_msats
-    }}) {{
-        payment {{
-            ...OutgoingPaymentFragment
-        }}
-    }}
-}}
+            PAY_INVOICE_MUTATION,
+            variables,
+            self.get_signing_key(node_id),
+        )
+        return OutgoingPayment_from_json(
+            self._requester, json["pay_invoice"]["payment"]
+        )
 
-{OutgoingPaymentFragment}
-""",
+    def pay_uma_invoice(
+        self,
+        node_id: str,
+        encoded_invoice: str,
+        timeout_secs: int,
+        maximum_fees_msats: int,
+        amount_msats: Optional[int] = None,
+    ) -> OutgoingPayment:
+        variables = {
+            "node_id": node_id,
+            "encoded_invoice": encoded_invoice,
+            "timeout_secs": timeout_secs,
+            "maximum_fees_msats": maximum_fees_msats,
+        }
+        if amount_msats is not None:
+            variables["amount_msats"] = amount_msats
+        json = self._requester.execute_graphql(
+            PAY_UMA_INVOICE_MUTATION,
             variables,
             self.get_signing_key(node_id),
         )
@@ -625,29 +489,7 @@ mutation PayInvoice(
         maximum_fees_msats: int,
     ) -> OutgoingPayment:
         json = self._requester.execute_graphql(
-            f"""
-mutation SendPayment(
-    $node_id: ID!
-    $destination_public_key: String!
-    $amount_msats: Long!
-    $timeout_secs: Int!
-    $maximum_fees_msats: Long!
-) {{
-    send_payment(input: {{
-        node_id: $node_id
-        destination_public_key: $destination_public_key
-        amount_msats: $amount_msats
-        timeout_secs: $timeout_secs
-        maximum_fees_msats: $maximum_fees_msats
-    }}) {{
-        payment {{
-            ...OutgoingPaymentFragment
-        }}
-    }}
-}}
-
-{OutgoingPaymentFragment}
-""",
+            SEND_PAYMENT_MUTATION,
             {
                 "node_id": node_id,
                 "destination_public_key": destination_public_key,
@@ -660,6 +502,17 @@ mutation SendPayment(
         return OutgoingPayment_from_json(
             self._requester, json["send_payment"]["payment"]
         )
+
+    def screen_node(self, provider: ComplianceProvider, node_pubkey: str) -> RiskRating:
+        """
+        Screens a lightning node using its public key. In order to call this API,
+        you need to have the API key stored in your account setting page for the selected compliance provider.
+        """
+        json = self._requester.execute_graphql(
+            SCREEN_NODE_MUTATION,
+            {"provider": provider, "node_pubkey": node_pubkey},
+        )
+        return parse_enum(RiskRating, json["screen_node"]["rating"])
 
     def get_signing_key(self, node_id: str) -> bytes:
         if node_id not in self._node_private_keys:
@@ -688,20 +541,7 @@ mutation SendPayment(
             CurrencyAmount: The amount of funds added to the node.
         """
         json = self._requester.execute_graphql(
-            f"""
-mutation FundNode(
-    $node_id: ID!,
-    $amount_sats: Long
-) {{
-    fund_node(input: {{ node_id: $node_id, amount_sats: $amount_sats }}) {{
-        amount {{
-            ...CurrencyAmountFragment
-        }}
-    }}
-}}
-
-{CurrencyAmountFragment}
-""",
+            FUND_NODE_MUTATION,
             {
                 "node_id": node_id,
                 "amount_sats": amount_sats,
@@ -723,27 +563,7 @@ mutation FundNode(
         """
 
         json = self._requester.execute_graphql(
-            f"""
-mutation RequestWithdrawal(
-    $node_id: ID!
-    $amount_sats: Long!
-    $bitcoin_address: String!
-    $withdrawal_mode: WithdrawalMode!
-) {{
-    request_withdrawal(input: {{
-        node_id: $node_id
-        amount_sats: $amount_sats
-        bitcoin_address: $bitcoin_address
-        withdrawal_mode: $withdrawal_mode
-    }}) {{
-        request {{
-            ...WithdrawalRequestFragment
-        }}
-    }}
-}}
-
-{WithdrawalRequestFragment}
-""",
+            REQUEST_WITHDRAWAL_MUTATION,
             {
                 "node_id": node_id,
                 "amount_sats": amount_sats,
@@ -754,4 +574,35 @@ mutation RequestWithdrawal(
         )
         return WithdrawalRequest_from_json(
             self._requester, json["request_withdrawal"]["request"]
+        )
+
+    def register_payment(
+        self,
+        provider: ComplianceProvider,
+        payment_id: str,
+        node_pubkey: str,
+        direction: PaymentDirection,
+    ) -> LightningTransaction:
+        """
+        Register a successful lightning payment with a selected compliance provider.
+        In order to call this API, you need to have the API key stored in your account
+        setting page for the selected compliance provider.
+
+        Args:
+            provider: The external compliance provider you have account with. You need to store the API key in your account seeting.
+            payment_id: The ID of a lightning payment, which can be either an OutgoingPayment or an IncomingPayment.
+            node_pubkey: The public key of the counterparty lightning node, which is the recipient node for an OutgoingPayment or the sender node for an IncomingPayment.
+            direction: Indicates whether this payment is an OutgoingPayment or an IncomingPayment
+        """
+        json = self._requester.execute_graphql(
+            REGISTER_PAYMENT_MUTATION,
+            {
+                "provider": provider,
+                "node_pubkey": node_pubkey,
+                "payment_id": payment_id,
+                "direction": direction,
+            },
+        )
+        return LightningTransaction_from_json(
+            self._requester, json["register_payment"]["payment"]
         )

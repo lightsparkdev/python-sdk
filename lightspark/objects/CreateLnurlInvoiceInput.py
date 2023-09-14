@@ -18,10 +18,6 @@ class CreateLnurlInvoiceInput:
     expiry_secs: Optional[int]
     """The expiry of the invoice in seconds. Default value is 86400 (1 day)."""
 
-    payment_hash: Optional[str]
-
-    preimage_nonce: Optional[str]
-
 
 def from_json(obj: Mapping[str, Any]) -> CreateLnurlInvoiceInput:
     return CreateLnurlInvoiceInput(
@@ -29,6 +25,4 @@ def from_json(obj: Mapping[str, Any]) -> CreateLnurlInvoiceInput:
         amount_msats=obj["create_lnurl_invoice_input_amount_msats"],
         metadata_hash=obj["create_lnurl_invoice_input_metadata_hash"],
         expiry_secs=obj["create_lnurl_invoice_input_expiry_secs"],
-        payment_hash=obj["create_lnurl_invoice_input_payment_hash"],
-        preimage_nonce=obj["create_lnurl_invoice_input_preimage_nonce"],
     )

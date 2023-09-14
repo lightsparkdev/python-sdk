@@ -15,11 +15,17 @@ class CreateTestModePaymentoutput:
     payment_id: str
     """The payment that has been sent."""
 
+    incoming_payment_id: str
+    """The payment that has been received."""
+
 
 FRAGMENT = """
 fragment CreateTestModePaymentoutputFragment on CreateTestModePaymentoutput {
     __typename
     create_test_mode_paymentoutput_payment: payment {
+        id
+    }
+    create_test_mode_paymentoutput_incoming_payment: incoming_payment {
         id
     }
 }
@@ -32,4 +38,7 @@ def from_json(
     return CreateTestModePaymentoutput(
         requester=requester,
         payment_id=obj["create_test_mode_paymentoutput_payment"]["id"],
+        incoming_payment_id=obj["create_test_mode_paymentoutput_incoming_payment"][
+            "id"
+        ],
     )

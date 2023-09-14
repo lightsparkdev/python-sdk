@@ -74,6 +74,9 @@ fragment LightsparkNodeOwnerFragment on LightsparkNodeOwner {
             }
         }
         wallet_third_party_identifier: third_party_identifier
+        wallet_account: account {
+            id
+        }
         wallet_status: status
     }
 }
@@ -108,6 +111,7 @@ def from_json(requester: Requester, obj: Mapping[str, Any]) -> LightsparkNodeOwn
             if obj["wallet_balances"]
             else None,
             third_party_identifier=obj["wallet_third_party_identifier"],
+            account_id=obj["wallet_account"]["id"] if obj["wallet_account"] else None,
             status=parse_enum(WalletStatus, obj["wallet_status"]),
         )
     graphql_typename = obj["__typename"]

@@ -17,6 +17,8 @@ from .IncomingPaymentToAttemptsConnection import (
     from_json as IncomingPaymentToAttemptsConnection_from_json,
 )
 from .LightningTransaction import LightningTransaction
+from .PostTransactionData import PostTransactionData
+from .PostTransactionData import from_json as PostTransactionData_from_json
 from .Transaction import Transaction
 from .TransactionStatus import TransactionStatus
 
@@ -56,6 +58,9 @@ class IncomingPayment(LightningTransaction, Transaction, Entity):
 
     payment_request_id: Optional[str]
     """The optional payment request for this incoming payment, which will be null if the payment is sent through keysend."""
+
+    uma_post_transaction_data: Optional[List[PostTransactionData]]
+    """The post transaction data which can be used in KYT payment registration."""
     typename: str
 
     def get_attempts(
@@ -140,6 +145,18 @@ fragment IncomingPaymentFragment on IncomingPayment {
     incoming_payment_payment_request: payment_request {
         id
     }
+    incoming_payment_uma_post_transaction_data: uma_post_transaction_data {
+        __typename
+        post_transaction_data_utxo: utxo
+        post_transaction_data_amount: amount {
+            __typename
+            currency_amount_original_value: original_value
+            currency_amount_original_unit: original_unit
+            currency_amount_preferred_currency_unit: preferred_currency_unit
+            currency_amount_preferred_currency_value_rounded: preferred_currency_value_rounded
+            currency_amount_preferred_currency_value_approx: preferred_currency_value_approx
+        }
+    }
 }
 """
 
@@ -162,4 +179,10 @@ def from_json(requester: Requester, obj: Mapping[str, Any]) -> IncomingPayment:
         payment_request_id=obj["incoming_payment_payment_request"]["id"]
         if obj["incoming_payment_payment_request"]
         else None,
+        uma_post_transaction_data=list(
+            map(
+                lambda e: PostTransactionData_from_json(requester, e),
+                obj["incoming_payment_uma_post_transaction_data"],
+            )
+        ),
     )

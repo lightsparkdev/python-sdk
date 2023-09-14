@@ -2,7 +2,7 @@
 
 from dataclasses import dataclass
 from datetime import datetime
-from typing import Any, Mapping, Optional
+from typing import Any, List, Mapping, Optional
 
 from lightspark.objects.PaymentFailureReason import PaymentFailureReason
 from lightspark.objects.TransactionStatus import TransactionStatus
@@ -20,6 +20,8 @@ from .OutgoingPaymentToAttemptsConnection import (
 from .PaymentFailureReason import PaymentFailureReason
 from .PaymentRequestData import PaymentRequestData
 from .PaymentRequestData import from_json as PaymentRequestData_from_json
+from .PostTransactionData import PostTransactionData
+from .PostTransactionData import from_json as PostTransactionData_from_json
 from .RichText import RichText
 from .RichText import from_json as RichText_from_json
 from .Transaction import Transaction
@@ -70,6 +72,9 @@ class OutgoingPayment(LightningTransaction, Transaction, Entity):
 
     failure_message: Optional[RichText]
     """If applicable, user-facing error message describing why the payment failed."""
+
+    uma_post_transaction_data: Optional[List[PostTransactionData]]
+    """The post transaction data which can be used in KYT payment registration."""
     typename: str
 
     def get_attempts(
@@ -300,6 +305,7 @@ fragment OutgoingPaymentFragment on OutgoingPayment {
                         currency_amount_preferred_currency_value_approx: preferred_currency_value_approx
                     }
                     lightspark_node_status: status
+                    lightspark_node_uma_prescreening_utxos: uma_prescreening_utxos
                 }
             }
         }
@@ -308,6 +314,18 @@ fragment OutgoingPaymentFragment on OutgoingPayment {
     outgoing_payment_failure_message: failure_message {
         __typename
         rich_text_text: text
+    }
+    outgoing_payment_uma_post_transaction_data: uma_post_transaction_data {
+        __typename
+        post_transaction_data_utxo: utxo
+        post_transaction_data_amount: amount {
+            __typename
+            currency_amount_original_value: original_value
+            currency_amount_original_unit: original_unit
+            currency_amount_preferred_currency_unit: preferred_currency_unit
+            currency_amount_preferred_currency_value_rounded: preferred_currency_value_rounded
+            currency_amount_preferred_currency_value_approx: preferred_currency_value_approx
+        }
     }
 }
 """
@@ -344,4 +362,10 @@ def from_json(requester: Requester, obj: Mapping[str, Any]) -> OutgoingPayment:
         )
         if obj["outgoing_payment_failure_message"]
         else None,
+        uma_post_transaction_data=list(
+            map(
+                lambda e: PostTransactionData_from_json(requester, e),
+                obj["outgoing_payment_uma_post_transaction_data"],
+            )
+        ),
     )
