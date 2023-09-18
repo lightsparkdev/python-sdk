@@ -26,7 +26,9 @@ class LnurlpRequest:
         try:
             [identifier, host] = self.receiver_address.split("@")
         except ValueError as ex:
-            raise InvalidRequestException("invalid receiver address") from ex
+            raise InvalidRequestException(
+                f"invalid receiver address {self.receiver_address}."
+            ) from ex
 
         scheme = "http" if host.startswith("localhost:") else "https"
         base_url = f"{scheme}://{host}/.well-known/lnurlp/{identifier}?"
