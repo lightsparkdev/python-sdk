@@ -33,6 +33,9 @@ class LightsparkUmaInvoiceCreator(IUmaInvoiceCreator):
         metadata: str,
     ) -> str:
         invoice = self.lightspark_client.create_uma_invoice(
-            self.node_id, amount_msats=amount_msats, metadata=metadata
+            self.node_id,
+            amount_msats=amount_msats,
+            metadata=metadata,
+            expiry_secs=self.expiry_secs,
         )
         return invoice.data.encoded_payment_request

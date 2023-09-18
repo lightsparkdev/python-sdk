@@ -1,5 +1,12 @@
 # Changelog
 
+# v1.4.3
+
+- Fix a few UMA bugs/ommisions:
+  - Add expiry_secs to invoice calls
+  - Parse create_uma_invoice correctly
+  - Add fees to the invoice amount
+
 # v1.4.2
 
 - Fix a packaging problem with UMA.

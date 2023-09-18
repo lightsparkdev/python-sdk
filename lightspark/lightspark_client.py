@@ -137,17 +137,18 @@ class LightsparkSyncClient:
         amount_msats: int,
         memo: Optional[str] = None,
         invoice_type: Optional[InvoiceType] = None,
+        expiry_secs: Optional[int] = None,
     ) -> Invoice:
         logger.info("Creating an invoice for node %s.", node_id)
-        json = self._requester.execute_graphql(
-            CREATE_INVOICE_MUTATION,
-            {
-                "amount_msats": amount_msats,
-                "node_id": node_id,
-                "memo": memo,
-                "invoice_type": invoice_type,
-            },
-        )
+        variables = {
+            "amount_msats": amount_msats,
+            "node_id": node_id,
+            "memo": memo,
+            "invoice_type": invoice_type,
+        }
+        if expiry_secs is not None:
+            variables["expiry_secs"] = expiry_secs
+        json = self._requester.execute_graphql(CREATE_INVOICE_MUTATION, variables)
 
         return Invoice_from_json(self._requester, json["create_invoice"]["invoice"])
 
@@ -156,6 +157,7 @@ class LightsparkSyncClient:
         node_id: str,
         amount_msats: int,
         metadata: str,
+        expiry_secs: Optional[int] = None,
     ) -> Invoice:
         """Generates a Lightning Invoice (follows the Bolt 11 specification) to request a payment
         from another Lightning Node. This should only be used for generating invoices for LNURLs,
@@ -168,19 +170,21 @@ class LightsparkSyncClient:
             metadata (str): The LNURL metadata payload field in the initial payreq response. This
             will be hashed and present in the h-tag (SHA256 purpose of payment) of the resulting
             Bolt 11 invoice.
+            expiry_secs (int, optional): The number of seconds after which the invoice will expire.
+            Defaults to 1 day.
 
         Returns:
             Invoice: An `Invoice` object representing the generated invoice.
         """
         logger.info("Creating an lnurl invoice for node %s.", node_id)
-        json = self._requester.execute_graphql(
-            CREATE_LNURL_INVOICE_MUTATION,
-            {
-                "amount_msats": amount_msats,
-                "node_id": node_id,
-                "metadata_hash": sha256(metadata.encode("utf-8")).hexdigest(),
-            },
-        )
+        variables = {
+            "amount_msats": amount_msats,
+            "node_id": node_id,
+            "metadata_hash": sha256(metadata.encode("utf-8")).hexdigest(),
+        }
+        if expiry_secs is not None:
+            variables["expiry_secs"] = expiry_secs
+        json = self._requester.execute_graphql(CREATE_LNURL_INVOICE_MUTATION, variables)
 
         return Invoice_from_json(
             self._requester, json["create_lnurl_invoice"]["invoice"]
@@ -244,6 +248,7 @@ class LightsparkSyncClient:
         node_id: str,
         amount_msats: int,
         metadata: str,
+        expiry_secs: Optional[int] = None,
     ) -> Invoice:
         logger.info("Creating an uma invoice for node %s.", node_id)
         json = self._requester.execute_graphql(
@@ -252,12 +257,11 @@ class LightsparkSyncClient:
                 "amount_msats": amount_msats,
                 "node_id": node_id,
                 "metadata_hash": sha256(metadata.encode("utf-8")).hexdigest(),
+                "expiry_secs": expiry_secs if expiry_secs is not None else 600,
             },
         )
 
-        return Invoice_from_json(
-            self._requester, json["create_lnurl_invoice"]["invoice"]
-        )
+        return Invoice_from_json(self._requester, json["create_uma_invoice"]["invoice"])
 
     def delete_api_token(self, api_token_id: str) -> None:
         logger.info("Deleting API token %s.", api_token_id)

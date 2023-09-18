@@ -304,7 +304,7 @@ def create_pay_req_response(
         utxo_callback: the URL that the receiving VASP will call to send UTXOs of the channel that the receiver used to receive the payment once it completes.
     """
 
-    amount_msats = request.amount * msats_per_currency_unit
+    amount_msats = request.amount * msats_per_currency_unit + receiver_fees_msats
     metadata += "{" + request.payer_data.to_json() + "}"
     encoded_invoice = invoice_creator.create_uma_invoice(
         amount_msats=amount_msats,
