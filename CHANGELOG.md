@@ -1,5 +1,9 @@
 # Changelog
 
+# v1.4.2
+
+- Fix a packaging problem with UMA.
+
 # v1.4.1
 
 - Fix deserializing nullable lists
