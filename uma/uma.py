@@ -5,6 +5,7 @@ from typing import List, Optional
 from urllib.parse import parse_qs, urlparse
 
 import requests
+from cryptography.exceptions import InvalidSignature
 from cryptography.hazmat.primitives import hashes, serialization
 from cryptography.hazmat.primitives.asymmetric.ec import ECDSA
 from ecies import encrypt
@@ -105,7 +106,7 @@ def _verify_signature(payload: bytes, signature: str, signing_pubkey: bytes) -> 
             data=payload,
             signature_algorithm=ECDSA(hashes.SHA256()),
         )
-    except ValueError as ex:
+    except (ValueError, InvalidSignature) as ex:
         raise InvalidSignatureException() from ex
 
 

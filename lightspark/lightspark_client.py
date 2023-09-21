@@ -481,7 +481,7 @@ class LightsparkSyncClient:
             self.get_signing_key(node_id),
         )
         return OutgoingPayment_from_json(
-            self._requester, json["pay_invoice"]["payment"]
+            self._requester, json["pay_uma_invoice"]["payment"]
         )
 
     def send_payment(

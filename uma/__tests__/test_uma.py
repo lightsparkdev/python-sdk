@@ -7,11 +7,11 @@ from typing import Tuple
 from unittest.mock import patch
 
 import pytest
-from cryptography.exceptions import InvalidSignature
 from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.asymmetric.ec import SECP256K1, generate_private_key
 from ecies import PrivateKey, decrypt
 from uma.currency import Currency
+from uma.exceptions import InvalidSignatureException
 from uma.kyc_status import KycStatus
 from uma.payer_data import PayerDataOptions
 from uma.public_key_cache import InMemoryPublicKeyCache, PubkeyResponse
@@ -116,7 +116,7 @@ def test_pay_request_create_and_parse() -> None:
     pay_request.payer_data.compliance.signature = (  # pyre-ignore: [16]
         secrets.token_hex()
     )
-    with pytest.raises(InvalidSignature):
+    with pytest.raises(InvalidSignatureException):
         verify_pay_request_signature(pay_request, sender_signing_public_key_bytes)
 
     # verify encryption
@@ -191,7 +191,7 @@ def test_lnurlp_request_url_create_and_parse() -> None:
 
     # test invalid signature
     request.signature = secrets.token_hex()
-    with pytest.raises(InvalidSignature):
+    with pytest.raises(InvalidSignatureException):
         verify_uma_lnurlp_query_signature(request, sender_signing_public_key_bytes)
 
 
@@ -341,7 +341,7 @@ def test_lnurlp_response_create_and_parse() -> None:
 
     # test invalid signature
     result_response.compliance.signature = secrets.token_hex()
-    with pytest.raises(InvalidSignature):
+    with pytest.raises(InvalidSignatureException):
         verify_uma_lnurlp_response_signature(
             result_response, receiver_signing_public_key_bytes
         )
