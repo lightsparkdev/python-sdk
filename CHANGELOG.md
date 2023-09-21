@@ -1,5 +1,9 @@
 # Changelog
 
+# v1.4.4
+
+- Fix parsing of the pay_uma_invoice response
+
 # v1.4.3
 
 - Fix a few UMA bugs/ommisions:
