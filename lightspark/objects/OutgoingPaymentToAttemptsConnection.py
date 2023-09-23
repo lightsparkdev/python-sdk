@@ -59,6 +59,7 @@ def from_json(
         ),
         entities=list(
             map(
+                # pylint: disable=unnecessary-lambda
                 lambda e: OutgoingPaymentAttempt_from_json(requester, e),
                 obj["outgoing_payment_to_attempts_connection_entities"],
             )

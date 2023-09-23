@@ -59,6 +59,7 @@ def from_json(
         ],
         entities=list(
             map(
+                # pylint: disable=unnecessary-lambda
                 lambda e: ChannelOpeningTransaction_from_json(requester, e),
                 obj[
                     "withdrawal_request_to_channel_opening_transactions_connection_entities"

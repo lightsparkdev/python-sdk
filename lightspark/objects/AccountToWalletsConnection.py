@@ -57,6 +57,7 @@ def from_json(
         ),
         entities=list(
             map(
+                # pylint: disable=unnecessary-lambda
                 lambda e: Wallet_from_json(requester, e),
                 obj["account_to_wallets_connection_entities"],
             )

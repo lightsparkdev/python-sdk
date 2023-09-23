@@ -15,10 +15,10 @@ from requests.utils import default_user_agent
 
 from lightspark.exceptions import LightsparkException
 from lightspark.requests.encoder import Encoder
-from lightspark.utils.crypto import sign_payload
+from lightspark.utils.signing_key import SigningKey
 from lightspark.version import __version__
 
-DEFAULT_BASE_URL = "https://api.lightspark.com/graphql/server/2023-04-04"
+DEFAULT_BASE_URL = "https://api.lightspark.com/graphql/server/2023-09-13"
 
 logger = logging.getLogger("lightspark")
 
@@ -45,7 +45,7 @@ class Requester:
         self,
         query: str,
         variables: Optional[Mapping[str, Any]],
-        signing_key: Optional[bytes] = None,
+        signing_key: Optional[SigningKey] = None,
     ) -> Mapping[str, Any]:
         operation = re.match(r"\s*(?:query|mutation)\s+(\w+)", query, re.IGNORECASE)
         payload = json.dumps(
@@ -63,7 +63,7 @@ class Requester:
             cls=Encoder,
         ).encode("utf8")
 
-        signing = sign_payload(payload, signing_key) if signing_key else None
+        signing = signing_key.sign_payload(payload) if signing_key else None
 
         user_agent = self.user_agent_string()
         logger.debug(

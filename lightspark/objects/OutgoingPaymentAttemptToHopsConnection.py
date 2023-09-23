@@ -59,6 +59,7 @@ def from_json(
         ),
         entities=list(
             map(
+                # pylint: disable=unnecessary-lambda
                 lambda e: Hop_from_json(requester, e),
                 obj["outgoing_payment_attempt_to_hops_connection_entities"],
             )

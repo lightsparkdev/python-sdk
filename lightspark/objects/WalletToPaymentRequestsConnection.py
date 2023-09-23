@@ -57,6 +57,7 @@ def from_json(
         ),
         entities=list(
             map(
+                # pylint: disable=unnecessary-lambda
                 lambda e: PaymentRequest_from_json(requester, e),
                 obj["wallet_to_payment_requests_connection_entities"],
             )

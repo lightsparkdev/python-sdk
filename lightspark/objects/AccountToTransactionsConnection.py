@@ -107,6 +107,7 @@ def from_json(
         else None,
         entities=list(
             map(
+                # pylint: disable=unnecessary-lambda
                 lambda e: Transaction_from_json(requester, e),
                 obj["account_to_transactions_connection_entities"],
             )

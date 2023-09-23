@@ -39,6 +39,7 @@ def from_json(
         count=obj["account_to_channels_connection_count"],
         entities=list(
             map(
+                # pylint: disable=unnecessary-lambda
                 lambda e: Channel_from_json(requester, e),
                 obj["account_to_channels_connection_entities"],
             )

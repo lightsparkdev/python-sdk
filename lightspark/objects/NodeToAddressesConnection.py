@@ -43,6 +43,7 @@ def from_json(
         count=obj["node_to_addresses_connection_count"],
         entities=list(
             map(
+                # pylint: disable=unnecessary-lambda
                 lambda e: NodeAddress_from_json(requester, e),
                 obj["node_to_addresses_connection_entities"],
             )

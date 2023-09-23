@@ -5,7 +5,7 @@ query RecoverNodeSigningKey(
     $node_id: ID!
 ) {
     entity(id: $node_id) {
-        ... on LightsparkNode {
+        ... on LightsparkNodeWithOSK {
             encrypted_signing_private_key {
                 encrypted_value
                 cipher

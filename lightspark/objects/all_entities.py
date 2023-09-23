@@ -66,6 +66,22 @@ from lightspark.objects.LightsparkNodeOwner import LightsparkNodeOwner
 from lightspark.objects.LightsparkNodeOwner import (
     from_json as LightsparkNodeOwner_from_json,
 )
+from lightspark.objects.LightsparkNodeWithOSK import (
+    FRAGMENT as LightsparkNodeWithOSKFragment,
+)
+from lightspark.objects.LightsparkNodeWithOSK import LightsparkNodeWithOSK
+from lightspark.objects.LightsparkNodeWithOSK import (
+    from_json as LightsparkNodeWithOSK_from_json,
+)
+from lightspark.objects.LightsparkNodeWithRemoteSigning import (
+    FRAGMENT as LightsparkNodeWithRemoteSigningFragment,
+)
+from lightspark.objects.LightsparkNodeWithRemoteSigning import (
+    LightsparkNodeWithRemoteSigning,
+)
+from lightspark.objects.LightsparkNodeWithRemoteSigning import (
+    from_json as LightsparkNodeWithRemoteSigning_from_json,
+)
 from lightspark.objects.Node import FRAGMENT as NodeFragment
 from lightspark.objects.Node import Node
 from lightspark.objects.Node import from_json as Node_from_json
@@ -92,6 +108,12 @@ from lightspark.objects.RoutingTransaction import RoutingTransaction
 from lightspark.objects.RoutingTransaction import (
     from_json as RoutingTransaction_from_json,
 )
+from lightspark.objects.Signable import FRAGMENT as SignableFragment
+from lightspark.objects.Signable import Signable
+from lightspark.objects.Signable import from_json as Signable_from_json
+from lightspark.objects.SignablePayload import FRAGMENT as SignablePayloadFragment
+from lightspark.objects.SignablePayload import SignablePayload
+from lightspark.objects.SignablePayload import from_json as SignablePayload_from_json
 from lightspark.objects.Transaction import FRAGMENT as TransactionFragment
 from lightspark.objects.Transaction import Transaction
 from lightspark.objects.Transaction import from_json as Transaction_from_json
@@ -171,6 +193,14 @@ ALL_QUERIES: Mapping[Type, str] = {
             ...LightsparkNodeOwnerFragment
         }
 """,
+    LightsparkNodeWithOSK: """        ... on LightsparkNodeWithOSK {
+            ...LightsparkNodeWithOSKFragment
+        }
+""",
+    LightsparkNodeWithRemoteSigning: """        ... on LightsparkNodeWithRemoteSigning {
+            ...LightsparkNodeWithRemoteSigningFragment
+        }
+""",
     Node: """        ... on Node {
             ...NodeFragment
         }
@@ -193,6 +223,14 @@ ALL_QUERIES: Mapping[Type, str] = {
 """,
     RoutingTransaction: """        ... on RoutingTransaction {
             ...RoutingTransactionFragment
+        }
+""",
+    Signable: """        ... on Signable {
+            ...SignableFragment
+        }
+""",
+    SignablePayload: """        ... on SignablePayload {
+            ...SignablePayloadFragment
         }
 """,
     Transaction: """        ... on Transaction {
@@ -228,12 +266,16 @@ ALL_FRAGMENTS: Mapping[Type, str] = {
     LightningTransaction: LightningTransactionFragment,
     LightsparkNode: LightsparkNodeFragment,
     LightsparkNodeOwner: LightsparkNodeOwnerFragment,
+    LightsparkNodeWithOSK: LightsparkNodeWithOSKFragment,
+    LightsparkNodeWithRemoteSigning: LightsparkNodeWithRemoteSigningFragment,
     Node: NodeFragment,
     OnChainTransaction: OnChainTransactionFragment,
     OutgoingPayment: OutgoingPaymentFragment,
     OutgoingPaymentAttempt: OutgoingPaymentAttemptFragment,
     PaymentRequest: PaymentRequestFragment,
     RoutingTransaction: RoutingTransactionFragment,
+    Signable: SignableFragment,
+    SignablePayload: SignablePayloadFragment,
     Transaction: TransactionFragment,
     Wallet: WalletFragment,
     Withdrawal: WithdrawalFragment,
@@ -254,12 +296,16 @@ ALL_JSON_LOADERS: Mapping[Type, Callable] = {
     LightningTransaction: LightningTransaction_from_json,
     LightsparkNode: LightsparkNode_from_json,
     LightsparkNodeOwner: LightsparkNodeOwner_from_json,
+    LightsparkNodeWithOSK: LightsparkNodeWithOSK_from_json,
+    LightsparkNodeWithRemoteSigning: LightsparkNodeWithRemoteSigning_from_json,
     Node: Node_from_json,
     OnChainTransaction: OnChainTransaction_from_json,
     OutgoingPayment: OutgoingPayment_from_json,
     OutgoingPaymentAttempt: OutgoingPaymentAttempt_from_json,
     PaymentRequest: PaymentRequest_from_json,
     RoutingTransaction: RoutingTransaction_from_json,
+    Signable: Signable_from_json,
+    SignablePayload: SignablePayload_from_json,
     Transaction: Transaction_from_json,
     Wallet: Wallet_from_json,
     Withdrawal: Withdrawal_from_json,

@@ -1,5 +1,8 @@
 # Changelog
 
+# v2.0.0
+- Add support for remote signing.
+
 # v1.4.4
 
 - Fix parsing of the pay_uma_invoice response

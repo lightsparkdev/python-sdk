@@ -1,16 +1,13 @@
 # Copyright ©, 2022-present, Lightspark Group, Inc. - All Rights Reserved
 
 from dataclasses import dataclass
-from typing import Any, List, Mapping, Optional
+from typing import Any, List, Mapping
 
-from lightspark.objects.LightsparkNodePurpose import LightsparkNodePurpose
 from lightspark.requests.requester import Requester
-from lightspark.utils.enums import parse_enum_optional
 
 from .Connection import Connection
 from .LightsparkNode import LightsparkNode
 from .LightsparkNode import from_json as LightsparkNode_from_json
-from .LightsparkNodePurpose import LightsparkNodePurpose
 from .PageInfo import PageInfo
 from .PageInfo import from_json as PageInfo_from_json
 
@@ -26,9 +23,6 @@ class AccountToNodesConnection(Connection):
 
     page_info: PageInfo
     """An object that holds pagination information about the objects in this connection."""
-
-    purpose: Optional[LightsparkNodePurpose]
-    """The main purpose for the selected set of nodes. It is automatically determined from the nodes that are selected in this connection and is used for optimization purposes, as well as to determine the variation of the UI that should be presented to the user."""
 
     entities: List[LightsparkNode]
     """The nodes for the current page of this connection."""
@@ -46,7 +40,6 @@ fragment AccountToNodesConnectionFragment on AccountToNodesConnection {
         page_info_start_cursor: start_cursor
         page_info_end_cursor: end_cursor
     }
-    account_to_nodes_connection_purpose: purpose
     account_to_nodes_connection_entities: entities {
         id
     }
@@ -62,11 +55,9 @@ def from_json(requester: Requester, obj: Mapping[str, Any]) -> AccountToNodesCon
         page_info=PageInfo_from_json(
             requester, obj["account_to_nodes_connection_page_info"]
         ),
-        purpose=parse_enum_optional(
-            LightsparkNodePurpose, obj["account_to_nodes_connection_purpose"]
-        ),
         entities=list(
             map(
+                # pylint: disable=unnecessary-lambda
                 lambda e: LightsparkNode_from_json(requester, e),
                 obj["account_to_nodes_connection_entities"],
             )

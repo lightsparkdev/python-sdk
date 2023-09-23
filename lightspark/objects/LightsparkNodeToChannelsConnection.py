@@ -57,6 +57,7 @@ def from_json(
         ),
         entities=list(
             map(
+                # pylint: disable=unnecessary-lambda
                 lambda e: Channel_from_json(requester, e),
                 obj["lightspark_node_to_channels_connection_entities"],
             )

@@ -33,6 +33,7 @@ def from_json(
         requester=requester,
         payments=list(
             map(
+                # pylint: disable=unnecessary-lambda
                 lambda e: OutgoingPayment_from_json(requester, e),
                 obj["outgoing_payments_for_invoice_query_output_payments"],
             )

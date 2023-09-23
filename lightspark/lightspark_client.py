@@ -81,6 +81,7 @@ from lightspark.scripts.screen_node import SCREEN_NODE_MUTATION
 from lightspark.scripts.send_payment import SEND_PAYMENT_MUTATION
 from lightspark.utils.crypto import decrypt_private_key
 from lightspark.utils.enums import parse_enum
+from lightspark.utils.signing_key import SigningKey, Secp256k1SigningKey, RSASigningKey
 
 logger = logging.getLogger("lightspark")
 
@@ -90,7 +91,7 @@ ENTITY = TypeVar("ENTITY", bound=Entity)
 @dataclass
 class LightsparkSyncClient:
     _requester: Requester
-    _node_private_keys: Dict[str, bytes]
+    _node_private_keys: Dict[str, SigningKey]
 
     def __init__(
         self,
@@ -410,11 +411,11 @@ class LightsparkSyncClient:
             self._requester, json["lightning_fee_estimate_for_node"]
         ).fee_estimate
 
-    def load_node_signing_key(self, node_id: str, signing_key: bytes) -> None:
+    def load_node_signing_key(self, node_id: str, signing_key: SigningKey) -> None:
         logger.info("Loading the signing key for node %s", node_id)
         self._node_private_keys[node_id] = signing_key
 
-    def recover_node_signing_key(self, node_id: str, node_password: str) -> bytes:
+    def recover_node_signing_key(self, node_id: str, node_password: str) -> SigningKey:
         logger.info("Recovering the signing key for node %s", node_id)
         json = self._requester.execute_graphql(
             RECOVER_NODE_SIGNING_KEY_QUERY,
@@ -431,8 +432,16 @@ class LightsparkSyncClient:
             password=node_password,
         )
 
-        self.load_node_signing_key(node_id=node_id, signing_key=decrypted_private_key)
-        return decrypted_private_key
+        signing_key = RSASigningKey(decrypted_private_key)
+
+        self.load_node_signing_key(node_id=node_id, signing_key=signing_key)
+        return signing_key
+
+    def provide_node_master_seed(
+        self, node_id: str, master_seed: bytes, bitcoin_network: BitcoinNetwork
+    ) -> None:
+        signing_key = Secp256k1SigningKey(master_seed, bitcoin_network)
+        self.load_node_signing_key(node_id=node_id, signing_key=signing_key)
 
     def pay_invoice(
         self,
@@ -518,7 +527,7 @@ class LightsparkSyncClient:
         )
         return parse_enum(RiskRating, json["screen_node"]["rating"])
 
-    def get_signing_key(self, node_id: str) -> bytes:
+    def get_signing_key(self, node_id: str) -> SigningKey:
         if node_id not in self._node_private_keys:
             raise LightsparkException(
                 "SIGNING_ERROR",

@@ -46,7 +46,6 @@ fragment ConnectionFragment on Connection {
             page_info_start_cursor: start_cursor
             page_info_end_cursor: end_cursor
         }
-        account_to_nodes_connection_purpose: purpose
         account_to_nodes_connection_entities: entities {
             id
         }

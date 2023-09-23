@@ -57,6 +57,7 @@ def from_json(
         ),
         entities=list(
             map(
+                # pylint: disable=unnecessary-lambda
                 lambda e: ApiToken_from_json(requester, e),
                 obj["account_to_api_tokens_connection_entities"],
             )

@@ -50,9 +50,6 @@ class IncomingPayment(LightningTransaction, Transaction, Entity):
     transaction_hash: Optional[str]
     """The hash of this transaction, so it can be uniquely identified on the Lightning Network."""
 
-    origin_id: Optional[str]
-    """If known, the Lightspark node this payment originated from."""
-
     destination_id: str
     """The recipient Lightspark node this payment was sent to."""
 
@@ -136,9 +133,6 @@ fragment IncomingPaymentFragment on IncomingPayment {
         currency_amount_preferred_currency_value_approx: preferred_currency_value_approx
     }
     incoming_payment_transaction_hash: transaction_hash
-    incoming_payment_origin: origin {
-        id
-    }
     incoming_payment_destination: destination {
         id
     }
@@ -172,15 +166,13 @@ def from_json(requester: Requester, obj: Mapping[str, Any]) -> IncomingPayment:
         resolved_at=obj["incoming_payment_resolved_at"],
         amount=CurrencyAmount_from_json(requester, obj["incoming_payment_amount"]),
         transaction_hash=obj["incoming_payment_transaction_hash"],
-        origin_id=obj["incoming_payment_origin"]["id"]
-        if obj["incoming_payment_origin"]
-        else None,
         destination_id=obj["incoming_payment_destination"]["id"],
         payment_request_id=obj["incoming_payment_payment_request"]["id"]
         if obj["incoming_payment_payment_request"]
         else None,
         uma_post_transaction_data=list(
             map(
+                # pylint: disable=unnecessary-lambda
                 lambda e: PostTransactionData_from_json(requester, e),
                 obj["incoming_payment_uma_post_transaction_data"],
             )
