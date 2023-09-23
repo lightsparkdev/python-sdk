@@ -2,6 +2,14 @@
 
 The Lightspark Python SDK provides a convenient way to interact with the Lightspark services from applications written in the Python language.
 
+## Installation
+
+To install the SDK, simply run:
+
+```bash
+pip install lightspark
+```
+
 ## Documentation
 
 The documentation for this SDK (installation, usage, etc.) is available at https://app.lightspark.com/docs/sdk
