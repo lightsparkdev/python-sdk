@@ -1,5 +1,8 @@
 # Changelog
 
+# v2.1.1
+- Update dependencies.
+
 # v2.1.0
 - Remove UMA from lightspark SDK. Go install from https://pypi.org/project/uma-sdk/ instead.
 
