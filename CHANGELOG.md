@@ -1,5 +1,8 @@
 # Changelog
 
+# v2.1.2
+- Fix a signing key bug.
+
 # v2.1.1
 - Update dependencies.
 

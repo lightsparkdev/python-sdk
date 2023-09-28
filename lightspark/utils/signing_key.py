@@ -45,10 +45,10 @@ class Secp256k1SigningKey(SigningKey):
         self.key = signer.derive_private_key("m/5")
 
     def sign_payload(self, payload: bytes) -> str:
-        sig = sign_ecdsa(payload, self.key)
+        sig = sign_ecdsa(payload, bytes.fromhex(self.key))
         return json.dumps(
             {
                 "v": 1,
-                "signature": b64encode(sig).decode("ascii"),
+                "signature": b64encode(bytes(sig)).decode("ascii"),
             }
         )
