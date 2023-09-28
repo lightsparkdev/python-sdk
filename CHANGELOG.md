@@ -1,5 +1,8 @@
 # Changelog
 
+# v2.1.0
+- Remove UMA from lightspark SDK. Go install from https://pypi.org/project/uma-sdk/ instead.
+
 # v2.0.0
 - Add support for remote signing.
 

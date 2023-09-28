@@ -5,7 +5,6 @@ name = "pypi"
 
 [packages]
 cryptography = "*"
-eciespy = "*"
 pyjwt = "*"
 requests = "*"
 lightspark-crypto-python = "*"

@@ -14,7 +14,7 @@ You'll need to bump the version number in `<WEBDEV_ROOT>/python-sdk/lightspark/v
 
 ## Step 2: Changelog
 
-Edit the file `<WEBDEV_ROOT>/sdk/CHANGELOG.md` and add all the relevant changes since the last version.
+Edit the file `<WEBDEV_ROOT>/python-sdk/CHANGELOG.md` and add all the relevant changes since the last version.
 
 ## Step 3: Tag and publish the release
 
