@@ -1,6 +1,6 @@
 # Copyright ©, 2022-present, Lightspark Group, Inc. - All Rights Reserved
 
-from lightspark.objects.OutgoingPayment import FRAGMENT as OutgoingPaymentFragment
+from lightspark.objects.IncomingPayment import FRAGMENT as IncomingPaymentFragment
 
 CREATE_TEST_MODE_PAYMENT_MUTATION = f"""
 mutation CreateTestModePayment(
@@ -13,11 +13,11 @@ mutation CreateTestModePayment(
         encoded_invoice: $encoded_invoice
         amount_msats: $amount_msats
     }}) {{
-        payment {{
-            ...OutgoingPaymentFragment
+        incoming_payment {{
+            ...IncomingPaymentFragment
         }}
     }}
 }}
 
-{OutgoingPaymentFragment}
+{IncomingPaymentFragment}
 """

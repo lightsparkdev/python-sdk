@@ -27,6 +27,8 @@ from lightspark.objects.CurrencyAmount import from_json as CurrencyAmount_from_j
 from lightspark.objects.Entity import Entity
 from lightspark.objects.FeeEstimate import FeeEstimate
 from lightspark.objects.FeeEstimate import from_json as FeeEstimate_from_json
+from lightspark.objects.IncomingPayment import IncomingPayment
+from lightspark.objects.IncomingPayment import from_json as IncomingPayment_from_json
 from lightspark.objects.Invoice import Invoice
 from lightspark.objects.Invoice import from_json as Invoice_from_json
 from lightspark.objects.InvoiceData import from_json as InvoiceData_from_json
@@ -227,7 +229,7 @@ class LightsparkSyncClient:
         local_node_id: str,
         encoded_invoice: str,
         amount_msats: Optional[int] = None,
-    ) -> OutgoingPayment:
+    ) -> IncomingPayment:
         variables: Dict[str, Any] = {
             "local_node_id": local_node_id,
             "encoded_invoice": encoded_invoice,
@@ -240,8 +242,8 @@ class LightsparkSyncClient:
             variables,
             self.get_signing_key(local_node_id),
         )
-        return OutgoingPayment_from_json(
-            self._requester, json["create_test_mode_payment"]["payment"]
+        return IncomingPayment_from_json(
+            self._requester, json["create_test_mode_payment"]["incoming_payment"]
         )
 
     def create_uma_invoice(
