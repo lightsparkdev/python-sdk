@@ -1,15 +1,23 @@
 # Changelog
 
+# v2.1.3
+
+- Add webhook handling example and fix create_test_mode_payment bug.
+
 # v2.1.2
+
 - Fix a signing key bug.
 
 # v2.1.1
+
 - Update dependencies.
 
 # v2.1.0
+
 - Remove UMA from lightspark SDK. Go install from https://pypi.org/project/uma-sdk/ instead.
 
 # v2.0.0
+
 - Add support for remote signing.
 
 # v1.4.4
