@@ -1,22 +1,10 @@
 import logging
-import os
 
 import lightspark
+from lightspark.__tests__.test_config import *
 from lightspark.__tests__.test_utilities import wait_for_payment_completion
 
 log = logging.getLogger("python_sdk_test_regtest_client_funding")
-
-LIGHTSPARK_API_ENDPOINT = os.environ["LIGHTSPARK_API_ENDPOINT"]
-LIGHTSPARK_API_TOKEN_CLIENT_ID = os.environ["LIGHTSPARK_API_TOKEN_CLIENT_ID"]
-LIGHTSPARK_API_TOKEN_CLIENT_SECRET = os.environ["LIGHTSPARK_API_TOKEN_CLIENT_SECRET"]
-LIGHTSPARK_RS_NODE_ID = os.environ["LIGHTSPARK_RS_NODE_ID"]
-LIGHTSPARK_RS_NODE_ID_2 = os.environ["LIGHTSPARK_RS_NODE_ID_2"]
-LIGHTSPARK_API_TOKEN_CLIENT_ID_2 = os.environ["LIGHTSPARK_API_TOKEN_CLIENT_ID_2"]
-LIGHTSPARK_API_TOKEN_CLIENT_SECRET_2 = os.environ[
-    "LIGHTSPARK_API_TOKEN_CLIENT_SECRET_2"
-]
-LIGHTSPARK_RS_MASTER_SEED = os.environ["LIGHTSPARK_RS_MASTER_SEED"]
-LIGHTSPARK_RS_MASTER_SEED_2 = os.environ["LIGHTSPARK_RS_MASTER_SEED_2"]
 
 
 # Create invoice for node 1 and pay it from routing node. You'll need to run this a few
