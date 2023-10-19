@@ -8,6 +8,7 @@ cryptography = "*"
 pyjwt = "*"
 requests = "*"
 lightspark-crypto-python = "*"
+lightspark = "*"
 
 [dev-packages]
 black = "*"
