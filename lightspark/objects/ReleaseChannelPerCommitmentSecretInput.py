@@ -7,10 +7,13 @@ from typing import Any, Mapping
 @dataclass
 class ReleaseChannelPerCommitmentSecretInput:
     channel_id: str
+    """The unique identifier of the channel."""
 
     per_commitment_secret: str
+    """The per-commitment secret to be released."""
 
     per_commitment_index: int
+    """The index associated with the per-commitment secret."""
 
 
 def from_json(obj: Mapping[str, Any]) -> ReleaseChannelPerCommitmentSecretInput:

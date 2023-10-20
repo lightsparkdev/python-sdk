@@ -7,10 +7,13 @@ from typing import Any, Mapping
 @dataclass
 class SignInvoiceInput:
     invoice_id: str
+    """The unique identifier of the invoice to be signed."""
 
     signature: str
+    """The cryptographic signature for the invoice."""
 
     recovery_id: int
+    """The recovery identifier for the signature."""
 
 
 def from_json(obj: Mapping[str, Any]) -> SignInvoiceInput:

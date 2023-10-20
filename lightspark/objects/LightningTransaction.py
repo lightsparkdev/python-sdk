@@ -377,6 +377,7 @@ fragment LightningTransactionFragment on LightningTransaction {
                 currency_amount_preferred_currency_value_approx: preferred_currency_value_approx
             }
         }
+        outgoing_payment_payment_preimage: payment_preimage
     }
     ... on RoutingTransaction {
         __typename
@@ -490,6 +491,7 @@ def from_json(requester: Requester, obj: Mapping[str, Any]) -> LightningTransact
             )
             if obj["outgoing_payment_uma_post_transaction_data"]
             else None,
+            payment_preimage=obj["outgoing_payment_payment_preimage"],
         )
     if obj["__typename"] == "RoutingTransaction":
         # pylint: disable=import-outside-toplevel

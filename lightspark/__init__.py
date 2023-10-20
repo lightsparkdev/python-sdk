@@ -21,6 +21,7 @@ from lightspark.objects.Channel import Channel
 from lightspark.objects.ChannelClosingTransaction import ChannelClosingTransaction
 from lightspark.objects.ChannelFees import ChannelFees
 from lightspark.objects.ChannelOpeningTransaction import ChannelOpeningTransaction
+from lightspark.objects.ChannelSnapshot import ChannelSnapshot
 from lightspark.objects.ChannelStatus import ChannelStatus
 from lightspark.objects.ChannelToTransactionsConnection import (
     ChannelToTransactionsConnection,

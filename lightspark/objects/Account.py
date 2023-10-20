@@ -1136,6 +1136,7 @@ query FetchAccountToTransactionsConnection($entity_id: ID!, $first: Int, $after:
                                 currency_amount_preferred_currency_value_approx: preferred_currency_value_approx
                             }
                         }
+                        outgoing_payment_payment_preimage: payment_preimage
                     }
                     ... on RoutingTransaction {
                         __typename

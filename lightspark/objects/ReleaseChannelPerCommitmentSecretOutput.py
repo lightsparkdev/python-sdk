@@ -11,6 +11,7 @@ class ReleaseChannelPerCommitmentSecretOutput:
     requester: Requester
 
     channel_id: str
+    """The channel object after the per-commitment secret release operation."""
 
 
 FRAGMENT = """
