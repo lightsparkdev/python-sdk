@@ -12,8 +12,10 @@ from .ComplianceProvider import ComplianceProvider
 @dataclass
 class ScreenNodeInput:
     provider: ComplianceProvider
+    """The compliance provider that is going to screen the node. You need to be a customer of the selected provider and store the API key on the Lightspark account setting page."""
 
     node_pubkey: str
+    """The public key of the lightning node that needs to be screened."""
 
 
 def from_json(obj: Mapping[str, Any]) -> ScreenNodeInput:

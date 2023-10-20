@@ -7,8 +7,10 @@ from typing import Any, Mapping
 @dataclass
 class IdAndSignature:
     id: str
+    """The id of the message."""
 
     signature: str
+    """The signature of the message."""
 
 
 def from_json(obj: Mapping[str, Any]) -> IdAndSignature:

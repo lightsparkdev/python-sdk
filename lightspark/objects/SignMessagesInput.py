@@ -10,6 +10,7 @@ from .IdAndSignature import from_json as IdAndSignature_from_json
 @dataclass
 class SignMessagesInput:
     signatures: List[IdAndSignature]
+    """The list of the message ids and signatures."""
 
 
 def from_json(obj: Mapping[str, Any]) -> SignMessagesInput:

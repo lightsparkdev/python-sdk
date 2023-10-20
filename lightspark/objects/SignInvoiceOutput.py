@@ -11,6 +11,7 @@ class SignInvoiceOutput:
     requester: Requester
 
     invoice_id: str
+    """ The signed invoice object."""
 
 
 FRAGMENT = """

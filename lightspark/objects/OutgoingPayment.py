@@ -75,6 +75,9 @@ class OutgoingPayment(LightningTransaction, Transaction, Entity):
 
     uma_post_transaction_data: Optional[List[PostTransactionData]]
     """The post transaction data which can be used in KYT payment registration."""
+
+    payment_preimage: Optional[str]
+    """The preimage of the payment."""
     typename: str
 
     def get_attempts(
@@ -122,6 +125,33 @@ query FetchOutgoingPaymentToAttemptsConnection($entity_id: ID!, $first: Int, $af
                     }
                     outgoing_payment_attempt_outgoing_payment: outgoing_payment {
                         id
+                    }
+                    outgoing_payment_attempt_channel_snapshot: channel_snapshot {
+                        __typename
+                        channel_snapshot_local_balance: local_balance {
+                            __typename
+                            currency_amount_original_value: original_value
+                            currency_amount_original_unit: original_unit
+                            currency_amount_preferred_currency_unit: preferred_currency_unit
+                            currency_amount_preferred_currency_value_rounded: preferred_currency_value_rounded
+                            currency_amount_preferred_currency_value_approx: preferred_currency_value_approx
+                        }
+                        channel_snapshot_local_unsettled_balance: local_unsettled_balance {
+                            __typename
+                            currency_amount_original_value: original_value
+                            currency_amount_original_unit: original_unit
+                            currency_amount_preferred_currency_unit: preferred_currency_unit
+                            currency_amount_preferred_currency_value_rounded: preferred_currency_value_rounded
+                            currency_amount_preferred_currency_value_approx: preferred_currency_value_approx
+                        }
+                        channel_snapshot_local_channel_reserve: local_channel_reserve {
+                            __typename
+                            currency_amount_original_value: original_value
+                            currency_amount_original_unit: original_unit
+                            currency_amount_preferred_currency_unit: preferred_currency_unit
+                            currency_amount_preferred_currency_value_rounded: preferred_currency_value_rounded
+                            currency_amount_preferred_currency_value_approx: preferred_currency_value_approx
+                        }
                     }
                 }
             }
@@ -423,6 +453,7 @@ fragment OutgoingPaymentFragment on OutgoingPayment {
             currency_amount_preferred_currency_value_approx: preferred_currency_value_approx
         }
     }
+    outgoing_payment_payment_preimage: payment_preimage
 }
 """
 
@@ -467,4 +498,5 @@ def from_json(requester: Requester, obj: Mapping[str, Any]) -> OutgoingPayment:
         )
         if obj["outgoing_payment_uma_post_transaction_data"]
         else None,
+        payment_preimage=obj["outgoing_payment_payment_preimage"],
     )

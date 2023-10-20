@@ -11,6 +11,7 @@ class ReleasePaymentPreimageOutput:
     requester: Requester
 
     invoice_id: str
+    """The invoice of the transaction."""
 
 
 FRAGMENT = """

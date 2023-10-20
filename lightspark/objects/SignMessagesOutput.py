@@ -14,6 +14,7 @@ class SignMessagesOutput:
     requester: Requester
 
     signed_payloads: List[SignablePayload]
+    """The list of signed payloads."""
 
 
 FRAGMENT = """
