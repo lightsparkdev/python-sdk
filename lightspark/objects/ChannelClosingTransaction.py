@@ -106,10 +106,18 @@ def from_json(
         requester=requester,
         typename="ChannelClosingTransaction",
         id=obj["channel_closing_transaction_id"],
-        created_at=obj["channel_closing_transaction_created_at"],
-        updated_at=obj["channel_closing_transaction_updated_at"],
+        created_at=datetime.fromisoformat(
+            obj["channel_closing_transaction_created_at"]
+        ),
+        updated_at=datetime.fromisoformat(
+            obj["channel_closing_transaction_updated_at"]
+        ),
         status=parse_enum(TransactionStatus, obj["channel_closing_transaction_status"]),
-        resolved_at=obj["channel_closing_transaction_resolved_at"],
+        resolved_at=datetime.fromisoformat(
+            obj["channel_closing_transaction_resolved_at"]
+        )
+        if obj["channel_closing_transaction_resolved_at"]
+        else None,
         amount=CurrencyAmount_from_json(
             requester, obj["channel_closing_transaction_amount"]
         ),

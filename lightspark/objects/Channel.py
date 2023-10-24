@@ -263,8 +263,8 @@ def from_json(requester: Requester, obj: Mapping[str, Any]) -> Channel:
         requester=requester,
         typename="Channel",
         id=obj["channel_id"],
-        created_at=obj["channel_created_at"],
-        updated_at=obj["channel_updated_at"],
+        created_at=datetime.fromisoformat(obj["channel_created_at"]),
+        updated_at=datetime.fromisoformat(obj["channel_updated_at"]),
         funding_transaction_id=obj["channel_funding_transaction"]["id"]
         if obj["channel_funding_transaction"]
         else None,

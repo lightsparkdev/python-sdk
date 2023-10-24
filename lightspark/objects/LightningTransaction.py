@@ -428,10 +428,12 @@ def from_json(requester: Requester, obj: Mapping[str, Any]) -> LightningTransact
             requester=requester,
             typename="IncomingPayment",
             id=obj["incoming_payment_id"],
-            created_at=obj["incoming_payment_created_at"],
-            updated_at=obj["incoming_payment_updated_at"],
+            created_at=datetime.fromisoformat(obj["incoming_payment_created_at"]),
+            updated_at=datetime.fromisoformat(obj["incoming_payment_updated_at"]),
             status=parse_enum(TransactionStatus, obj["incoming_payment_status"]),
-            resolved_at=obj["incoming_payment_resolved_at"],
+            resolved_at=datetime.fromisoformat(obj["incoming_payment_resolved_at"])
+            if obj["incoming_payment_resolved_at"]
+            else None,
             amount=CurrencyAmount_from_json(requester, obj["incoming_payment_amount"]),
             transaction_hash=obj["incoming_payment_transaction_hash"],
             destination_id=obj["incoming_payment_destination"]["id"],
@@ -456,10 +458,12 @@ def from_json(requester: Requester, obj: Mapping[str, Any]) -> LightningTransact
             requester=requester,
             typename="OutgoingPayment",
             id=obj["outgoing_payment_id"],
-            created_at=obj["outgoing_payment_created_at"],
-            updated_at=obj["outgoing_payment_updated_at"],
+            created_at=datetime.fromisoformat(obj["outgoing_payment_created_at"]),
+            updated_at=datetime.fromisoformat(obj["outgoing_payment_updated_at"]),
             status=parse_enum(TransactionStatus, obj["outgoing_payment_status"]),
-            resolved_at=obj["outgoing_payment_resolved_at"],
+            resolved_at=datetime.fromisoformat(obj["outgoing_payment_resolved_at"])
+            if obj["outgoing_payment_resolved_at"]
+            else None,
             amount=CurrencyAmount_from_json(requester, obj["outgoing_payment_amount"]),
             transaction_hash=obj["outgoing_payment_transaction_hash"],
             origin_id=obj["outgoing_payment_origin"]["id"],
@@ -501,10 +505,12 @@ def from_json(requester: Requester, obj: Mapping[str, Any]) -> LightningTransact
             requester=requester,
             typename="RoutingTransaction",
             id=obj["routing_transaction_id"],
-            created_at=obj["routing_transaction_created_at"],
-            updated_at=obj["routing_transaction_updated_at"],
+            created_at=datetime.fromisoformat(obj["routing_transaction_created_at"]),
+            updated_at=datetime.fromisoformat(obj["routing_transaction_updated_at"]),
             status=parse_enum(TransactionStatus, obj["routing_transaction_status"]),
-            resolved_at=obj["routing_transaction_resolved_at"],
+            resolved_at=datetime.fromisoformat(obj["routing_transaction_resolved_at"])
+            if obj["routing_transaction_resolved_at"]
+            else None,
             amount=CurrencyAmount_from_json(
                 requester, obj["routing_transaction_amount"]
             ),

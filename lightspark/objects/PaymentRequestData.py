@@ -1,6 +1,7 @@
 # Copyright ©, 2022-present, Lightspark Group, Inc. - All Rights Reserved
 
 from dataclasses import dataclass
+from datetime import datetime
 from typing import Any, Mapping
 
 from lightspark.exceptions import LightsparkException
@@ -284,8 +285,8 @@ def from_json(requester: Requester, obj: Mapping[str, Any]) -> PaymentRequestDat
             ),
             payment_hash=obj["invoice_data_payment_hash"],
             amount=CurrencyAmount_from_json(requester, obj["invoice_data_amount"]),
-            created_at=obj["invoice_data_created_at"],
-            expires_at=obj["invoice_data_expires_at"],
+            created_at=datetime.fromisoformat(obj["invoice_data_created_at"]),
+            expires_at=datetime.fromisoformat(obj["invoice_data_expires_at"]),
             memo=obj["invoice_data_memo"],
             destination=Node_from_json(requester, obj["invoice_data_destination"]),
         )

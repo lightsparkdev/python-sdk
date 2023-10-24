@@ -39,6 +39,6 @@ def from_json(requester: Requester, obj: Mapping[str, Any]) -> Signable:
         requester=requester,
         typename="Signable",
         id=obj["signable_id"],
-        created_at=obj["signable_created_at"],
-        updated_at=obj["signable_updated_at"],
+        created_at=datetime.fromisoformat(obj["signable_created_at"]),
+        updated_at=datetime.fromisoformat(obj["signable_updated_at"]),
     )

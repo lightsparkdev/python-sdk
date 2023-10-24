@@ -295,8 +295,8 @@ def from_json(requester: Requester, obj: Mapping[str, Any]) -> InvoiceData:
         bitcoin_network=parse_enum(BitcoinNetwork, obj["invoice_data_bitcoin_network"]),
         payment_hash=obj["invoice_data_payment_hash"],
         amount=CurrencyAmount_from_json(requester, obj["invoice_data_amount"]),
-        created_at=obj["invoice_data_created_at"],
-        expires_at=obj["invoice_data_expires_at"],
+        created_at=datetime.fromisoformat(obj["invoice_data_created_at"]),
+        expires_at=datetime.fromisoformat(obj["invoice_data_expires_at"]),
         memo=obj["invoice_data_memo"],
         destination=Node_from_json(requester, obj["invoice_data_destination"]),
     )

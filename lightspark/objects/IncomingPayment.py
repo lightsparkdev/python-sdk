@@ -160,10 +160,12 @@ def from_json(requester: Requester, obj: Mapping[str, Any]) -> IncomingPayment:
         requester=requester,
         typename="IncomingPayment",
         id=obj["incoming_payment_id"],
-        created_at=obj["incoming_payment_created_at"],
-        updated_at=obj["incoming_payment_updated_at"],
+        created_at=datetime.fromisoformat(obj["incoming_payment_created_at"]),
+        updated_at=datetime.fromisoformat(obj["incoming_payment_updated_at"]),
         status=parse_enum(TransactionStatus, obj["incoming_payment_status"]),
-        resolved_at=obj["incoming_payment_resolved_at"],
+        resolved_at=datetime.fromisoformat(obj["incoming_payment_resolved_at"])
+        if obj["incoming_payment_resolved_at"]
+        else None,
         amount=CurrencyAmount_from_json(requester, obj["incoming_payment_amount"]),
         transaction_hash=obj["incoming_payment_transaction_hash"],
         destination_id=obj["incoming_payment_destination"]["id"],
