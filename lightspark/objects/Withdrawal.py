@@ -104,10 +104,12 @@ def from_json(requester: Requester, obj: Mapping[str, Any]) -> Withdrawal:
         requester=requester,
         typename="Withdrawal",
         id=obj["withdrawal_id"],
-        created_at=obj["withdrawal_created_at"],
-        updated_at=obj["withdrawal_updated_at"],
+        created_at=datetime.fromisoformat(obj["withdrawal_created_at"]),
+        updated_at=datetime.fromisoformat(obj["withdrawal_updated_at"]),
         status=parse_enum(TransactionStatus, obj["withdrawal_status"]),
-        resolved_at=obj["withdrawal_resolved_at"],
+        resolved_at=datetime.fromisoformat(obj["withdrawal_resolved_at"])
+        if obj["withdrawal_resolved_at"]
+        else None,
         amount=CurrencyAmount_from_json(requester, obj["withdrawal_amount"]),
         transaction_hash=obj["withdrawal_transaction_hash"],
         fees=CurrencyAmount_from_json(requester, obj["withdrawal_fees"])

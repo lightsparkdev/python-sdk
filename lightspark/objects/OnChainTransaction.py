@@ -206,12 +206,20 @@ def from_json(requester: Requester, obj: Mapping[str, Any]) -> OnChainTransactio
             requester=requester,
             typename="ChannelClosingTransaction",
             id=obj["channel_closing_transaction_id"],
-            created_at=obj["channel_closing_transaction_created_at"],
-            updated_at=obj["channel_closing_transaction_updated_at"],
+            created_at=datetime.fromisoformat(
+                obj["channel_closing_transaction_created_at"]
+            ),
+            updated_at=datetime.fromisoformat(
+                obj["channel_closing_transaction_updated_at"]
+            ),
             status=parse_enum(
                 TransactionStatus, obj["channel_closing_transaction_status"]
             ),
-            resolved_at=obj["channel_closing_transaction_resolved_at"],
+            resolved_at=datetime.fromisoformat(
+                obj["channel_closing_transaction_resolved_at"]
+            )
+            if obj["channel_closing_transaction_resolved_at"]
+            else None,
             amount=CurrencyAmount_from_json(
                 requester, obj["channel_closing_transaction_amount"]
             ),
@@ -241,12 +249,20 @@ def from_json(requester: Requester, obj: Mapping[str, Any]) -> OnChainTransactio
             requester=requester,
             typename="ChannelOpeningTransaction",
             id=obj["channel_opening_transaction_id"],
-            created_at=obj["channel_opening_transaction_created_at"],
-            updated_at=obj["channel_opening_transaction_updated_at"],
+            created_at=datetime.fromisoformat(
+                obj["channel_opening_transaction_created_at"]
+            ),
+            updated_at=datetime.fromisoformat(
+                obj["channel_opening_transaction_updated_at"]
+            ),
             status=parse_enum(
                 TransactionStatus, obj["channel_opening_transaction_status"]
             ),
-            resolved_at=obj["channel_opening_transaction_resolved_at"],
+            resolved_at=datetime.fromisoformat(
+                obj["channel_opening_transaction_resolved_at"]
+            )
+            if obj["channel_opening_transaction_resolved_at"]
+            else None,
             amount=CurrencyAmount_from_json(
                 requester, obj["channel_opening_transaction_amount"]
             ),
@@ -274,10 +290,12 @@ def from_json(requester: Requester, obj: Mapping[str, Any]) -> OnChainTransactio
             requester=requester,
             typename="Deposit",
             id=obj["deposit_id"],
-            created_at=obj["deposit_created_at"],
-            updated_at=obj["deposit_updated_at"],
+            created_at=datetime.fromisoformat(obj["deposit_created_at"]),
+            updated_at=datetime.fromisoformat(obj["deposit_updated_at"]),
             status=parse_enum(TransactionStatus, obj["deposit_status"]),
-            resolved_at=obj["deposit_resolved_at"],
+            resolved_at=datetime.fromisoformat(obj["deposit_resolved_at"])
+            if obj["deposit_resolved_at"]
+            else None,
             amount=CurrencyAmount_from_json(requester, obj["deposit_amount"]),
             transaction_hash=obj["deposit_transaction_hash"],
             fees=CurrencyAmount_from_json(requester, obj["deposit_fees"])
@@ -297,10 +315,12 @@ def from_json(requester: Requester, obj: Mapping[str, Any]) -> OnChainTransactio
             requester=requester,
             typename="Withdrawal",
             id=obj["withdrawal_id"],
-            created_at=obj["withdrawal_created_at"],
-            updated_at=obj["withdrawal_updated_at"],
+            created_at=datetime.fromisoformat(obj["withdrawal_created_at"]),
+            updated_at=datetime.fromisoformat(obj["withdrawal_updated_at"]),
             status=parse_enum(TransactionStatus, obj["withdrawal_status"]),
-            resolved_at=obj["withdrawal_resolved_at"],
+            resolved_at=datetime.fromisoformat(obj["withdrawal_resolved_at"])
+            if obj["withdrawal_resolved_at"]
+            else None,
             amount=CurrencyAmount_from_json(requester, obj["withdrawal_amount"]),
             transaction_hash=obj["withdrawal_transaction_hash"],
             fees=CurrencyAmount_from_json(requester, obj["withdrawal_fees"])

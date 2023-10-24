@@ -188,8 +188,8 @@ def from_json(requester: Requester, obj: Mapping[str, Any]) -> OutgoingPaymentAt
         requester=requester,
         typename="OutgoingPaymentAttempt",
         id=obj["outgoing_payment_attempt_id"],
-        created_at=obj["outgoing_payment_attempt_created_at"],
-        updated_at=obj["outgoing_payment_attempt_updated_at"],
+        created_at=datetime.fromisoformat(obj["outgoing_payment_attempt_created_at"]),
+        updated_at=datetime.fromisoformat(obj["outgoing_payment_attempt_updated_at"]),
         status=parse_enum(
             OutgoingPaymentAttemptStatus, obj["outgoing_payment_attempt_status"]
         ),
@@ -197,7 +197,9 @@ def from_json(requester: Requester, obj: Mapping[str, Any]) -> OutgoingPaymentAt
             HtlcAttemptFailureCode, obj["outgoing_payment_attempt_failure_code"]
         ),
         failure_source_index=obj["outgoing_payment_attempt_failure_source_index"],
-        resolved_at=obj["outgoing_payment_attempt_resolved_at"],
+        resolved_at=datetime.fromisoformat(obj["outgoing_payment_attempt_resolved_at"])
+        if obj["outgoing_payment_attempt_resolved_at"]
+        else None,
         amount=CurrencyAmount_from_json(
             requester, obj["outgoing_payment_attempt_amount"]
         )

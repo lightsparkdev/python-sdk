@@ -228,8 +228,8 @@ def from_json(requester: Requester, obj: Mapping[str, Any]) -> WithdrawalRequest
         requester=requester,
         typename="WithdrawalRequest",
         id=obj["withdrawal_request_id"],
-        created_at=obj["withdrawal_request_created_at"],
-        updated_at=obj["withdrawal_request_updated_at"],
+        created_at=datetime.fromisoformat(obj["withdrawal_request_created_at"]),
+        updated_at=datetime.fromisoformat(obj["withdrawal_request_updated_at"]),
         amount=CurrencyAmount_from_json(requester, obj["withdrawal_request_amount"]),
         estimated_amount=CurrencyAmount_from_json(
             requester, obj["withdrawal_request_estimated_amount"]
@@ -241,7 +241,9 @@ def from_json(requester: Requester, obj: Mapping[str, Any]) -> WithdrawalRequest
             WithdrawalMode, obj["withdrawal_request_withdrawal_mode"]
         ),
         status=parse_enum(WithdrawalRequestStatus, obj["withdrawal_request_status"]),
-        completed_at=obj["withdrawal_request_completed_at"],
+        completed_at=datetime.fromisoformat(obj["withdrawal_request_completed_at"])
+        if obj["withdrawal_request_completed_at"]
+        else None,
         withdrawal_id=obj["withdrawal_request_withdrawal"]["id"]
         if obj["withdrawal_request_withdrawal"]
         else None,

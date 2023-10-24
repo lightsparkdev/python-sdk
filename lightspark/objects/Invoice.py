@@ -304,8 +304,8 @@ def from_json(requester: Requester, obj: Mapping[str, Any]) -> Invoice:
         requester=requester,
         typename="Invoice",
         id=obj["invoice_id"],
-        created_at=obj["invoice_created_at"],
-        updated_at=obj["invoice_updated_at"],
+        created_at=datetime.fromisoformat(obj["invoice_created_at"]),
+        updated_at=datetime.fromisoformat(obj["invoice_updated_at"]),
         data=InvoiceData_from_json(requester, obj["invoice_data"]),
         status=parse_enum(PaymentRequestStatus, obj["invoice_status"]),
         amount_paid=CurrencyAmount_from_json(requester, obj["invoice_amount_paid"])

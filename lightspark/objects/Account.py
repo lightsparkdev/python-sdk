@@ -1617,7 +1617,7 @@ def from_json(requester: Requester, obj: Mapping[str, Any]) -> Account:
         requester=requester,
         typename="Account",
         id=obj["account_id"],
-        created_at=obj["account_created_at"],
-        updated_at=obj["account_updated_at"],
+        created_at=datetime.fromisoformat(obj["account_created_at"]),
+        updated_at=datetime.fromisoformat(obj["account_updated_at"]),
         name=obj["account_name"],
     )

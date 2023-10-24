@@ -111,10 +111,12 @@ def from_json(requester: Requester, obj: Mapping[str, Any]) -> RoutingTransactio
         requester=requester,
         typename="RoutingTransaction",
         id=obj["routing_transaction_id"],
-        created_at=obj["routing_transaction_created_at"],
-        updated_at=obj["routing_transaction_updated_at"],
+        created_at=datetime.fromisoformat(obj["routing_transaction_created_at"]),
+        updated_at=datetime.fromisoformat(obj["routing_transaction_updated_at"]),
         status=parse_enum(TransactionStatus, obj["routing_transaction_status"]),
-        resolved_at=obj["routing_transaction_resolved_at"],
+        resolved_at=datetime.fromisoformat(obj["routing_transaction_resolved_at"])
+        if obj["routing_transaction_resolved_at"]
+        else None,
         amount=CurrencyAmount_from_json(requester, obj["routing_transaction_amount"]),
         transaction_hash=obj["routing_transaction_transaction_hash"],
         incoming_channel_id=obj["routing_transaction_incoming_channel"]["id"]

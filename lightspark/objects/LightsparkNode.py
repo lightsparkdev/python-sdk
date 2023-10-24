@@ -465,8 +465,12 @@ def from_json(requester: Requester, obj: Mapping[str, Any]) -> LightsparkNode:
             requester=requester,
             typename="LightsparkNodeWithOSK",
             id=obj["lightspark_node_with_o_s_k_id"],
-            created_at=obj["lightspark_node_with_o_s_k_created_at"],
-            updated_at=obj["lightspark_node_with_o_s_k_updated_at"],
+            created_at=datetime.fromisoformat(
+                obj["lightspark_node_with_o_s_k_created_at"]
+            ),
+            updated_at=datetime.fromisoformat(
+                obj["lightspark_node_with_o_s_k_updated_at"]
+            ),
             alias=obj["lightspark_node_with_o_s_k_alias"],
             bitcoin_network=parse_enum(
                 BitcoinNetwork, obj["lightspark_node_with_o_s_k_bitcoin_network"]
@@ -524,8 +528,12 @@ def from_json(requester: Requester, obj: Mapping[str, Any]) -> LightsparkNode:
             requester=requester,
             typename="LightsparkNodeWithRemoteSigning",
             id=obj["lightspark_node_with_remote_signing_id"],
-            created_at=obj["lightspark_node_with_remote_signing_created_at"],
-            updated_at=obj["lightspark_node_with_remote_signing_updated_at"],
+            created_at=datetime.fromisoformat(
+                obj["lightspark_node_with_remote_signing_created_at"]
+            ),
+            updated_at=datetime.fromisoformat(
+                obj["lightspark_node_with_remote_signing_updated_at"]
+            ),
             alias=obj["lightspark_node_with_remote_signing_alias"],
             bitcoin_network=parse_enum(
                 BitcoinNetwork,

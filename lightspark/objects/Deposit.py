@@ -104,10 +104,12 @@ def from_json(requester: Requester, obj: Mapping[str, Any]) -> Deposit:
         requester=requester,
         typename="Deposit",
         id=obj["deposit_id"],
-        created_at=obj["deposit_created_at"],
-        updated_at=obj["deposit_updated_at"],
+        created_at=datetime.fromisoformat(obj["deposit_created_at"]),
+        updated_at=datetime.fromisoformat(obj["deposit_updated_at"]),
         status=parse_enum(TransactionStatus, obj["deposit_status"]),
-        resolved_at=obj["deposit_resolved_at"],
+        resolved_at=datetime.fromisoformat(obj["deposit_resolved_at"])
+        if obj["deposit_resolved_at"]
+        else None,
         amount=CurrencyAmount_from_json(requester, obj["deposit_amount"]),
         transaction_hash=obj["deposit_transaction_hash"],
         fees=CurrencyAmount_from_json(requester, obj["deposit_fees"])

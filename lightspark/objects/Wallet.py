@@ -995,9 +995,11 @@ def from_json(requester: Requester, obj: Mapping[str, Any]) -> Wallet:
         requester=requester,
         typename="Wallet",
         id=obj["wallet_id"],
-        created_at=obj["wallet_created_at"],
-        updated_at=obj["wallet_updated_at"],
-        last_login_at=obj["wallet_last_login_at"],
+        created_at=datetime.fromisoformat(obj["wallet_created_at"]),
+        updated_at=datetime.fromisoformat(obj["wallet_updated_at"]),
+        last_login_at=datetime.fromisoformat(obj["wallet_last_login_at"])
+        if obj["wallet_last_login_at"]
+        else None,
         balances=Balances_from_json(requester, obj["wallet_balances"])
         if obj["wallet_balances"]
         else None,
