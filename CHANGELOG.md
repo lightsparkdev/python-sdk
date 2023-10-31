@@ -1,5 +1,9 @@
 # Changelog
 
+# v2.2.0
+
+- Add a call to get outgoing payments for an invoice.
+
 # v2.1.3
 
 - Add webhook handling example and fix create_test_mode_payment bug.
