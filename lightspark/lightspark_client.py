@@ -4,7 +4,7 @@ import logging
 from dataclasses import dataclass
 from datetime import datetime, timedelta, timezone
 from hashlib import sha256
-from typing import Any, Dict, Mapping, Optional, Tuple, Type, TypeVar
+from typing import Any, Dict, List, Mapping, Optional, Tuple, Type, TypeVar
 
 import jwt
 from cryptography.hazmat.primitives.asymmetric.ed448 import Ed448PrivateKey
@@ -46,6 +46,7 @@ from lightspark.objects.PaymentDirection import PaymentDirection
 from lightspark.objects.PaymentRequestData import PaymentRequestData
 from lightspark.objects.Permission import Permission
 from lightspark.objects.RiskRating import RiskRating
+from lightspark.objects.TransactionStatus import TransactionStatus
 from lightspark.objects.WithdrawalMode import WithdrawalMode
 from lightspark.objects.WithdrawalRequest import WithdrawalRequest
 from lightspark.objects.WithdrawalRequest import (
@@ -73,6 +74,9 @@ from lightspark.scripts.lightning_fee_estimate_for_invoice import (
 )
 from lightspark.scripts.lightning_fee_estimate_for_node import (
     LIGHTNING_FEE_ESTIMATE_FOR_NODE_QUERY,
+)
+from lightspark.scripts.outgoing_payments_for_invoice import (
+    OUTGOING_PAYMENTS_FOR_INVOICE_QUERY,
 )
 from lightspark.scripts.pay_invoice import PAY_INVOICE_MUTATION
 from lightspark.scripts.pay_uma_invoice import PAY_UMA_INVOICE_MUTATION
@@ -621,3 +625,31 @@ class LightsparkSyncClient:
         return LightningTransaction_from_json(
             self._requester, json["register_payment"]["payment"]
         )
+
+    def outgoing_payments_for_invoice(
+        self,
+        encoded_invoice: str,
+        transaction_statuses: Optional[List[TransactionStatus]] = None,
+    ) -> List[OutgoingPayment]:
+        """
+        Fetches the outgoing payments (if any) which have been made for a given invoice.
+
+        Args:
+            encoded_invoice: The encoded invoice for which to fetch the outgoing payments.
+            transaction_statuses: The statuses of the transactions to fetch. If not specified, all transactions will be fetched.
+        """
+
+        variables: Dict[str, Any] = {"encoded_invoice": encoded_invoice}
+        if transaction_statuses is not None:
+            variables["transaction_statuses"] = transaction_statuses
+        json = self._requester.execute_graphql(
+            OUTGOING_PAYMENTS_FOR_INVOICE_QUERY, variables
+        )
+        if "outgoing_payments_for_invoice" not in json:
+            return []
+        if "payments" not in json["outgoing_payments_for_invoice"]:
+            return []
+        return [
+            OutgoingPayment_from_json(self._requester, payment)
+            for payment in json["outgoing_payments_for_invoice"]["payments"]
+        ]
