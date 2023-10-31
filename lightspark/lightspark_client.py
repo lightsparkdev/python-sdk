@@ -639,7 +639,7 @@ class LightsparkSyncClient:
             transaction_statuses: The statuses of the transactions to fetch. If not specified, all transactions will be fetched.
         """
 
-        variables = {"encoded_invoice": encoded_invoice}
+        variables: Dict[str, Any] = {"encoded_invoice": encoded_invoice}
         if transaction_statuses is not None:
             variables["transaction_statuses"] = transaction_statuses
         json = self._requester.execute_graphql(
