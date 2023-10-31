@@ -240,6 +240,14 @@ payment = client.pay_invoice(
 print(f"Payment to the invoice done with ID = {payment.id}")
 print("")
 
+outgoing_payments = client.outgoing_payments_for_invoice(
+    encoded_invoice=test_invoice,  # replace test_invoice with real encoded invoice in non-test mode
+)
+print(f"Outgoing payments for invoice {test_invoice}:")
+for outgoing_payment in outgoing_payments:
+    print(f"    - {outgoing_payment.id}")
+print("")
+
 # Key Send sample
 #
 # payment = client.send_payment(
