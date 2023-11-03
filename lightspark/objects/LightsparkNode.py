@@ -10,6 +10,8 @@ from lightspark.objects.LightsparkNodeStatus import LightsparkNodeStatus
 from lightspark.requests.requester import Requester
 from lightspark.utils.enums import parse_enum, parse_enum_optional
 
+from .Balances import Balances
+from .Balances import from_json as Balances_from_json
 from .BitcoinNetwork import BitcoinNetwork
 from .BlockchainBalance import BlockchainBalance
 from .BlockchainBalance import from_json as BlockchainBalance_from_json
@@ -85,6 +87,9 @@ class LightsparkNode(Node, Entity):
 
     uma_prescreening_utxos: List[str]
     """The utxos of the channels that are connected to this node. This is used in uma flow for pre-screening."""
+
+    balances: Optional[Balances]
+    """The balances that describe the funds in this node."""
     typename: str
 
     def get_addresses(
@@ -346,6 +351,33 @@ fragment LightsparkNodeFragment on LightsparkNode {
             }
         }
         lightspark_node_with_o_s_k_uma_prescreening_utxos: uma_prescreening_utxos
+        lightspark_node_with_o_s_k_balances: balances {
+            __typename
+            balances_owned_balance: owned_balance {
+                __typename
+                currency_amount_original_value: original_value
+                currency_amount_original_unit: original_unit
+                currency_amount_preferred_currency_unit: preferred_currency_unit
+                currency_amount_preferred_currency_value_rounded: preferred_currency_value_rounded
+                currency_amount_preferred_currency_value_approx: preferred_currency_value_approx
+            }
+            balances_available_to_send_balance: available_to_send_balance {
+                __typename
+                currency_amount_original_value: original_value
+                currency_amount_original_unit: original_unit
+                currency_amount_preferred_currency_unit: preferred_currency_unit
+                currency_amount_preferred_currency_value_rounded: preferred_currency_value_rounded
+                currency_amount_preferred_currency_value_approx: preferred_currency_value_approx
+            }
+            balances_available_to_withdraw_balance: available_to_withdraw_balance {
+                __typename
+                currency_amount_original_value: original_value
+                currency_amount_original_unit: original_unit
+                currency_amount_preferred_currency_unit: preferred_currency_unit
+                currency_amount_preferred_currency_value_rounded: preferred_currency_value_rounded
+                currency_amount_preferred_currency_value_approx: preferred_currency_value_approx
+            }
+        }
         lightspark_node_with_o_s_k_encrypted_signing_private_key: encrypted_signing_private_key {
             __typename
             secret_encrypted_value: encrypted_value
@@ -451,6 +483,33 @@ fragment LightsparkNodeFragment on LightsparkNode {
             }
         }
         lightspark_node_with_remote_signing_uma_prescreening_utxos: uma_prescreening_utxos
+        lightspark_node_with_remote_signing_balances: balances {
+            __typename
+            balances_owned_balance: owned_balance {
+                __typename
+                currency_amount_original_value: original_value
+                currency_amount_original_unit: original_unit
+                currency_amount_preferred_currency_unit: preferred_currency_unit
+                currency_amount_preferred_currency_value_rounded: preferred_currency_value_rounded
+                currency_amount_preferred_currency_value_approx: preferred_currency_value_approx
+            }
+            balances_available_to_send_balance: available_to_send_balance {
+                __typename
+                currency_amount_original_value: original_value
+                currency_amount_original_unit: original_unit
+                currency_amount_preferred_currency_unit: preferred_currency_unit
+                currency_amount_preferred_currency_value_rounded: preferred_currency_value_rounded
+                currency_amount_preferred_currency_value_approx: preferred_currency_value_approx
+            }
+            balances_available_to_withdraw_balance: available_to_withdraw_balance {
+                __typename
+                currency_amount_original_value: original_value
+                currency_amount_original_unit: original_unit
+                currency_amount_preferred_currency_unit: preferred_currency_unit
+                currency_amount_preferred_currency_value_rounded: preferred_currency_value_rounded
+                currency_amount_preferred_currency_value_approx: preferred_currency_value_approx
+            }
+        }
     }
 }
 """
@@ -511,6 +570,11 @@ def from_json(requester: Requester, obj: Mapping[str, Any]) -> LightsparkNode:
             uma_prescreening_utxos=obj[
                 "lightspark_node_with_o_s_k_uma_prescreening_utxos"
             ],
+            balances=Balances_from_json(
+                requester, obj["lightspark_node_with_o_s_k_balances"]
+            )
+            if obj["lightspark_node_with_o_s_k_balances"]
+            else None,
             encrypted_signing_private_key=Secret_from_json(
                 requester,
                 obj["lightspark_node_with_o_s_k_encrypted_signing_private_key"],
@@ -576,6 +640,11 @@ def from_json(requester: Requester, obj: Mapping[str, Any]) -> LightsparkNode:
             uma_prescreening_utxos=obj[
                 "lightspark_node_with_remote_signing_uma_prescreening_utxos"
             ],
+            balances=Balances_from_json(
+                requester, obj["lightspark_node_with_remote_signing_balances"]
+            )
+            if obj["lightspark_node_with_remote_signing_balances"]
+            else None,
         )
     graphql_typename = obj["__typename"]
     raise LightsparkException(
