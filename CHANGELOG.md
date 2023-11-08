@@ -1,5 +1,9 @@
 # Changelog
 
+# v2.3.0
+
+- Add the Balances object to wallets and nodes for a more human-readable view of balances.
+
 # v2.2.0
 
 - Add a call to get outgoing payments for an invoice.
