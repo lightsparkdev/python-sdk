@@ -16,6 +16,16 @@ class OutgoingPaymentsForInvoiceQueryInput:
     statuses: Optional[List[TransactionStatus]]
     """An optional filter to only query outgoing payments of given statuses."""
 
+    def to_json(self) -> Mapping[str, Any]:
+        return {
+            "outgoing_payments_for_invoice_query_input_encoded_invoice": self.encoded_invoice,
+            "outgoing_payments_for_invoice_query_input_statuses": [
+                e.to_json() for e in self.statuses
+            ]
+            if self.statuses
+            else None,
+        }
+
 
 def from_json(obj: Mapping[str, Any]) -> OutgoingPaymentsForInvoiceQueryInput:
     return OutgoingPaymentsForInvoiceQueryInput(

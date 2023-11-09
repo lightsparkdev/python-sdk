@@ -42,6 +42,18 @@ class IncomingPaymentAttempt(Entity):
     """The channel this attempt was made on."""
     typename: str
 
+    def to_json(self) -> Mapping[str, Any]:
+        return {
+            "__typename": "IncomingPaymentAttempt",
+            "incoming_payment_attempt_id": self.id,
+            "incoming_payment_attempt_created_at": self.created_at.isoformat(),
+            "incoming_payment_attempt_updated_at": self.updated_at.isoformat(),
+            "incoming_payment_attempt_status": self.status.value,
+            "incoming_payment_attempt_resolved_at": self.resolved_at.isoformat(),
+            "incoming_payment_attempt_amount": self.amount.to_json(),
+            "incoming_payment_attempt_channel": {"id": self.channel_id},
+        }
+
 
 FRAGMENT = """
 fragment IncomingPaymentAttemptFragment on IncomingPaymentAttempt {

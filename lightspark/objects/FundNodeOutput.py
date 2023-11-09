@@ -15,6 +15,11 @@ class FundNodeOutput:
 
     amount: CurrencyAmount
 
+    def to_json(self) -> Mapping[str, Any]:
+        return {
+            "fund_node_output_amount": self.amount.to_json(),
+        }
+
 
 FRAGMENT = """
 fragment FundNodeOutputFragment on FundNodeOutput {

@@ -15,6 +15,13 @@ class OutgoingPaymentsForInvoiceQueryOutput:
 
     payments: List[OutgoingPayment]
 
+    def to_json(self) -> Mapping[str, Any]:
+        return {
+            "outgoing_payments_for_invoice_query_output_payments": [
+                e.to_json() for e in self.payments
+            ],
+        }
+
 
 FRAGMENT = """
 fragment OutgoingPaymentsForInvoiceQueryOutputFragment on OutgoingPaymentsForInvoiceQueryOutput {

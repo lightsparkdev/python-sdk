@@ -23,6 +23,14 @@ class Signable(Entity):
     """The date and time when the entity was last updated."""
     typename: str
 
+    def to_json(self) -> Mapping[str, Any]:
+        return {
+            "__typename": "Signable",
+            "signable_id": self.id,
+            "signable_created_at": self.created_at.isoformat(),
+            "signable_updated_at": self.updated_at.isoformat(),
+        }
+
 
 FRAGMENT = """
 fragment SignableFragment on Signable {

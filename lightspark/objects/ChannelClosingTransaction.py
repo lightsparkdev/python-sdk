@@ -62,6 +62,28 @@ class ChannelClosingTransaction(OnChainTransaction, Transaction, Entity):
     """If known, the channel this transaction is closing."""
     typename: str
 
+    def to_json(self) -> Mapping[str, Any]:
+        return {
+            "__typename": "ChannelClosingTransaction",
+            "channel_closing_transaction_id": self.id,
+            "channel_closing_transaction_created_at": self.created_at.isoformat(),
+            "channel_closing_transaction_updated_at": self.updated_at.isoformat(),
+            "channel_closing_transaction_status": self.status.value,
+            "channel_closing_transaction_resolved_at": self.resolved_at.isoformat(),
+            "channel_closing_transaction_amount": self.amount.to_json(),
+            "channel_closing_transaction_transaction_hash": self.transaction_hash,
+            "channel_closing_transaction_fees": self.fees.to_json()
+            if self.fees
+            else None,
+            "channel_closing_transaction_block_hash": self.block_hash,
+            "channel_closing_transaction_block_height": self.block_height,
+            "channel_closing_transaction_destination_addresses": self.destination_addresses,
+            "channel_closing_transaction_num_confirmations": self.num_confirmations,
+            "channel_closing_transaction_channel": {"id": self.channel_id}
+            if self.channel_id
+            else None,
+        }
+
 
 FRAGMENT = """
 fragment ChannelClosingTransactionFragment on ChannelClosingTransaction {

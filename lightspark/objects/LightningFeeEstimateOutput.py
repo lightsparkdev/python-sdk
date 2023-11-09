@@ -16,6 +16,11 @@ class LightningFeeEstimateOutput:
     fee_estimate: CurrencyAmount
     """The estimated fees for the payment."""
 
+    def to_json(self) -> Mapping[str, Any]:
+        return {
+            "lightning_fee_estimate_output_fee_estimate": self.fee_estimate.to_json(),
+        }
+
 
 FRAGMENT = """
 fragment LightningFeeEstimateOutputFragment on LightningFeeEstimateOutput {

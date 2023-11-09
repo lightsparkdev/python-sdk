@@ -21,6 +21,15 @@ class SendPaymentInput:
     maximum_fees_msats: int
     """The maximum amount of fees that you want to pay for this payment to be sent, expressed in msats."""
 
+    def to_json(self) -> Mapping[str, Any]:
+        return {
+            "send_payment_input_node_id": self.node_id,
+            "send_payment_input_destination_public_key": self.destination_public_key,
+            "send_payment_input_timeout_secs": self.timeout_secs,
+            "send_payment_input_amount_msats": self.amount_msats,
+            "send_payment_input_maximum_fees_msats": self.maximum_fees_msats,
+        }
+
 
 def from_json(obj: Mapping[str, Any]) -> SendPaymentInput:
     return SendPaymentInput(

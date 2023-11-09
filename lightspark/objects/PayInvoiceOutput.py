@@ -13,6 +13,11 @@ class PayInvoiceOutput:
     payment_id: str
     """The payment that has been sent."""
 
+    def to_json(self) -> Mapping[str, Any]:
+        return {
+            "pay_invoice_output_payment": {"id": self.payment_id},
+        }
+
 
 FRAGMENT = """
 fragment PayInvoiceOutputFragment on PayInvoiceOutput {

@@ -26,6 +26,16 @@ class AccountToPaymentRequestsConnection(Connection):
     """The payment requests for the current page of this connection."""
     typename: str
 
+    def to_json(self) -> Mapping[str, Any]:
+        return {
+            "__typename": "AccountToPaymentRequestsConnection",
+            "account_to_payment_requests_connection_count": self.count,
+            "account_to_payment_requests_connection_page_info": self.page_info.to_json(),
+            "account_to_payment_requests_connection_entities": [
+                e.to_json() for e in self.entities
+            ],
+        }
+
 
 FRAGMENT = """
 fragment AccountToPaymentRequestsConnectionFragment on AccountToPaymentRequestsConnection {

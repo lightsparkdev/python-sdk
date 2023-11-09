@@ -37,6 +37,25 @@ class AccountToTransactionsConnection(Connection):
     """The transactions for the current page of this connection."""
     typename: str
 
+    def to_json(self) -> Mapping[str, Any]:
+        return {
+            "__typename": "AccountToTransactionsConnection",
+            "account_to_transactions_connection_count": self.count,
+            "account_to_transactions_connection_page_info": self.page_info.to_json(),
+            "account_to_transactions_connection_profit_loss": self.profit_loss.to_json()
+            if self.profit_loss
+            else None,
+            "account_to_transactions_connection_average_fee_earned": self.average_fee_earned.to_json()
+            if self.average_fee_earned
+            else None,
+            "account_to_transactions_connection_total_amount_transacted": self.total_amount_transacted.to_json()
+            if self.total_amount_transacted
+            else None,
+            "account_to_transactions_connection_entities": [
+                e.to_json() for e in self.entities
+            ],
+        }
+
 
 FRAGMENT = """
 fragment AccountToTransactionsConnectionFragment on AccountToTransactionsConnection {

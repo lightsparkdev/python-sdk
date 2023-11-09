@@ -115,6 +115,27 @@ query FetchIncomingPaymentToAttemptsConnection($entity_id: ID!, $first: Int, $st
         connection = json["entity"]["attempts"]
         return IncomingPaymentToAttemptsConnection_from_json(self.requester, connection)
 
+    def to_json(self) -> Mapping[str, Any]:
+        return {
+            "__typename": "IncomingPayment",
+            "incoming_payment_id": self.id,
+            "incoming_payment_created_at": self.created_at.isoformat(),
+            "incoming_payment_updated_at": self.updated_at.isoformat(),
+            "incoming_payment_status": self.status.value,
+            "incoming_payment_resolved_at": self.resolved_at.isoformat(),
+            "incoming_payment_amount": self.amount.to_json(),
+            "incoming_payment_transaction_hash": self.transaction_hash,
+            "incoming_payment_destination": {"id": self.destination_id},
+            "incoming_payment_payment_request": {"id": self.payment_request_id}
+            if self.payment_request_id
+            else None,
+            "incoming_payment_uma_post_transaction_data": [
+                e.to_json() for e in self.uma_post_transaction_data
+            ]
+            if self.uma_post_transaction_data
+            else None,
+        }
+
 
 FRAGMENT = """
 fragment IncomingPaymentFragment on IncomingPayment {

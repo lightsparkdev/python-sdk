@@ -28,6 +28,16 @@ class OutgoingPaymentAttemptToHopsConnection(Connection):
     """The hops for the current page of this connection."""
     typename: str
 
+    def to_json(self) -> Mapping[str, Any]:
+        return {
+            "__typename": "OutgoingPaymentAttemptToHopsConnection",
+            "outgoing_payment_attempt_to_hops_connection_count": self.count,
+            "outgoing_payment_attempt_to_hops_connection_page_info": self.page_info.to_json(),
+            "outgoing_payment_attempt_to_hops_connection_entities": [
+                e.to_json() for e in self.entities
+            ],
+        }
+
 
 FRAGMENT = """
 fragment OutgoingPaymentAttemptToHopsConnectionFragment on OutgoingPaymentAttemptToHopsConnection {

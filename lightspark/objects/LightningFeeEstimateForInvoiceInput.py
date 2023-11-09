@@ -15,6 +15,13 @@ class LightningFeeEstimateForInvoiceInput:
     amount_msats: Optional[int]
     """If the invoice does not specify a payment amount, then the amount that you wish to pay, expressed in msats."""
 
+    def to_json(self) -> Mapping[str, Any]:
+        return {
+            "lightning_fee_estimate_for_invoice_input_node_id": self.node_id,
+            "lightning_fee_estimate_for_invoice_input_encoded_payment_request": self.encoded_payment_request,
+            "lightning_fee_estimate_for_invoice_input_amount_msats": self.amount_msats,
+        }
+
 
 def from_json(obj: Mapping[str, Any]) -> LightningFeeEstimateForInvoiceInput:
     return LightningFeeEstimateForInvoiceInput(

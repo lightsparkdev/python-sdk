@@ -25,6 +25,14 @@ class RegisterPaymentInput:
     direction: PaymentDirection
     """Indicates whether this payment is an OutgoingPayment or an IncomingPayment."""
 
+    def to_json(self) -> Mapping[str, Any]:
+        return {
+            "register_payment_input_provider": self.provider.value,
+            "register_payment_input_payment_id": self.payment_id,
+            "register_payment_input_node_pubkey": self.node_pubkey,
+            "register_payment_input_direction": self.direction.value,
+        }
+
 
 def from_json(obj: Mapping[str, Any]) -> RegisterPaymentInput:
     return RegisterPaymentInput(

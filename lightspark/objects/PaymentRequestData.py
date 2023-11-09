@@ -26,6 +26,13 @@ class PaymentRequestData:
 
     typename: str
 
+    def to_json(self) -> Mapping[str, Any]:
+        return {
+            "__typename": self.typename,
+            "payment_request_data_encoded_payment_request": self.encoded_payment_request,
+            "payment_request_data_bitcoin_network": self.bitcoin_network.value,
+        }
+
 
 FRAGMENT = """
 fragment PaymentRequestDataFragment on PaymentRequestData {

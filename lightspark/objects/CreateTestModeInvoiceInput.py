@@ -19,6 +19,14 @@ class CreateTestModeInvoiceInput:
 
     invoice_type: Optional[InvoiceType]
 
+    def to_json(self) -> Mapping[str, Any]:
+        return {
+            "create_test_mode_invoice_input_local_node_id": self.local_node_id,
+            "create_test_mode_invoice_input_amount_msats": self.amount_msats,
+            "create_test_mode_invoice_input_memo": self.memo,
+            "create_test_mode_invoice_input_invoice_type": self.invoice_type.value,
+        }
+
 
 def from_json(obj: Mapping[str, Any]) -> CreateTestModeInvoiceInput:
     return CreateTestModeInvoiceInput(

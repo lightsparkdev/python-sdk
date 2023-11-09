@@ -44,6 +44,20 @@ class SignablePayload(Entity):
     """The signable this payload belongs to."""
     typename: str
 
+    def to_json(self) -> Mapping[str, Any]:
+        return {
+            "__typename": "SignablePayload",
+            "signable_payload_id": self.id,
+            "signable_payload_created_at": self.created_at.isoformat(),
+            "signable_payload_updated_at": self.updated_at.isoformat(),
+            "signable_payload_payload": self.payload,
+            "signable_payload_derivation_path": self.derivation_path,
+            "signable_payload_status": self.status.value,
+            "signable_payload_add_tweak": self.add_tweak,
+            "signable_payload_mul_tweak": self.mul_tweak,
+            "signable_payload_signable": {"id": self.signable_id},
+        }
+
 
 FRAGMENT = """
 fragment SignablePayloadFragment on SignablePayload {

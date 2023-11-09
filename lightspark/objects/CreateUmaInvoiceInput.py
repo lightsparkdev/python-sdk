@@ -14,6 +14,14 @@ class CreateUmaInvoiceInput:
 
     expiry_secs: Optional[int]
 
+    def to_json(self) -> Mapping[str, Any]:
+        return {
+            "create_uma_invoice_input_node_id": self.node_id,
+            "create_uma_invoice_input_amount_msats": self.amount_msats,
+            "create_uma_invoice_input_metadata_hash": self.metadata_hash,
+            "create_uma_invoice_input_expiry_secs": self.expiry_secs,
+        }
+
 
 def from_json(obj: Mapping[str, Any]) -> CreateUmaInvoiceInput:
     return CreateUmaInvoiceInput(

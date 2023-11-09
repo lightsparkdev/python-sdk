@@ -122,6 +122,28 @@ query FetchOutgoingPaymentAttemptToHopsConnection($entity_id: ID!, $first: Int, 
             self.requester, connection
         )
 
+    def to_json(self) -> Mapping[str, Any]:
+        return {
+            "__typename": "OutgoingPaymentAttempt",
+            "outgoing_payment_attempt_id": self.id,
+            "outgoing_payment_attempt_created_at": self.created_at.isoformat(),
+            "outgoing_payment_attempt_updated_at": self.updated_at.isoformat(),
+            "outgoing_payment_attempt_status": self.status.value,
+            "outgoing_payment_attempt_failure_code": self.failure_code.value,
+            "outgoing_payment_attempt_failure_source_index": self.failure_source_index,
+            "outgoing_payment_attempt_resolved_at": self.resolved_at.isoformat(),
+            "outgoing_payment_attempt_amount": self.amount.to_json()
+            if self.amount
+            else None,
+            "outgoing_payment_attempt_fees": self.fees.to_json() if self.fees else None,
+            "outgoing_payment_attempt_outgoing_payment": {
+                "id": self.outgoing_payment_id
+            },
+            "outgoing_payment_attempt_channel_snapshot": self.channel_snapshot.to_json()
+            if self.channel_snapshot
+            else None,
+        }
+
 
 FRAGMENT = """
 fragment OutgoingPaymentAttemptFragment on OutgoingPaymentAttempt {

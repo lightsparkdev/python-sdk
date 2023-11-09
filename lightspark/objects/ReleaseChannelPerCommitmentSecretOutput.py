@@ -13,6 +13,13 @@ class ReleaseChannelPerCommitmentSecretOutput:
     channel_id: str
     """The channel object after the per-commitment secret release operation."""
 
+    def to_json(self) -> Mapping[str, Any]:
+        return {
+            "release_channel_per_commitment_secret_output_channel": {
+                "id": self.channel_id
+            },
+        }
+
 
 FRAGMENT = """
 fragment ReleaseChannelPerCommitmentSecretOutputFragment on ReleaseChannelPerCommitmentSecretOutput {

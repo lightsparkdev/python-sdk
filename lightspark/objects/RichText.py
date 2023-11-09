@@ -12,6 +12,11 @@ class RichText:
 
     text: str
 
+    def to_json(self) -> Mapping[str, Any]:
+        return {
+            "rich_text_text": self.text,
+        }
+
 
 FRAGMENT = """
 fragment RichTextFragment on RichText {

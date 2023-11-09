@@ -59,6 +59,23 @@ class OnChainTransaction(Transaction, Entity):
     """The number of blockchain confirmations for this transaction in real time."""
     typename: str
 
+    def to_json(self) -> Mapping[str, Any]:
+        return {
+            "__typename": self.typename,
+            "on_chain_transaction_id": self.id,
+            "on_chain_transaction_created_at": self.created_at.isoformat(),
+            "on_chain_transaction_updated_at": self.updated_at.isoformat(),
+            "on_chain_transaction_status": self.status.value,
+            "on_chain_transaction_resolved_at": self.resolved_at.isoformat(),
+            "on_chain_transaction_amount": self.amount.to_json(),
+            "on_chain_transaction_transaction_hash": self.transaction_hash,
+            "on_chain_transaction_fees": self.fees.to_json() if self.fees else None,
+            "on_chain_transaction_block_hash": self.block_hash,
+            "on_chain_transaction_block_height": self.block_height,
+            "on_chain_transaction_destination_addresses": self.destination_addresses,
+            "on_chain_transaction_num_confirmations": self.num_confirmations,
+        }
+
 
 FRAGMENT = """
 fragment OnChainTransactionFragment on OnChainTransaction {

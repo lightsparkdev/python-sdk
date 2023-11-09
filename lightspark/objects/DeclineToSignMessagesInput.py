@@ -9,6 +9,11 @@ class DeclineToSignMessagesInput:
     payload_ids: List[str]
     """List of payload ids to decline to sign because validation failed."""
 
+    def to_json(self) -> Mapping[str, Any]:
+        return {
+            "decline_to_sign_messages_input_payload_ids": self.payload_ids,
+        }
+
 
 def from_json(obj: Mapping[str, Any]) -> DeclineToSignMessagesInput:
     return DeclineToSignMessagesInput(

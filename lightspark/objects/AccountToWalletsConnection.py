@@ -26,6 +26,16 @@ class AccountToWalletsConnection(Connection):
     """The wallets for the current page of this connection."""
     typename: str
 
+    def to_json(self) -> Mapping[str, Any]:
+        return {
+            "__typename": "AccountToWalletsConnection",
+            "account_to_wallets_connection_count": self.count,
+            "account_to_wallets_connection_page_info": self.page_info.to_json(),
+            "account_to_wallets_connection_entities": [
+                e.to_json() for e in self.entities
+            ],
+        }
+
 
 FRAGMENT = """
 fragment AccountToWalletsConnectionFragment on AccountToWalletsConnection {

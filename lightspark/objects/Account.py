@@ -1762,6 +1762,15 @@ query FetchAccountToWalletsConnection($entity_id: ID!, $first: Int, $after: Stri
         connection = json["entity"]["wallets"]
         return AccountToWalletsConnection_from_json(self.requester, connection)
 
+    def to_json(self) -> Mapping[str, Any]:
+        return {
+            "__typename": "Account",
+            "account_id": self.id,
+            "account_created_at": self.created_at.isoformat(),
+            "account_updated_at": self.updated_at.isoformat(),
+            "account_name": self.name,
+        }
+
 
 FRAGMENT = """
 fragment AccountFragment on Account {

@@ -13,6 +13,11 @@ class SignInvoiceOutput:
     invoice_id: str
     """ The signed invoice object."""
 
+    def to_json(self) -> Mapping[str, Any]:
+        return {
+            "sign_invoice_output_invoice": {"id": self.invoice_id},
+        }
+
 
 FRAGMENT = """
 fragment SignInvoiceOutputFragment on SignInvoiceOutput {

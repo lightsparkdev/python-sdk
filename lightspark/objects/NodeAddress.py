@@ -22,6 +22,12 @@ class NodeAddress:
     type: NodeAddressType
     """The type, or protocol, of this address."""
 
+    def to_json(self) -> Mapping[str, Any]:
+        return {
+            "node_address_address": self.address,
+            "node_address_type": self.type.value,
+        }
+
 
 FRAGMENT = """
 fragment NodeAddressFragment on NodeAddress {

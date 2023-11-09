@@ -33,6 +33,28 @@ class BlockchainBalance:
     available_balance: Optional[CurrencyAmount]
     """Funds available for creating channels or withdrawing."""
 
+    def to_json(self) -> Mapping[str, Any]:
+        return {
+            "blockchain_balance_total_balance": self.total_balance.to_json()
+            if self.total_balance
+            else None,
+            "blockchain_balance_confirmed_balance": self.confirmed_balance.to_json()
+            if self.confirmed_balance
+            else None,
+            "blockchain_balance_unconfirmed_balance": self.unconfirmed_balance.to_json()
+            if self.unconfirmed_balance
+            else None,
+            "blockchain_balance_locked_balance": self.locked_balance.to_json()
+            if self.locked_balance
+            else None,
+            "blockchain_balance_required_reserve": self.required_reserve.to_json()
+            if self.required_reserve
+            else None,
+            "blockchain_balance_available_balance": self.available_balance.to_json()
+            if self.available_balance
+            else None,
+        }
+
 
 FRAGMENT = """
 fragment BlockchainBalanceFragment on BlockchainBalance {

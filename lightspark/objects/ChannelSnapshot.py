@@ -28,6 +28,27 @@ class ChannelSnapshot:
 
     remote_unsettled_balance: Optional[CurrencyAmount]
 
+    def to_json(self) -> Mapping[str, Any]:
+        return {
+            "channel_snapshot_channel": {"id": self.channel_id},
+            "channel_snapshot_timestamp": self.timestamp.isoformat(),
+            "channel_snapshot_local_balance": self.local_balance.to_json()
+            if self.local_balance
+            else None,
+            "channel_snapshot_local_unsettled_balance": self.local_unsettled_balance.to_json()
+            if self.local_unsettled_balance
+            else None,
+            "channel_snapshot_local_channel_reserve": self.local_channel_reserve.to_json()
+            if self.local_channel_reserve
+            else None,
+            "channel_snapshot_remote_balance": self.remote_balance.to_json()
+            if self.remote_balance
+            else None,
+            "channel_snapshot_remote_unsettled_balance": self.remote_unsettled_balance.to_json()
+            if self.remote_unsettled_balance
+            else None,
+        }
+
 
 FRAGMENT = """
 fragment ChannelSnapshotFragment on ChannelSnapshot {

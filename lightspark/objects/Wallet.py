@@ -1054,6 +1054,19 @@ query FetchWalletTotalAmountSent($entity_id: ID!, $created_after_date: DateTime,
         connection = json["entity"]["total_amount_sent"]
         return CurrencyAmount_from_json(self.requester, connection)
 
+    def to_json(self) -> Mapping[str, Any]:
+        return {
+            "__typename": "Wallet",
+            "wallet_id": self.id,
+            "wallet_created_at": self.created_at.isoformat(),
+            "wallet_updated_at": self.updated_at.isoformat(),
+            "wallet_last_login_at": self.last_login_at.isoformat(),
+            "wallet_balances": self.balances.to_json() if self.balances else None,
+            "wallet_third_party_identifier": self.third_party_identifier,
+            "wallet_account": {"id": self.account_id} if self.account_id else None,
+            "wallet_status": self.status.value,
+        }
+
 
 FRAGMENT = """
 fragment WalletFragment on Wallet {

@@ -15,6 +15,13 @@ class ReleaseChannelPerCommitmentSecretInput:
     per_commitment_index: int
     """The index associated with the per-commitment secret."""
 
+    def to_json(self) -> Mapping[str, Any]:
+        return {
+            "release_channel_per_commitment_secret_input_channel_id": self.channel_id,
+            "release_channel_per_commitment_secret_input_per_commitment_secret": self.per_commitment_secret,
+            "release_channel_per_commitment_secret_input_per_commitment_index": self.per_commitment_index,
+        }
+
 
 def from_json(obj: Mapping[str, Any]) -> ReleaseChannelPerCommitmentSecretInput:
     return ReleaseChannelPerCommitmentSecretInput(

@@ -62,6 +62,24 @@ class Deposit(OnChainTransaction, Transaction, Entity):
     """The recipient Lightspark node this deposit was sent to."""
     typename: str
 
+    def to_json(self) -> Mapping[str, Any]:
+        return {
+            "__typename": "Deposit",
+            "deposit_id": self.id,
+            "deposit_created_at": self.created_at.isoformat(),
+            "deposit_updated_at": self.updated_at.isoformat(),
+            "deposit_status": self.status.value,
+            "deposit_resolved_at": self.resolved_at.isoformat(),
+            "deposit_amount": self.amount.to_json(),
+            "deposit_transaction_hash": self.transaction_hash,
+            "deposit_fees": self.fees.to_json() if self.fees else None,
+            "deposit_block_hash": self.block_hash,
+            "deposit_block_height": self.block_height,
+            "deposit_destination_addresses": self.destination_addresses,
+            "deposit_num_confirmations": self.num_confirmations,
+            "deposit_destination": {"id": self.destination_id},
+        }
+
 
 FRAGMENT = """
 fragment DepositFragment on Deposit {

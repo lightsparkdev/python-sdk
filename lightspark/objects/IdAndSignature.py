@@ -12,6 +12,12 @@ class IdAndSignature:
     signature: str
     """The signature of the message."""
 
+    def to_json(self) -> Mapping[str, Any]:
+        return {
+            "id_and_signature_id": self.id,
+            "id_and_signature_signature": self.signature,
+        }
+
 
 def from_json(obj: Mapping[str, Any]) -> IdAndSignature:
     return IdAndSignature(

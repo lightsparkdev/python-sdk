@@ -12,6 +12,11 @@ class DeleteApiTokenOutput:
 
     account_id: str
 
+    def to_json(self) -> Mapping[str, Any]:
+        return {
+            "delete_api_token_output_account": {"id": self.account_id},
+        }
+
 
 FRAGMENT = """
 fragment DeleteApiTokenOutputFragment on DeleteApiTokenOutput {

@@ -8,6 +8,11 @@ from typing import Any, Mapping
 class DeleteApiTokenInput:
     api_token_id: str
 
+    def to_json(self) -> Mapping[str, Any]:
+        return {
+            "delete_api_token_input_api_token_id": self.api_token_id,
+        }
+
 
 def from_json(obj: Mapping[str, Any]) -> DeleteApiTokenInput:
     return DeleteApiTokenInput(

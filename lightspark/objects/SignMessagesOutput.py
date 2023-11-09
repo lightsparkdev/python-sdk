@@ -16,6 +16,13 @@ class SignMessagesOutput:
     signed_payloads: List[SignablePayload]
     """The list of signed payloads."""
 
+    def to_json(self) -> Mapping[str, Any]:
+        return {
+            "sign_messages_output_signed_payloads": [
+                e.to_json() for e in self.signed_payloads
+            ],
+        }
+
 
 FRAGMENT = """
 fragment SignMessagesOutputFragment on SignMessagesOutput {

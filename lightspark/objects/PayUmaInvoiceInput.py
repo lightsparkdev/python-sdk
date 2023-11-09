@@ -16,6 +16,15 @@ class PayUmaInvoiceInput:
 
     amount_msats: Optional[int]
 
+    def to_json(self) -> Mapping[str, Any]:
+        return {
+            "pay_uma_invoice_input_node_id": self.node_id,
+            "pay_uma_invoice_input_encoded_invoice": self.encoded_invoice,
+            "pay_uma_invoice_input_timeout_secs": self.timeout_secs,
+            "pay_uma_invoice_input_maximum_fees_msats": self.maximum_fees_msats,
+            "pay_uma_invoice_input_amount_msats": self.amount_msats,
+        }
+
 
 def from_json(obj: Mapping[str, Any]) -> PayUmaInvoiceInput:
     return PayUmaInvoiceInput(

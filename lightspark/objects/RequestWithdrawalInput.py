@@ -23,6 +23,14 @@ class RequestWithdrawalInput:
     withdrawal_mode: WithdrawalMode
     """The strategy that should be used to withdraw the funds from this node."""
 
+    def to_json(self) -> Mapping[str, Any]:
+        return {
+            "request_withdrawal_input_node_id": self.node_id,
+            "request_withdrawal_input_bitcoin_address": self.bitcoin_address,
+            "request_withdrawal_input_amount_sats": self.amount_sats,
+            "request_withdrawal_input_withdrawal_mode": self.withdrawal_mode.value,
+        }
+
 
 def from_json(obj: Mapping[str, Any]) -> RequestWithdrawalInput:
     return RequestWithdrawalInput(

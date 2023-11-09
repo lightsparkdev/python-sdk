@@ -21,6 +21,12 @@ class PostTransactionData:
     amount: CurrencyAmount
     """The amount of funds transferred in the payment."""
 
+    def to_json(self) -> Mapping[str, Any]:
+        return {
+            "post_transaction_data_utxo": self.utxo,
+            "post_transaction_data_amount": self.amount.to_json(),
+        }
+
 
 FRAGMENT = """
 fragment PostTransactionDataFragment on PostTransactionData {

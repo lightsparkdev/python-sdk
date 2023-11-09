@@ -14,6 +14,12 @@ class Secret:
 
     cipher: str
 
+    def to_json(self) -> Mapping[str, Any]:
+        return {
+            "secret_encrypted_value": self.encrypted_value,
+            "secret_cipher": self.cipher,
+        }
+
 
 FRAGMENT = """
 fragment SecretFragment on Secret {

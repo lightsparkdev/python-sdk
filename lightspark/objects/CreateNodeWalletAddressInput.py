@@ -8,6 +8,11 @@ from typing import Any, Mapping
 class CreateNodeWalletAddressInput:
     node_id: str
 
+    def to_json(self) -> Mapping[str, Any]:
+        return {
+            "create_node_wallet_address_input_node_id": self.node_id,
+        }
+
 
 def from_json(obj: Mapping[str, Any]) -> CreateNodeWalletAddressInput:
     return CreateNodeWalletAddressInput(

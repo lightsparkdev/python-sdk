@@ -15,6 +15,13 @@ class LightningFeeEstimateForNodeInput:
     amount_msats: int
     """The payment amount expressed in msats."""
 
+    def to_json(self) -> Mapping[str, Any]:
+        return {
+            "lightning_fee_estimate_for_node_input_node_id": self.node_id,
+            "lightning_fee_estimate_for_node_input_destination_node_public_key": self.destination_node_public_key,
+            "lightning_fee_estimate_for_node_input_amount_msats": self.amount_msats,
+        }
+
 
 def from_json(obj: Mapping[str, Any]) -> LightningFeeEstimateForNodeInput:
     return LightningFeeEstimateForNodeInput(

@@ -247,6 +247,41 @@ query FetchLightsparkNodeToChannelsConnection($entity_id: ID!, $first: Int, $sta
         connection = json["entity"]["channels"]
         return LightsparkNodeToChannelsConnection_from_json(self.requester, connection)
 
+    def to_json(self) -> Mapping[str, Any]:
+        return {
+            "__typename": "LightsparkNodeWithRemoteSigning",
+            "lightspark_node_with_remote_signing_id": self.id,
+            "lightspark_node_with_remote_signing_created_at": self.created_at.isoformat(),
+            "lightspark_node_with_remote_signing_updated_at": self.updated_at.isoformat(),
+            "lightspark_node_with_remote_signing_alias": self.alias,
+            "lightspark_node_with_remote_signing_bitcoin_network": self.bitcoin_network.value,
+            "lightspark_node_with_remote_signing_color": self.color,
+            "lightspark_node_with_remote_signing_conductivity": self.conductivity,
+            "lightspark_node_with_remote_signing_display_name": self.display_name,
+            "lightspark_node_with_remote_signing_public_key": self.public_key,
+            "lightspark_node_with_remote_signing_owner": {"id": self.owner_id},
+            "lightspark_node_with_remote_signing_status": self.status.value,
+            "lightspark_node_with_remote_signing_total_balance": self.total_balance.to_json()
+            if self.total_balance
+            else None,
+            "lightspark_node_with_remote_signing_total_local_balance": self.total_local_balance.to_json()
+            if self.total_local_balance
+            else None,
+            "lightspark_node_with_remote_signing_local_balance": self.local_balance.to_json()
+            if self.local_balance
+            else None,
+            "lightspark_node_with_remote_signing_remote_balance": self.remote_balance.to_json()
+            if self.remote_balance
+            else None,
+            "lightspark_node_with_remote_signing_blockchain_balance": self.blockchain_balance.to_json()
+            if self.blockchain_balance
+            else None,
+            "lightspark_node_with_remote_signing_uma_prescreening_utxos": self.uma_prescreening_utxos,
+            "lightspark_node_with_remote_signing_balances": self.balances.to_json()
+            if self.balances
+            else None,
+        }
+
 
 FRAGMENT = """
 fragment LightsparkNodeWithRemoteSigningFragment on LightsparkNodeWithRemoteSigning {

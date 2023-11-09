@@ -26,6 +26,16 @@ class AccountToApiTokensConnection(Connection):
     """The API tokens for the current page of this connection."""
     typename: str
 
+    def to_json(self) -> Mapping[str, Any]:
+        return {
+            "__typename": "AccountToApiTokensConnection",
+            "account_to_api_tokens_connection_count": self.count,
+            "account_to_api_tokens_connection_page_info": self.page_info.to_json(),
+            "account_to_api_tokens_connection_entities": [
+                e.to_json() for e in self.entities
+            ],
+        }
+
 
 FRAGMENT = """
 fragment AccountToApiTokensConnectionFragment on AccountToApiTokensConnection {

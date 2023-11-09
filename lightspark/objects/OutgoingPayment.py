@@ -184,6 +184,36 @@ query FetchOutgoingPaymentToAttemptsConnection($entity_id: ID!, $first: Int, $af
         connection = json["entity"]["attempts"]
         return OutgoingPaymentToAttemptsConnection_from_json(self.requester, connection)
 
+    def to_json(self) -> Mapping[str, Any]:
+        return {
+            "__typename": "OutgoingPayment",
+            "outgoing_payment_id": self.id,
+            "outgoing_payment_created_at": self.created_at.isoformat(),
+            "outgoing_payment_updated_at": self.updated_at.isoformat(),
+            "outgoing_payment_status": self.status.value,
+            "outgoing_payment_resolved_at": self.resolved_at.isoformat(),
+            "outgoing_payment_amount": self.amount.to_json(),
+            "outgoing_payment_transaction_hash": self.transaction_hash,
+            "outgoing_payment_origin": {"id": self.origin_id},
+            "outgoing_payment_destination": {"id": self.destination_id}
+            if self.destination_id
+            else None,
+            "outgoing_payment_fees": self.fees.to_json() if self.fees else None,
+            "outgoing_payment_payment_request_data": self.payment_request_data.to_json()
+            if self.payment_request_data
+            else None,
+            "outgoing_payment_failure_reason": self.failure_reason.value,
+            "outgoing_payment_failure_message": self.failure_message.to_json()
+            if self.failure_message
+            else None,
+            "outgoing_payment_uma_post_transaction_data": [
+                e.to_json() for e in self.uma_post_transaction_data
+            ]
+            if self.uma_post_transaction_data
+            else None,
+            "outgoing_payment_payment_preimage": self.payment_preimage,
+        }
+
 
 FRAGMENT = """
 fragment OutgoingPaymentFragment on OutgoingPayment {

@@ -252,6 +252,44 @@ query FetchLightsparkNodeToChannelsConnection($entity_id: ID!, $first: Int, $sta
         connection = json["entity"]["channels"]
         return LightsparkNodeToChannelsConnection_from_json(self.requester, connection)
 
+    def to_json(self) -> Mapping[str, Any]:
+        return {
+            "__typename": "LightsparkNodeWithOSK",
+            "lightspark_node_with_o_s_k_id": self.id,
+            "lightspark_node_with_o_s_k_created_at": self.created_at.isoformat(),
+            "lightspark_node_with_o_s_k_updated_at": self.updated_at.isoformat(),
+            "lightspark_node_with_o_s_k_alias": self.alias,
+            "lightspark_node_with_o_s_k_bitcoin_network": self.bitcoin_network.value,
+            "lightspark_node_with_o_s_k_color": self.color,
+            "lightspark_node_with_o_s_k_conductivity": self.conductivity,
+            "lightspark_node_with_o_s_k_display_name": self.display_name,
+            "lightspark_node_with_o_s_k_public_key": self.public_key,
+            "lightspark_node_with_o_s_k_owner": {"id": self.owner_id},
+            "lightspark_node_with_o_s_k_status": self.status.value,
+            "lightspark_node_with_o_s_k_total_balance": self.total_balance.to_json()
+            if self.total_balance
+            else None,
+            "lightspark_node_with_o_s_k_total_local_balance": self.total_local_balance.to_json()
+            if self.total_local_balance
+            else None,
+            "lightspark_node_with_o_s_k_local_balance": self.local_balance.to_json()
+            if self.local_balance
+            else None,
+            "lightspark_node_with_o_s_k_remote_balance": self.remote_balance.to_json()
+            if self.remote_balance
+            else None,
+            "lightspark_node_with_o_s_k_blockchain_balance": self.blockchain_balance.to_json()
+            if self.blockchain_balance
+            else None,
+            "lightspark_node_with_o_s_k_uma_prescreening_utxos": self.uma_prescreening_utxos,
+            "lightspark_node_with_o_s_k_balances": self.balances.to_json()
+            if self.balances
+            else None,
+            "lightspark_node_with_o_s_k_encrypted_signing_private_key": self.encrypted_signing_private_key.to_json()
+            if self.encrypted_signing_private_key
+            else None,
+        }
+
 
 FRAGMENT = """
 fragment LightsparkNodeWithOSKFragment on LightsparkNodeWithOSK {

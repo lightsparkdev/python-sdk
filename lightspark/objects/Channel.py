@@ -159,6 +159,47 @@ query FetchChannelToTransactionsConnection($entity_id: ID!, $types: [Transaction
         connection = json["entity"]["transactions"]
         return ChannelToTransactionsConnection_from_json(self.requester, connection)
 
+    def to_json(self) -> Mapping[str, Any]:
+        return {
+            "__typename": "Channel",
+            "channel_id": self.id,
+            "channel_created_at": self.created_at.isoformat(),
+            "channel_updated_at": self.updated_at.isoformat(),
+            "channel_funding_transaction": {"id": self.funding_transaction_id}
+            if self.funding_transaction_id
+            else None,
+            "channel_capacity": self.capacity.to_json() if self.capacity else None,
+            "channel_local_balance": self.local_balance.to_json()
+            if self.local_balance
+            else None,
+            "channel_local_unsettled_balance": self.local_unsettled_balance.to_json()
+            if self.local_unsettled_balance
+            else None,
+            "channel_remote_balance": self.remote_balance.to_json()
+            if self.remote_balance
+            else None,
+            "channel_remote_unsettled_balance": self.remote_unsettled_balance.to_json()
+            if self.remote_unsettled_balance
+            else None,
+            "channel_unsettled_balance": self.unsettled_balance.to_json()
+            if self.unsettled_balance
+            else None,
+            "channel_total_balance": self.total_balance.to_json()
+            if self.total_balance
+            else None,
+            "channel_status": self.status.value,
+            "channel_estimated_force_closure_wait_minutes": self.estimated_force_closure_wait_minutes,
+            "channel_commit_fee": self.commit_fee.to_json()
+            if self.commit_fee
+            else None,
+            "channel_fees": self.fees.to_json() if self.fees else None,
+            "channel_remote_node": {"id": self.remote_node_id}
+            if self.remote_node_id
+            else None,
+            "channel_local_node": {"id": self.local_node_id},
+            "channel_short_channel_id": self.short_channel_id,
+        }
+
 
 FRAGMENT = """
 fragment ChannelFragment on Channel {

@@ -12,6 +12,12 @@ class ReleasePaymentPreimageInput:
     payment_preimage: str
     """The preimage to release."""
 
+    def to_json(self) -> Mapping[str, Any]:
+        return {
+            "release_payment_preimage_input_invoice_id": self.invoice_id,
+            "release_payment_preimage_input_payment_preimage": self.payment_preimage,
+        }
+
 
 def from_json(obj: Mapping[str, Any]) -> ReleasePaymentPreimageInput:
     return ReleasePaymentPreimageInput(

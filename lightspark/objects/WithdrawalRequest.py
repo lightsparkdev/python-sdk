@@ -189,6 +189,25 @@ query FetchWithdrawalRequestToChannelOpeningTransactionsConnection($entity_id: I
             self.requester, connection
         )
 
+    def to_json(self) -> Mapping[str, Any]:
+        return {
+            "__typename": "WithdrawalRequest",
+            "withdrawal_request_id": self.id,
+            "withdrawal_request_created_at": self.created_at.isoformat(),
+            "withdrawal_request_updated_at": self.updated_at.isoformat(),
+            "withdrawal_request_amount": self.amount.to_json(),
+            "withdrawal_request_estimated_amount": self.estimated_amount.to_json()
+            if self.estimated_amount
+            else None,
+            "withdrawal_request_bitcoin_address": self.bitcoin_address,
+            "withdrawal_request_withdrawal_mode": self.withdrawal_mode.value,
+            "withdrawal_request_status": self.status.value,
+            "withdrawal_request_completed_at": self.completed_at.isoformat(),
+            "withdrawal_request_withdrawal": {"id": self.withdrawal_id}
+            if self.withdrawal_id
+            else None,
+        }
+
 
 FRAGMENT = """
 fragment WithdrawalRequestFragment on WithdrawalRequest {

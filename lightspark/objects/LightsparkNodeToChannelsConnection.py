@@ -26,6 +26,16 @@ class LightsparkNodeToChannelsConnection(Connection):
     """The channels for the current page of this connection."""
     typename: str
 
+    def to_json(self) -> Mapping[str, Any]:
+        return {
+            "__typename": "LightsparkNodeToChannelsConnection",
+            "lightspark_node_to_channels_connection_count": self.count,
+            "lightspark_node_to_channels_connection_page_info": self.page_info.to_json(),
+            "lightspark_node_to_channels_connection_entities": [
+                e.to_json() for e in self.entities
+            ],
+        }
+
 
 FRAGMENT = """
 fragment LightsparkNodeToChannelsConnectionFragment on LightsparkNodeToChannelsConnection {
