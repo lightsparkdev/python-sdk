@@ -19,6 +19,12 @@ class FeeEstimate:
 
     fee_min: CurrencyAmount
 
+    def to_json(self) -> Mapping[str, Any]:
+        return {
+            "fee_estimate_fee_fast": self.fee_fast.to_json(),
+            "fee_estimate_fee_min": self.fee_min.to_json(),
+        }
+
 
 FRAGMENT = """
 fragment FeeEstimateFragment on FeeEstimate {

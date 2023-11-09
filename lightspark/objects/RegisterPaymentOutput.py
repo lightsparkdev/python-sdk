@@ -12,6 +12,11 @@ class RegisterPaymentOutput:
 
     payment_id: str
 
+    def to_json(self) -> Mapping[str, Any]:
+        return {
+            "register_payment_output_payment": {"id": self.payment_id},
+        }
+
 
 FRAGMENT = """
 fragment RegisterPaymentOutputFragment on RegisterPaymentOutput {

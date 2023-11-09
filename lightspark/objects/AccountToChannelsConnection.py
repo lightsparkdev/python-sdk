@@ -19,6 +19,14 @@ class AccountToChannelsConnection:
     entities: List[Channel]
     """The channels for the current page of this connection."""
 
+    def to_json(self) -> Mapping[str, Any]:
+        return {
+            "account_to_channels_connection_count": self.count,
+            "account_to_channels_connection_entities": [
+                e.to_json() for e in self.entities
+            ],
+        }
+
 
 FRAGMENT = """
 fragment AccountToChannelsConnectionFragment on AccountToChannelsConnection {

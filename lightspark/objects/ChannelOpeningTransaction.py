@@ -62,6 +62,30 @@ class ChannelOpeningTransaction(OnChainTransaction, Transaction, Entity):
     """If known, the channel this transaction is opening."""
     typename: str
 
+    def to_json(self) -> Mapping[str, Any]:
+        return {
+            "__typename": "ChannelOpeningTransaction",
+            "channel_opening_transaction_id": self.id,
+            "channel_opening_transaction_created_at": self.created_at.isoformat(),
+            "channel_opening_transaction_updated_at": self.updated_at.isoformat(),
+            "channel_opening_transaction_status": self.status.value,
+            "channel_opening_transaction_resolved_at": self.resolved_at.isoformat()
+            if self.resolved_at
+            else None,
+            "channel_opening_transaction_amount": self.amount.to_json(),
+            "channel_opening_transaction_transaction_hash": self.transaction_hash,
+            "channel_opening_transaction_fees": self.fees.to_json()
+            if self.fees
+            else None,
+            "channel_opening_transaction_block_hash": self.block_hash,
+            "channel_opening_transaction_block_height": self.block_height,
+            "channel_opening_transaction_destination_addresses": self.destination_addresses,
+            "channel_opening_transaction_num_confirmations": self.num_confirmations,
+            "channel_opening_transaction_channel": {"id": self.channel_id}
+            if self.channel_id
+            else None,
+        }
+
 
 FRAGMENT = """
 fragment ChannelOpeningTransactionFragment on ChannelOpeningTransaction {

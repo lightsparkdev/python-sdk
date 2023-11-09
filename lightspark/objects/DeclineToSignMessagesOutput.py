@@ -15,6 +15,13 @@ class DeclineToSignMessagesOutput:
 
     declined_payloads: List[SignablePayload]
 
+    def to_json(self) -> Mapping[str, Any]:
+        return {
+            "decline_to_sign_messages_output_declined_payloads": [
+                e.to_json() for e in self.declined_payloads
+            ],
+        }
+
 
 FRAGMENT = """
 fragment DeclineToSignMessagesOutputFragment on DeclineToSignMessagesOutput {

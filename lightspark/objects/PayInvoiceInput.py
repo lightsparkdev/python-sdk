@@ -21,6 +21,15 @@ class PayInvoiceInput:
     amount_msats: Optional[int]
     """The amount you will pay for this invoice, expressed in msats. It should ONLY be set when the invoice amount is zero."""
 
+    def to_json(self) -> Mapping[str, Any]:
+        return {
+            "pay_invoice_input_node_id": self.node_id,
+            "pay_invoice_input_encoded_invoice": self.encoded_invoice,
+            "pay_invoice_input_timeout_secs": self.timeout_secs,
+            "pay_invoice_input_maximum_fees_msats": self.maximum_fees_msats,
+            "pay_invoice_input_amount_msats": self.amount_msats,
+        }
+
 
 def from_json(obj: Mapping[str, Any]) -> PayInvoiceInput:
     return PayInvoiceInput(

@@ -12,6 +12,11 @@ class UpdateNodeSharedSecretOutput:
 
     node_id: str
 
+    def to_json(self) -> Mapping[str, Any]:
+        return {
+            "update_node_shared_secret_output_node": {"id": self.node_id},
+        }
+
 
 FRAGMENT = """
 fragment UpdateNodeSharedSecretOutputFragment on UpdateNodeSharedSecretOutput {

@@ -17,6 +17,12 @@ class ScreenNodeInput:
     node_pubkey: str
     """The public key of the lightning node that needs to be screened."""
 
+    def to_json(self) -> Mapping[str, Any]:
+        return {
+            "screen_node_input_provider": self.provider.value,
+            "screen_node_input_node_pubkey": self.node_pubkey,
+        }
+
 
 def from_json(obj: Mapping[str, Any]) -> ScreenNodeInput:
     return ScreenNodeInput(

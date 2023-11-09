@@ -36,6 +36,17 @@ class ApiToken(Entity):
     """A list of permissions granted to the token."""
     typename: str
 
+    def to_json(self) -> Mapping[str, Any]:
+        return {
+            "__typename": "ApiToken",
+            "api_token_id": self.id,
+            "api_token_created_at": self.created_at.isoformat(),
+            "api_token_updated_at": self.updated_at.isoformat(),
+            "api_token_client_id": self.client_id,
+            "api_token_name": self.name,
+            "api_token_permissions": [e.value for e in self.permissions],
+        }
+
 
 FRAGMENT = """
 fragment ApiTokenFragment on ApiToken {

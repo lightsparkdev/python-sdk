@@ -18,6 +18,14 @@ class CreateTestModePaymentoutput:
     incoming_payment_id: str
     """The payment that has been received."""
 
+    def to_json(self) -> Mapping[str, Any]:
+        return {
+            "create_test_mode_paymentoutput_payment": {"id": self.payment_id},
+            "create_test_mode_paymentoutput_incoming_payment": {
+                "id": self.incoming_payment_id
+            },
+        }
+
 
 FRAGMENT = """
 fragment CreateTestModePaymentoutputFragment on CreateTestModePaymentoutput {

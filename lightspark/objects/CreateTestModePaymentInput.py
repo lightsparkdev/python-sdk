@@ -15,6 +15,13 @@ class CreateTestModePaymentInput:
     amount_msats: Optional[int]
     """The amount you will be paid for this invoice, expressed in msats. It should ONLY be set when the invoice amount is zero."""
 
+    def to_json(self) -> Mapping[str, Any]:
+        return {
+            "create_test_mode_payment_input_local_node_id": self.local_node_id,
+            "create_test_mode_payment_input_encoded_invoice": self.encoded_invoice,
+            "create_test_mode_payment_input_amount_msats": self.amount_msats,
+        }
+
 
 def from_json(obj: Mapping[str, Any]) -> CreateTestModePaymentInput:
     return CreateTestModePaymentInput(

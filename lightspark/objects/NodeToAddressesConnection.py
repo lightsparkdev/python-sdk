@@ -21,6 +21,14 @@ class NodeToAddressesConnection:
     entities: List[NodeAddress]
     """The addresses for the current page of this connection."""
 
+    def to_json(self) -> Mapping[str, Any]:
+        return {
+            "node_to_addresses_connection_count": self.count,
+            "node_to_addresses_connection_entities": [
+                e.to_json() for e in self.entities
+            ],
+        }
+
 
 FRAGMENT = """
 fragment NodeToAddressesConnectionFragment on NodeToAddressesConnection {

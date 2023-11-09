@@ -29,6 +29,14 @@ class LightsparkNodeOwner(Entity):
     """The date and time when the entity was last updated."""
     typename: str
 
+    def to_json(self) -> Mapping[str, Any]:
+        return {
+            "__typename": self.typename,
+            "lightspark_node_owner_id": self.id,
+            "lightspark_node_owner_created_at": self.created_at.isoformat(),
+            "lightspark_node_owner_updated_at": self.updated_at.isoformat(),
+        }
+
 
 FRAGMENT = """
 fragment LightsparkNodeOwnerFragment on LightsparkNodeOwner {

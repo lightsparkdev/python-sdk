@@ -45,6 +45,24 @@ class Hop(Entity):
     """The block height at which an unsettled HTLC is considered expired."""
     typename: str
 
+    def to_json(self) -> Mapping[str, Any]:
+        return {
+            "__typename": "Hop",
+            "hop_id": self.id,
+            "hop_created_at": self.created_at.isoformat(),
+            "hop_updated_at": self.updated_at.isoformat(),
+            "hop_destination": {"id": self.destination_id}
+            if self.destination_id
+            else None,
+            "hop_index": self.index,
+            "hop_public_key": self.public_key,
+            "hop_amount_to_forward": self.amount_to_forward.to_json()
+            if self.amount_to_forward
+            else None,
+            "hop_fee": self.fee.to_json() if self.fee else None,
+            "hop_expiry_block_height": self.expiry_block_height,
+        }
+
 
 FRAGMENT = """
 fragment HopFragment on Hop {

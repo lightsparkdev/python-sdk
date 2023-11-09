@@ -15,6 +15,13 @@ class SignInvoiceInput:
     recovery_id: int
     """The recovery identifier for the signature."""
 
+    def to_json(self) -> Mapping[str, Any]:
+        return {
+            "sign_invoice_input_invoice_id": self.invoice_id,
+            "sign_invoice_input_signature": self.signature,
+            "sign_invoice_input_recovery_id": self.recovery_id,
+        }
+
 
 def from_json(obj: Mapping[str, Any]) -> SignInvoiceInput:
     return SignInvoiceInput(

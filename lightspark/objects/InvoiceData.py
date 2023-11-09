@@ -45,6 +45,19 @@ class InvoiceData(PaymentRequestData):
     """The lightning node that will be paid when fulfilling this invoice."""
     typename: str
 
+    def to_json(self) -> Mapping[str, Any]:
+        return {
+            "__typename": "InvoiceData",
+            "invoice_data_encoded_payment_request": self.encoded_payment_request,
+            "invoice_data_bitcoin_network": self.bitcoin_network.value,
+            "invoice_data_payment_hash": self.payment_hash,
+            "invoice_data_amount": self.amount.to_json(),
+            "invoice_data_created_at": self.created_at.isoformat(),
+            "invoice_data_expires_at": self.expires_at.isoformat(),
+            "invoice_data_memo": self.memo,
+            "invoice_data_destination": self.destination.to_json(),
+        }
+
 
 FRAGMENT = """
 fragment InvoiceDataFragment on InvoiceData {

@@ -38,6 +38,16 @@ class PaymentRequest(Entity):
     """The status of the payment request."""
     typename: str
 
+    def to_json(self) -> Mapping[str, Any]:
+        return {
+            "__typename": self.typename,
+            "payment_request_id": self.id,
+            "payment_request_created_at": self.created_at.isoformat(),
+            "payment_request_updated_at": self.updated_at.isoformat(),
+            "payment_request_data": self.data.to_json(),
+            "payment_request_status": self.status.value,
+        }
+
 
 FRAGMENT = """
 fragment PaymentRequestFragment on PaymentRequest {

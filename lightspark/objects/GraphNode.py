@@ -76,6 +76,20 @@ query FetchNodeToAddressesConnection($entity_id: ID!, $first: Int, $types: [Node
         connection = json["entity"]["addresses"]
         return NodeToAddressesConnection_from_json(self.requester, connection)
 
+    def to_json(self) -> Mapping[str, Any]:
+        return {
+            "__typename": "GraphNode",
+            "graph_node_id": self.id,
+            "graph_node_created_at": self.created_at.isoformat(),
+            "graph_node_updated_at": self.updated_at.isoformat(),
+            "graph_node_alias": self.alias,
+            "graph_node_bitcoin_network": self.bitcoin_network.value,
+            "graph_node_color": self.color,
+            "graph_node_conductivity": self.conductivity,
+            "graph_node_display_name": self.display_name,
+            "graph_node_public_key": self.public_key,
+        }
+
 
 FRAGMENT = """
 fragment GraphNodeFragment on GraphNode {

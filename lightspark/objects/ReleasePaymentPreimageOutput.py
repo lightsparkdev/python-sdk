@@ -13,6 +13,11 @@ class ReleasePaymentPreimageOutput:
     invoice_id: str
     """The invoice of the transaction."""
 
+    def to_json(self) -> Mapping[str, Any]:
+        return {
+            "release_payment_preimage_output_invoice": {"id": self.invoice_id},
+        }
+
 
 FRAGMENT = """
 fragment ReleasePaymentPreimageOutputFragment on ReleasePaymentPreimageOutput {

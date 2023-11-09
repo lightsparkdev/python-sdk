@@ -42,6 +42,19 @@ class Invoice(PaymentRequest, Entity):
     """The total amount that has been paid to this invoice."""
     typename: str
 
+    def to_json(self) -> Mapping[str, Any]:
+        return {
+            "__typename": "Invoice",
+            "invoice_id": self.id,
+            "invoice_created_at": self.created_at.isoformat(),
+            "invoice_updated_at": self.updated_at.isoformat(),
+            "invoice_data": self.data.to_json(),
+            "invoice_status": self.status.value,
+            "invoice_amount_paid": self.amount_paid.to_json()
+            if self.amount_paid
+            else None,
+        }
+
 
 FRAGMENT = """
 fragment InvoiceFragment on Invoice {

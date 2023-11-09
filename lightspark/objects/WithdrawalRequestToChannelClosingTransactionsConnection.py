@@ -24,6 +24,15 @@ class WithdrawalRequestToChannelClosingTransactionsConnection:
     entities: List[ChannelClosingTransaction]
     """The channel closing transactions for the current page of this connection."""
 
+    def to_json(self) -> Mapping[str, Any]:
+        return {
+            "withdrawal_request_to_channel_closing_transactions_connection_page_info": self.page_info.to_json(),
+            "withdrawal_request_to_channel_closing_transactions_connection_count": self.count,
+            "withdrawal_request_to_channel_closing_transactions_connection_entities": [
+                e.to_json() for e in self.entities
+            ],
+        }
+
 
 FRAGMENT = """
 fragment WithdrawalRequestToChannelClosingTransactionsConnectionFragment on WithdrawalRequestToChannelClosingTransactionsConnection {

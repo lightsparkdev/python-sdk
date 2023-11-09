@@ -51,6 +51,20 @@ class LightningTransaction(Transaction, Entity):
     """The hash of this transaction, so it can be uniquely identified on the Lightning Network."""
     typename: str
 
+    def to_json(self) -> Mapping[str, Any]:
+        return {
+            "__typename": self.typename,
+            "lightning_transaction_id": self.id,
+            "lightning_transaction_created_at": self.created_at.isoformat(),
+            "lightning_transaction_updated_at": self.updated_at.isoformat(),
+            "lightning_transaction_status": self.status.value,
+            "lightning_transaction_resolved_at": self.resolved_at.isoformat()
+            if self.resolved_at
+            else None,
+            "lightning_transaction_amount": self.amount.to_json(),
+            "lightning_transaction_transaction_hash": self.transaction_hash,
+        }
+
 
 FRAGMENT = """
 fragment LightningTransactionFragment on LightningTransaction {

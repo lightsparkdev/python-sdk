@@ -62,6 +62,26 @@ class Withdrawal(OnChainTransaction, Transaction, Entity):
     """The Lightspark node this withdrawal originated from."""
     typename: str
 
+    def to_json(self) -> Mapping[str, Any]:
+        return {
+            "__typename": "Withdrawal",
+            "withdrawal_id": self.id,
+            "withdrawal_created_at": self.created_at.isoformat(),
+            "withdrawal_updated_at": self.updated_at.isoformat(),
+            "withdrawal_status": self.status.value,
+            "withdrawal_resolved_at": self.resolved_at.isoformat()
+            if self.resolved_at
+            else None,
+            "withdrawal_amount": self.amount.to_json(),
+            "withdrawal_transaction_hash": self.transaction_hash,
+            "withdrawal_fees": self.fees.to_json() if self.fees else None,
+            "withdrawal_block_hash": self.block_hash,
+            "withdrawal_block_height": self.block_height,
+            "withdrawal_destination_addresses": self.destination_addresses,
+            "withdrawal_num_confirmations": self.num_confirmations,
+            "withdrawal_origin": {"id": self.origin_id},
+        }
+
 
 FRAGMENT = """
 fragment WithdrawalFragment on Withdrawal {

@@ -17,6 +17,20 @@ class TransactionFailures:
 
     routing_transaction_failures: Optional[List[RoutingTransactionFailureReason]]
 
+    def to_json(self) -> Mapping[str, Any]:
+        return {
+            "transaction_failures_payment_failures": [
+                e.value for e in self.payment_failures
+            ]
+            if self.payment_failures
+            else None,
+            "transaction_failures_routing_transaction_failures": [
+                e.value for e in self.routing_transaction_failures
+            ]
+            if self.routing_transaction_failures
+            else None,
+        }
+
 
 def from_json(obj: Mapping[str, Any]) -> TransactionFailures:
     return TransactionFailures(

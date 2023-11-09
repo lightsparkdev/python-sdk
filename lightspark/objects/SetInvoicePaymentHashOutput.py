@@ -12,6 +12,11 @@ class SetInvoicePaymentHashOutput:
 
     invoice_id: str
 
+    def to_json(self) -> Mapping[str, Any]:
+        return {
+            "set_invoice_payment_hash_output_invoice": {"id": self.invoice_id},
+        }
+
 
 FRAGMENT = """
 fragment SetInvoicePaymentHashOutputFragment on SetInvoicePaymentHashOutput {

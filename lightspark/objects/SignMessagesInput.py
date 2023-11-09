@@ -12,6 +12,11 @@ class SignMessagesInput:
     signatures: List[IdAndSignature]
     """The list of the message ids and signatures."""
 
+    def to_json(self) -> Mapping[str, Any]:
+        return {
+            "sign_messages_input_signatures": [e.to_json() for e in self.signatures],
+        }
+
 
 def from_json(obj: Mapping[str, Any]) -> SignMessagesInput:
     return SignMessagesInput(

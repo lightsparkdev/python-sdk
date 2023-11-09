@@ -10,6 +10,12 @@ class UpdateNodeSharedSecretInput:
 
     shared_secret: str
 
+    def to_json(self) -> Mapping[str, Any]:
+        return {
+            "update_node_shared_secret_input_node_id": self.node_id,
+            "update_node_shared_secret_input_shared_secret": self.shared_secret,
+        }
+
 
 def from_json(obj: Mapping[str, Any]) -> UpdateNodeSharedSecretInput:
     return UpdateNodeSharedSecretInput(

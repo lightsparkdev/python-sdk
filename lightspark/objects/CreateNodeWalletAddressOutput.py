@@ -14,6 +14,12 @@ class CreateNodeWalletAddressOutput:
 
     wallet_address: str
 
+    def to_json(self) -> Mapping[str, Any]:
+        return {
+            "create_node_wallet_address_output_node": {"id": self.node_id},
+            "create_node_wallet_address_output_wallet_address": self.wallet_address,
+        }
+
 
 FRAGMENT = """
 fragment CreateNodeWalletAddressOutputFragment on CreateNodeWalletAddressOutput {

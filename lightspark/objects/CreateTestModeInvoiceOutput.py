@@ -12,6 +12,11 @@ class CreateTestModeInvoiceOutput:
 
     encoded_payment_request: str
 
+    def to_json(self) -> Mapping[str, Any]:
+        return {
+            "create_test_mode_invoice_output_encoded_payment_request": self.encoded_payment_request,
+        }
+
 
 FRAGMENT = """
 fragment CreateTestModeInvoiceOutputFragment on CreateTestModeInvoiceOutput {

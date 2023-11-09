@@ -19,6 +19,12 @@ class ChannelFees:
 
     fee_rate_per_mil: Optional[int]
 
+    def to_json(self) -> Mapping[str, Any]:
+        return {
+            "channel_fees_base_fee": self.base_fee.to_json() if self.base_fee else None,
+            "channel_fees_fee_rate_per_mil": self.fee_rate_per_mil,
+        }
+
 
 FRAGMENT = """
 fragment ChannelFeesFragment on ChannelFees {

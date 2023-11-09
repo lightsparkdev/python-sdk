@@ -32,6 +32,15 @@ class CurrencyAmount:
     preferred_currency_value_approx: float
     """The approximate float value for this CurrencyAmount in the very base level of user's preferred currency. For example, for USD, the value will be in cents."""
 
+    def to_json(self) -> Mapping[str, Any]:
+        return {
+            "currency_amount_original_value": self.original_value,
+            "currency_amount_original_unit": self.original_unit.value,
+            "currency_amount_preferred_currency_unit": self.preferred_currency_unit.value,
+            "currency_amount_preferred_currency_value_rounded": self.preferred_currency_value_rounded,
+            "currency_amount_preferred_currency_value_approx": self.preferred_currency_value_approx,
+        }
+
     _CONVERSION_MAP = {
         CurrencyUnit.BITCOIN: {
             CurrencyUnit.BITCOIN: lambda v: v,

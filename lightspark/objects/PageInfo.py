@@ -20,6 +20,14 @@ class PageInfo:
 
     end_cursor: Optional[str]
 
+    def to_json(self) -> Mapping[str, Any]:
+        return {
+            "page_info_has_next_page": self.has_next_page,
+            "page_info_has_previous_page": self.has_previous_page,
+            "page_info_start_cursor": self.start_cursor,
+            "page_info_end_cursor": self.end_cursor,
+        }
+
 
 FRAGMENT = """
 fragment PageInfoFragment on PageInfo {

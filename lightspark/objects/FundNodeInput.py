@@ -10,6 +10,12 @@ class FundNodeInput:
 
     amount_sats: Optional[int]
 
+    def to_json(self) -> Mapping[str, Any]:
+        return {
+            "fund_node_input_node_id": self.node_id,
+            "fund_node_input_amount_sats": self.amount_sats,
+        }
+
 
 def from_json(obj: Mapping[str, Any]) -> FundNodeInput:
     return FundNodeInput(

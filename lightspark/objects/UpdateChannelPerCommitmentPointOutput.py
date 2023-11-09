@@ -12,6 +12,13 @@ class UpdateChannelPerCommitmentPointOutput:
 
     channel_id: str
 
+    def to_json(self) -> Mapping[str, Any]:
+        return {
+            "update_channel_per_commitment_point_output_channel": {
+                "id": self.channel_id
+            },
+        }
+
 
 FRAGMENT = """
 fragment UpdateChannelPerCommitmentPointOutputFragment on UpdateChannelPerCommitmentPointOutput {

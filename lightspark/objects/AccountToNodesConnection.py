@@ -28,6 +28,16 @@ class AccountToNodesConnection(Connection):
     """The nodes for the current page of this connection."""
     typename: str
 
+    def to_json(self) -> Mapping[str, Any]:
+        return {
+            "__typename": "AccountToNodesConnection",
+            "account_to_nodes_connection_count": self.count,
+            "account_to_nodes_connection_page_info": self.page_info.to_json(),
+            "account_to_nodes_connection_entities": [
+                e.to_json() for e in self.entities
+            ],
+        }
+
 
 FRAGMENT = """
 fragment AccountToNodesConnectionFragment on AccountToNodesConnection {

@@ -20,6 +20,12 @@ class CreateApiTokenOutput:
     """The secret that should be used to authenticate against our API.
 This secret is not stored and will never be available again after this. You must keep this secret secure as it grants access to your account."""
 
+    def to_json(self) -> Mapping[str, Any]:
+        return {
+            "create_api_token_output_api_token": self.api_token.to_json(),
+            "create_api_token_output_client_secret": self.client_secret,
+        }
+
 
 FRAGMENT = """
 fragment CreateApiTokenOutputFragment on CreateApiTokenOutput {

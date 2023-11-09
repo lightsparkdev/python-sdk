@@ -16,6 +16,11 @@ class ScreenNodeOutput:
 
     rating: RiskRating
 
+    def to_json(self) -> Mapping[str, Any]:
+        return {
+            "screen_node_output_rating": self.rating.value,
+        }
+
 
 FRAGMENT = """
 fragment ScreenNodeOutputFragment on ScreenNodeOutput {

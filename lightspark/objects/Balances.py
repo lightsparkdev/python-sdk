@@ -30,6 +30,13 @@ It represents the amount currently available to be sent on the Lightning network
 
 It represents the amount currently available to withdraw and is usually equal to the `owned_balance` but it does not include in-flight operations (which would likely succeed and therefore likely make your withdrawal fail)."""
 
+    def to_json(self) -> Mapping[str, Any]:
+        return {
+            "balances_owned_balance": self.owned_balance.to_json(),
+            "balances_available_to_send_balance": self.available_to_send_balance.to_json(),
+            "balances_available_to_withdraw_balance": self.available_to_withdraw_balance.to_json(),
+        }
+
 
 FRAGMENT = """
 fragment BalancesFragment on Balances {

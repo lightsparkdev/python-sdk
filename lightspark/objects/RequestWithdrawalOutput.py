@@ -13,6 +13,11 @@ class RequestWithdrawalOutput:
     request_id: str
     """The request that is created for this withdrawal."""
 
+    def to_json(self) -> Mapping[str, Any]:
+        return {
+            "request_withdrawal_output_request": {"id": self.request_id},
+        }
+
 
 FRAGMENT = """
 fragment RequestWithdrawalOutputFragment on RequestWithdrawalOutput {

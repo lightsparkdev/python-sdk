@@ -25,6 +25,20 @@ class ChannelToTransactionsConnection:
     total_fees: Optional[CurrencyAmount]
     """The total amount of fees for the transactions that transited through this channel, according to the filters and constraints of the connection."""
 
+    def to_json(self) -> Mapping[str, Any]:
+        return {
+            "channel_to_transactions_connection_count": self.count,
+            "channel_to_transactions_connection_average_fee": self.average_fee.to_json()
+            if self.average_fee
+            else None,
+            "channel_to_transactions_connection_total_amount_transacted": self.total_amount_transacted.to_json()
+            if self.total_amount_transacted
+            else None,
+            "channel_to_transactions_connection_total_fees": self.total_fees.to_json()
+            if self.total_fees
+            else None,
+        }
+
 
 FRAGMENT = """
 fragment ChannelToTransactionsConnectionFragment on ChannelToTransactionsConnection {

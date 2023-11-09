@@ -12,6 +12,11 @@ class CreateInvoiceOutput:
 
     invoice_id: str
 
+    def to_json(self) -> Mapping[str, Any]:
+        return {
+            "create_invoice_output_invoice": {"id": self.invoice_id},
+        }
+
 
 FRAGMENT = """
 fragment CreateInvoiceOutputFragment on CreateInvoiceOutput {
