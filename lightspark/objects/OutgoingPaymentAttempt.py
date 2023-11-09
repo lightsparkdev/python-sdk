@@ -129,9 +129,13 @@ query FetchOutgoingPaymentAttemptToHopsConnection($entity_id: ID!, $first: Int, 
             "outgoing_payment_attempt_created_at": self.created_at.isoformat(),
             "outgoing_payment_attempt_updated_at": self.updated_at.isoformat(),
             "outgoing_payment_attempt_status": self.status.value,
-            "outgoing_payment_attempt_failure_code": self.failure_code.value,
+            "outgoing_payment_attempt_failure_code": self.failure_code.value
+            if self.failure_code
+            else None,
             "outgoing_payment_attempt_failure_source_index": self.failure_source_index,
-            "outgoing_payment_attempt_resolved_at": self.resolved_at.isoformat(),
+            "outgoing_payment_attempt_resolved_at": self.resolved_at.isoformat()
+            if self.resolved_at
+            else None,
             "outgoing_payment_attempt_amount": self.amount.to_json()
             if self.amount
             else None,

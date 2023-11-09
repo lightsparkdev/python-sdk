@@ -69,7 +69,9 @@ class ChannelOpeningTransaction(OnChainTransaction, Transaction, Entity):
             "channel_opening_transaction_created_at": self.created_at.isoformat(),
             "channel_opening_transaction_updated_at": self.updated_at.isoformat(),
             "channel_opening_transaction_status": self.status.value,
-            "channel_opening_transaction_resolved_at": self.resolved_at.isoformat(),
+            "channel_opening_transaction_resolved_at": self.resolved_at.isoformat()
+            if self.resolved_at
+            else None,
             "channel_opening_transaction_amount": self.amount.to_json(),
             "channel_opening_transaction_transaction_hash": self.transaction_hash,
             "channel_opening_transaction_fees": self.fees.to_json()

@@ -261,7 +261,7 @@ query FetchLightsparkNodeToChannelsConnection($entity_id: ID!, $first: Int, $sta
             "lightspark_node_display_name": self.display_name,
             "lightspark_node_public_key": self.public_key,
             "lightspark_node_owner": {"id": self.owner_id},
-            "lightspark_node_status": self.status.value,
+            "lightspark_node_status": self.status.value if self.status else None,
             "lightspark_node_total_balance": self.total_balance.to_json()
             if self.total_balance
             else None,

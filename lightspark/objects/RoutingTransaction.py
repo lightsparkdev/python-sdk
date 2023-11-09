@@ -72,7 +72,9 @@ class RoutingTransaction(LightningTransaction, Transaction, Entity):
             "routing_transaction_created_at": self.created_at.isoformat(),
             "routing_transaction_updated_at": self.updated_at.isoformat(),
             "routing_transaction_status": self.status.value,
-            "routing_transaction_resolved_at": self.resolved_at.isoformat(),
+            "routing_transaction_resolved_at": self.resolved_at.isoformat()
+            if self.resolved_at
+            else None,
             "routing_transaction_amount": self.amount.to_json(),
             "routing_transaction_transaction_hash": self.transaction_hash,
             "routing_transaction_incoming_channel": {"id": self.incoming_channel_id}
@@ -85,7 +87,9 @@ class RoutingTransaction(LightningTransaction, Transaction, Entity):
             "routing_transaction_failure_message": self.failure_message.to_json()
             if self.failure_message
             else None,
-            "routing_transaction_failure_reason": self.failure_reason.value,
+            "routing_transaction_failure_reason": self.failure_reason.value
+            if self.failure_reason
+            else None,
         }
 
 

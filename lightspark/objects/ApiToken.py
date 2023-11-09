@@ -44,7 +44,7 @@ class ApiToken(Entity):
             "api_token_updated_at": self.updated_at.isoformat(),
             "api_token_client_id": self.client_id,
             "api_token_name": self.name,
-            "api_token_permissions": [e.to_json() for e in self.permissions],
+            "api_token_permissions": [e.value for e in self.permissions],
         }
 
 

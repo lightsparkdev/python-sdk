@@ -66,7 +66,9 @@ class OnChainTransaction(Transaction, Entity):
             "on_chain_transaction_created_at": self.created_at.isoformat(),
             "on_chain_transaction_updated_at": self.updated_at.isoformat(),
             "on_chain_transaction_status": self.status.value,
-            "on_chain_transaction_resolved_at": self.resolved_at.isoformat(),
+            "on_chain_transaction_resolved_at": self.resolved_at.isoformat()
+            if self.resolved_at
+            else None,
             "on_chain_transaction_amount": self.amount.to_json(),
             "on_chain_transaction_transaction_hash": self.transaction_hash,
             "on_chain_transaction_fees": self.fees.to_json() if self.fees else None,

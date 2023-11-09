@@ -187,7 +187,7 @@ query FetchChannelToTransactionsConnection($entity_id: ID!, $types: [Transaction
             "channel_total_balance": self.total_balance.to_json()
             if self.total_balance
             else None,
-            "channel_status": self.status.value,
+            "channel_status": self.status.value if self.status else None,
             "channel_estimated_force_closure_wait_minutes": self.estimated_force_closure_wait_minutes,
             "channel_commit_fee": self.commit_fee.to_json()
             if self.commit_fee

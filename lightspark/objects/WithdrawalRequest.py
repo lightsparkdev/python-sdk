@@ -202,7 +202,9 @@ query FetchWithdrawalRequestToChannelOpeningTransactionsConnection($entity_id: I
             "withdrawal_request_bitcoin_address": self.bitcoin_address,
             "withdrawal_request_withdrawal_mode": self.withdrawal_mode.value,
             "withdrawal_request_status": self.status.value,
-            "withdrawal_request_completed_at": self.completed_at.isoformat(),
+            "withdrawal_request_completed_at": self.completed_at.isoformat()
+            if self.completed_at
+            else None,
             "withdrawal_request_withdrawal": {"id": self.withdrawal_id}
             if self.withdrawal_id
             else None,

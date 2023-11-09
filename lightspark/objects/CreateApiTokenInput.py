@@ -19,9 +19,7 @@ class CreateApiTokenInput:
     def to_json(self) -> Mapping[str, Any]:
         return {
             "create_api_token_input_name": self.name,
-            "create_api_token_input_permissions": [
-                e.to_json() for e in self.permissions
-            ],
+            "create_api_token_input_permissions": [e.value for e in self.permissions],
         }
 
 

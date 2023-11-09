@@ -191,7 +191,9 @@ query FetchOutgoingPaymentToAttemptsConnection($entity_id: ID!, $first: Int, $af
             "outgoing_payment_created_at": self.created_at.isoformat(),
             "outgoing_payment_updated_at": self.updated_at.isoformat(),
             "outgoing_payment_status": self.status.value,
-            "outgoing_payment_resolved_at": self.resolved_at.isoformat(),
+            "outgoing_payment_resolved_at": self.resolved_at.isoformat()
+            if self.resolved_at
+            else None,
             "outgoing_payment_amount": self.amount.to_json(),
             "outgoing_payment_transaction_hash": self.transaction_hash,
             "outgoing_payment_origin": {"id": self.origin_id},
@@ -202,7 +204,9 @@ query FetchOutgoingPaymentToAttemptsConnection($entity_id: ID!, $first: Int, $af
             "outgoing_payment_payment_request_data": self.payment_request_data.to_json()
             if self.payment_request_data
             else None,
-            "outgoing_payment_failure_reason": self.failure_reason.value,
+            "outgoing_payment_failure_reason": self.failure_reason.value
+            if self.failure_reason
+            else None,
             "outgoing_payment_failure_message": self.failure_message.to_json()
             if self.failure_message
             else None,

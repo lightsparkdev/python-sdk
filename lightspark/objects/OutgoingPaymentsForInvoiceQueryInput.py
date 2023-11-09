@@ -20,7 +20,7 @@ class OutgoingPaymentsForInvoiceQueryInput:
         return {
             "outgoing_payments_for_invoice_query_input_encoded_invoice": self.encoded_invoice,
             "outgoing_payments_for_invoice_query_input_statuses": [
-                e.to_json() for e in self.statuses
+                e.value for e in self.statuses
             ]
             if self.statuses
             else None,

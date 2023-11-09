@@ -57,7 +57,9 @@ class Transaction(Entity):
             "transaction_created_at": self.created_at.isoformat(),
             "transaction_updated_at": self.updated_at.isoformat(),
             "transaction_status": self.status.value,
-            "transaction_resolved_at": self.resolved_at.isoformat(),
+            "transaction_resolved_at": self.resolved_at.isoformat()
+            if self.resolved_at
+            else None,
             "transaction_amount": self.amount.to_json(),
             "transaction_transaction_hash": self.transaction_hash,
         }

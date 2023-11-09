@@ -58,7 +58,9 @@ class LightningTransaction(Transaction, Entity):
             "lightning_transaction_created_at": self.created_at.isoformat(),
             "lightning_transaction_updated_at": self.updated_at.isoformat(),
             "lightning_transaction_status": self.status.value,
-            "lightning_transaction_resolved_at": self.resolved_at.isoformat(),
+            "lightning_transaction_resolved_at": self.resolved_at.isoformat()
+            if self.resolved_at
+            else None,
             "lightning_transaction_amount": self.amount.to_json(),
             "lightning_transaction_transaction_hash": self.transaction_hash,
         }

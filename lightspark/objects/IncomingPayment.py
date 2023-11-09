@@ -122,7 +122,9 @@ query FetchIncomingPaymentToAttemptsConnection($entity_id: ID!, $first: Int, $st
             "incoming_payment_created_at": self.created_at.isoformat(),
             "incoming_payment_updated_at": self.updated_at.isoformat(),
             "incoming_payment_status": self.status.value,
-            "incoming_payment_resolved_at": self.resolved_at.isoformat(),
+            "incoming_payment_resolved_at": self.resolved_at.isoformat()
+            if self.resolved_at
+            else None,
             "incoming_payment_amount": self.amount.to_json(),
             "incoming_payment_transaction_hash": self.transaction_hash,
             "incoming_payment_destination": {"id": self.destination_id},

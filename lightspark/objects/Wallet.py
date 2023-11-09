@@ -1060,7 +1060,9 @@ query FetchWalletTotalAmountSent($entity_id: ID!, $created_after_date: DateTime,
             "wallet_id": self.id,
             "wallet_created_at": self.created_at.isoformat(),
             "wallet_updated_at": self.updated_at.isoformat(),
-            "wallet_last_login_at": self.last_login_at.isoformat(),
+            "wallet_last_login_at": self.last_login_at.isoformat()
+            if self.last_login_at
+            else None,
             "wallet_balances": self.balances.to_json() if self.balances else None,
             "wallet_third_party_identifier": self.third_party_identifier,
             "wallet_account": {"id": self.account_id} if self.account_id else None,

@@ -69,7 +69,9 @@ class Deposit(OnChainTransaction, Transaction, Entity):
             "deposit_created_at": self.created_at.isoformat(),
             "deposit_updated_at": self.updated_at.isoformat(),
             "deposit_status": self.status.value,
-            "deposit_resolved_at": self.resolved_at.isoformat(),
+            "deposit_resolved_at": self.resolved_at.isoformat()
+            if self.resolved_at
+            else None,
             "deposit_amount": self.amount.to_json(),
             "deposit_transaction_hash": self.transaction_hash,
             "deposit_fees": self.fees.to_json() if self.fees else None,
