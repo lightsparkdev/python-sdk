@@ -679,7 +679,7 @@ class LightsparkSyncClient:
             inviter_uma: The UMA of the inviter.
         """
         json = self._requester.execute_graphql(
-            CREATE_UMA_INVOICE_MUTATION,
+            CREATE_UMA_INVITATION_MUTATION,
             {
                 "inviter_uma": inviter_uma,
             },
@@ -799,4 +799,5 @@ class LightsparkSyncClient:
         return sha256(phone_number_e164_format.encode()).hexdigest()
 
 
+# pylint: disable=anomalous-backslash-in-string
 E614_REGEX = re.compile("^\+?[1-9]\d{1,14}$")
