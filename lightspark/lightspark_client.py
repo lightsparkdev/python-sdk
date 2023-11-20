@@ -684,7 +684,9 @@ class LightsparkSyncClient:
                 "inviter_uma": inviter_uma,
             },
         )
-        return UmaInvitation_from_json(json["create_uma_invitation"]["invitation"])
+        return UmaInvitation_from_json(
+            self._requester, json["create_uma_invitation"]["invitation"]
+        )
 
     def create_uma_invitation_with_incentives(
         self,
@@ -712,7 +714,7 @@ class LightsparkSyncClient:
             },
         )
         return UmaInvitation_from_json(
-            json["create_uma_invitation_with_incentives"]["invitation"]
+            self._requester, json["create_uma_invitation_with_incentives"]["invitation"]
         )
 
     def claim_uma_invitation(
@@ -783,7 +785,7 @@ class LightsparkSyncClient:
         )
 
         return (
-            UmaInvitation_from_json(json["uma_invitation_by_code"])
+            UmaInvitation_from_json(self._requester, json["uma_invitation_by_code"])
             if json["uma_invitation_by_code"]
             else None
         )
