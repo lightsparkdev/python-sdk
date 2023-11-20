@@ -1,6 +1,7 @@
 # Copyright ©, 2022-present, Lightspark Group, Inc. - All Rights Reserved
 
 import logging
+import re
 from dataclasses import dataclass
 from datetime import datetime, timedelta, timezone
 from hashlib import sha256
@@ -45,8 +46,11 @@ from lightspark.objects.OutgoingPayment import from_json as OutgoingPayment_from
 from lightspark.objects.PaymentDirection import PaymentDirection
 from lightspark.objects.PaymentRequestData import PaymentRequestData
 from lightspark.objects.Permission import Permission
+from lightspark.objects.RegionCode import RegionCode
 from lightspark.objects.RiskRating import RiskRating
 from lightspark.objects.TransactionStatus import TransactionStatus
+from lightspark.objects.UmaInvitation import UmaInvitation
+from lightspark.objects.UmaInvitation import from_json as UmaInvitation_from_json
 from lightspark.objects.WithdrawalMode import WithdrawalMode
 from lightspark.objects.WithdrawalRequest import WithdrawalRequest
 from lightspark.objects.WithdrawalRequest import (
@@ -54,6 +58,10 @@ from lightspark.objects.WithdrawalRequest import (
 )
 from lightspark.requests.requester import Requester
 from lightspark.scripts.bitcoin_fee_estimate import BITCOIN_FEE_ESTIMATE_QUERY
+from lightspark.scripts.claim_uma_invitation import (
+    CLAIM_UMA_INVITATION_MUTATION,
+    CLAIM_UMA_INVITATION_WITH_INCENTIVES_MUTATION,
+)
 from lightspark.scripts.create_api_token import CREATE_API_TOKEN_MUTATION
 from lightspark.scripts.create_invoice import CREATE_INVOICE_MUTATION
 from lightspark.scripts.create_lnurl_invoice import CREATE_LNURL_INVOICE_MUTATION
@@ -64,10 +72,15 @@ from lightspark.scripts.create_test_mode_invoice import (
 from lightspark.scripts.create_test_mode_payment import (
     CREATE_TEST_MODE_PAYMENT_MUTATION,
 )
+from lightspark.scripts.create_uma_invitation import (
+    CREATE_UMA_INVITATION_MUTATION,
+    CREATE_UMA_INVITATION_WITH_INCENTIVES_MUTATION,
+)
 from lightspark.scripts.create_uma_invoice import CREATE_UMA_INVOICE_MUTATION
 from lightspark.scripts.current_account import CURRENT_ACCOUNT_QUERY
 from lightspark.scripts.decoded_payment_request import DECODED_PAYMENT_REQUEST_QUERY
 from lightspark.scripts.delete_api_token import DELETE_API_TOKEN_MUTATION
+from lightspark.scripts.fetch_uma_invitation import FETCH_UMA_INVITATION_QUERY
 from lightspark.scripts.fund_node import FUND_NODE_MUTATION
 from lightspark.scripts.lightning_fee_estimate_for_invoice import (
     LIGHTNING_FEE_ESTIMATE_FOR_INVOICE_QUERY,
@@ -87,7 +100,7 @@ from lightspark.scripts.screen_node import SCREEN_NODE_MUTATION
 from lightspark.scripts.send_payment import SEND_PAYMENT_MUTATION
 from lightspark.utils.crypto import decrypt_private_key
 from lightspark.utils.enums import parse_enum
-from lightspark.utils.signing_key import SigningKey, Secp256k1SigningKey, RSASigningKey
+from lightspark.utils.signing_key import RSASigningKey, Secp256k1SigningKey, SigningKey
 
 logger = logging.getLogger("lightspark")
 
@@ -653,3 +666,135 @@ class LightsparkSyncClient:
             OutgoingPayment_from_json(self._requester, payment)
             for payment in json["outgoing_payments_for_invoice"]["payments"]
         ]
+
+    def create_uma_invitation(
+        self,
+        inviter_uma: str,
+    ) -> UmaInvitation:
+        """
+        Creates a new UMA invitation. If you are part of the incentive program, you should use the
+        `create_uma_invitation_with_incentives` method instead.
+
+        Args:
+            inviter_uma: The UMA of the inviter.
+        """
+        json = self._requester.execute_graphql(
+            CREATE_UMA_INVOICE_MUTATION,
+            {
+                "inviter_uma": inviter_uma,
+            },
+        )
+        return UmaInvitation_from_json(json["create_uma_invitation"]["invitation"])
+
+    def create_uma_invitation_with_incentives(
+        self,
+        inviter_uma: str,
+        inviter_phone_number_e164: str,
+        inviter_region: RegionCode,
+    ) -> UmaInvitation:
+        """
+        Creates a new UMA invitation with incentives. If you are not part of the incentive program, you should use the
+        `create_uma_invitation` method instead.
+
+        Args:
+            inviter_uma: The UMA of the inviter.
+            inviter_phone_number_e164: The E.164 formatted phone number of the inviter.
+            inviter_region: The region of the inviter.
+        """
+        json = self._requester.execute_graphql(
+            CREATE_UMA_INVITATION_WITH_INCENTIVES_MUTATION,
+            {
+                "inviter_uma": inviter_uma,
+                "inviter_phone_hash": self._hash_phone_number(
+                    inviter_phone_number_e164
+                ),
+                "inviter_region": inviter_region.name,
+            },
+        )
+        return UmaInvitation_from_json(
+            json["create_uma_invitation_with_incentives"]["invitation"]
+        )
+
+    def claim_uma_invitation(
+        self,
+        invitation_code: str,
+        invitee_uma: str,
+    ) -> None:
+        """
+        Claims a UMA invitation. If you are part of the incentive program, you should use the
+        `claim_uma_invitation_with_incentives` method instead.
+
+        Args:
+            invitation_code: The invitation code of the invitation to claim.
+            invitee_uma: The new UMA of the invitee.
+        """
+        self._requester.execute_graphql(
+            CLAIM_UMA_INVITATION_MUTATION,
+            {
+                "invitation_code": invitation_code,
+                "invitee_uma": invitee_uma,
+            },
+        )
+
+    def claim_uma_invitation_with_incentives(
+        self,
+        invitation_code: str,
+        invitee_uma: str,
+        invitee_phone_number_e164: str,
+        invitee_region: RegionCode,
+    ) -> None:
+        """
+        Claims a UMA invitation with incentives. If you are not part of the incentive program, you should use the
+        `claim_uma_invitation` method instead.
+
+        Args:
+            invitation_code: The invitation code of the invitation to claim.
+            invitee_uma: The new UMA of the invitee.
+            invitee_phone_number_e164: The E.164 formatted phone number of the invitee.
+            invitee_region: The region of the invitee.
+        """
+        self._requester.execute_graphql(
+            CLAIM_UMA_INVITATION_WITH_INCENTIVES_MUTATION,
+            {
+                "invitation_code": invitation_code,
+                "invitee_uma": invitee_uma,
+                "invitee_phone_hash": self._hash_phone_number(
+                    invitee_phone_number_e164
+                ),
+                "invitee_region": invitee_region,
+            },
+        )
+
+    def fetch_uma_invitation(
+        self,
+        invitation_code: str,
+    ) -> Optional[UmaInvitation]:
+        """
+        Fetches a UMA invitation by its invitation code.
+
+        Args:
+            invitation_code: The invitation code of the invitation to fetch.
+        """
+        json = self._requester.execute_graphql(
+            FETCH_UMA_INVITATION_QUERY,
+            {
+                "invitation_code": invitation_code,
+            },
+        )
+
+        return (
+            UmaInvitation_from_json(json["uma_invitation_by_code"])
+            if json["uma_invitation_by_code"]
+            else None
+        )
+
+    def _hash_phone_number(self, phone_number_e164_format: str) -> str:
+        match = E614_REGEX.search(phone_number_e164_format)
+        if not match:
+            raise LightsparkException(
+                "InvalidPhoneNumber", "The phone number must follow the E.164 format."
+            )
+        return sha256(phone_number_e164_format.encode()).hexdigest()
+
+
+E614_REGEX = re.compile("^\+?[1-9]\d{1,14}$")

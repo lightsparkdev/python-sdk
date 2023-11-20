@@ -34,7 +34,7 @@ class OutgoingPaymentAttempt(Entity):
     """The unique identifier of this entity across all Lightspark systems. Should be treated as an opaque string."""
 
     created_at: datetime
-    """The date and time when the attempt was initiated."""
+    """The date and time when the entity was first created."""
 
     updated_at: datetime
     """The date and time when the entity was last updated."""
@@ -47,6 +47,9 @@ class OutgoingPaymentAttempt(Entity):
 
     failure_source_index: Optional[int]
     """If the payment attempt failed, then this contains the index of the hop at which the problem occurred."""
+
+    attempted_at: datetime
+    """The date and time when the attempt was initiated."""
 
     resolved_at: Optional[datetime]
     """The time the outgoing payment attempt failed or succeeded."""
@@ -133,6 +136,7 @@ query FetchOutgoingPaymentAttemptToHopsConnection($entity_id: ID!, $first: Int, 
             if self.failure_code
             else None,
             "outgoing_payment_attempt_failure_source_index": self.failure_source_index,
+            "outgoing_payment_attempt_attempted_at": self.attempted_at.isoformat(),
             "outgoing_payment_attempt_resolved_at": self.resolved_at.isoformat()
             if self.resolved_at
             else None,
@@ -158,6 +162,7 @@ fragment OutgoingPaymentAttemptFragment on OutgoingPaymentAttempt {
     outgoing_payment_attempt_status: status
     outgoing_payment_attempt_failure_code: failure_code
     outgoing_payment_attempt_failure_source_index: failure_source_index
+    outgoing_payment_attempt_attempted_at: attempted_at
     outgoing_payment_attempt_resolved_at: resolved_at
     outgoing_payment_attempt_amount: amount {
         __typename
@@ -243,6 +248,9 @@ def from_json(requester: Requester, obj: Mapping[str, Any]) -> OutgoingPaymentAt
             HtlcAttemptFailureCode, obj["outgoing_payment_attempt_failure_code"]
         ),
         failure_source_index=obj["outgoing_payment_attempt_failure_source_index"],
+        attempted_at=datetime.fromisoformat(
+            obj["outgoing_payment_attempt_attempted_at"]
+        ),
         resolved_at=datetime.fromisoformat(obj["outgoing_payment_attempt_resolved_at"])
         if obj["outgoing_payment_attempt_resolved_at"]
         else None,
