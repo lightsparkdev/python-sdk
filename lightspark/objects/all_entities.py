@@ -117,6 +117,9 @@ from lightspark.objects.SignablePayload import from_json as SignablePayload_from
 from lightspark.objects.Transaction import FRAGMENT as TransactionFragment
 from lightspark.objects.Transaction import Transaction
 from lightspark.objects.Transaction import from_json as Transaction_from_json
+from lightspark.objects.UmaInvitation import FRAGMENT as UmaInvitationFragment
+from lightspark.objects.UmaInvitation import UmaInvitation
+from lightspark.objects.UmaInvitation import from_json as UmaInvitation_from_json
 from lightspark.objects.Wallet import FRAGMENT as WalletFragment
 from lightspark.objects.Wallet import Wallet
 from lightspark.objects.Wallet import from_json as Wallet_from_json
@@ -237,6 +240,10 @@ ALL_QUERIES: Mapping[Type, str] = {
             ...TransactionFragment
         }
 """,
+    UmaInvitation: """        ... on UmaInvitation {
+            ...UmaInvitationFragment
+        }
+""",
     Wallet: """        ... on Wallet {
             ...WalletFragment
         }
@@ -277,6 +284,7 @@ ALL_FRAGMENTS: Mapping[Type, str] = {
     Signable: SignableFragment,
     SignablePayload: SignablePayloadFragment,
     Transaction: TransactionFragment,
+    UmaInvitation: UmaInvitationFragment,
     Wallet: WalletFragment,
     Withdrawal: WithdrawalFragment,
     WithdrawalRequest: WithdrawalRequestFragment,
@@ -307,6 +315,7 @@ ALL_JSON_LOADERS: Mapping[Type, Callable] = {
     Signable: Signable_from_json,
     SignablePayload: SignablePayload_from_json,
     Transaction: Transaction_from_json,
+    UmaInvitation: UmaInvitation_from_json,
     Wallet: Wallet_from_json,
     Withdrawal: Withdrawal_from_json,
     WithdrawalRequest: WithdrawalRequest_from_json,

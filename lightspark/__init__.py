@@ -26,10 +26,24 @@ from lightspark.objects.ChannelStatus import ChannelStatus
 from lightspark.objects.ChannelToTransactionsConnection import (
     ChannelToTransactionsConnection,
 )
+from lightspark.objects.ClaimUmaInvitationInput import ClaimUmaInvitationInput
+from lightspark.objects.ClaimUmaInvitationOutput import ClaimUmaInvitationOutput
+from lightspark.objects.ClaimUmaInvitationWithIncentivesInput import (
+    ClaimUmaInvitationWithIncentivesInput,
+)
+from lightspark.objects.ClaimUmaInvitationWithIncentivesOutput import (
+    ClaimUmaInvitationWithIncentivesOutput,
+)
 from lightspark.objects.ComplianceProvider import ComplianceProvider
 from lightspark.objects.Connection import Connection
 from lightspark.objects.CreateApiTokenInput import CreateApiTokenInput
 from lightspark.objects.CreateApiTokenOutput import CreateApiTokenOutput
+from lightspark.objects.CreateInvitationWithIncentivesInput import (
+    CreateInvitationWithIncentivesInput,
+)
+from lightspark.objects.CreateInvitationWithIncentivesOutput import (
+    CreateInvitationWithIncentivesOutput,
+)
 from lightspark.objects.CreateInvoiceInput import CreateInvoiceInput
 from lightspark.objects.CreateInvoiceOutput import CreateInvoiceOutput
 from lightspark.objects.CreateLnurlInvoiceInput import CreateLnurlInvoiceInput
@@ -41,6 +55,8 @@ from lightspark.objects.CreateTestModeInvoiceInput import CreateTestModeInvoiceI
 from lightspark.objects.CreateTestModeInvoiceOutput import CreateTestModeInvoiceOutput
 from lightspark.objects.CreateTestModePaymentInput import CreateTestModePaymentInput
 from lightspark.objects.CreateTestModePaymentoutput import CreateTestModePaymentoutput
+from lightspark.objects.CreateUmaInvitationInput import CreateUmaInvitationInput
+from lightspark.objects.CreateUmaInvitationOutput import CreateUmaInvitationOutput
 from lightspark.objects.CreateUmaInvoiceInput import CreateUmaInvoiceInput
 from lightspark.objects.CurrencyAmount import CurrencyAmount
 from lightspark.objects.CurrencyUnit import CurrencyUnit
@@ -57,6 +73,10 @@ from lightspark.objects.GraphNode import GraphNode
 from lightspark.objects.Hop import Hop
 from lightspark.objects.HtlcAttemptFailureCode import HtlcAttemptFailureCode
 from lightspark.objects.IdAndSignature import IdAndSignature
+from lightspark.objects.IncentivesIneligibilityReason import (
+    IncentivesIneligibilityReason,
+)
+from lightspark.objects.IncentivesStatus import IncentivesStatus
 from lightspark.objects.IncomingPayment import IncomingPayment
 from lightspark.objects.IncomingPaymentAttempt import IncomingPaymentAttempt
 from lightspark.objects.IncomingPaymentAttemptStatus import IncomingPaymentAttemptStatus
@@ -115,6 +135,7 @@ from lightspark.objects.PaymentRequestStatus import PaymentRequestStatus
 from lightspark.objects.PayUmaInvoiceInput import PayUmaInvoiceInput
 from lightspark.objects.Permission import Permission
 from lightspark.objects.PostTransactionData import PostTransactionData
+from lightspark.objects.RegionCode import RegionCode
 from lightspark.objects.RegisterPaymentInput import RegisterPaymentInput
 from lightspark.objects.RegisterPaymentOutput import RegisterPaymentOutput
 from lightspark.objects.ReleaseChannelPerCommitmentSecretInput import (
@@ -152,6 +173,7 @@ from lightspark.objects.Transaction import Transaction
 from lightspark.objects.TransactionFailures import TransactionFailures
 from lightspark.objects.TransactionStatus import TransactionStatus
 from lightspark.objects.TransactionType import TransactionType
+from lightspark.objects.UmaInvitation import UmaInvitation
 from lightspark.objects.UpdateChannelPerCommitmentPointInput import (
     UpdateChannelPerCommitmentPointInput,
 )
