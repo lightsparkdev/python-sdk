@@ -12,7 +12,7 @@ pip install lightspark
 
 ## Documentation
 
-The documentation for this SDK (installation, usage, etc.) is available at https://app.lightspark.com/docs/sdk
+The documentation for this SDK (installation, usage, etc.) is available at https://docs.lightspark.com/lightspark-sdk/getting-started?language=Python
 
 ## Sample code
 
