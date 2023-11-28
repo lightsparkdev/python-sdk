@@ -222,6 +222,16 @@ payment = client.create_test_mode_payment(
 print(f"Simulated payment to the invoice done with ID = {payment.id}")
 print("")
 
+# Create and cancel an invoice
+invoice = client.create_invoice(
+    node_id=node_id,
+    amount_msats=42000,
+    memo="Cancelable Pizza!",
+)
+print(f"Invoice created from {node_name}: {invoice.id}")
+cancelled_invoice = client.cancel_invoice(invoice_id=invoice.id)
+print(f"Cancelled invoice {cancelled_invoice.id}")
+
 # Pay invoice sample
 #
 test_invoice = client.create_test_mode_invoice(

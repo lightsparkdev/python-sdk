@@ -17,6 +17,8 @@ from lightspark.objects.ApiToken import ApiToken
 from lightspark.objects.Balances import Balances
 from lightspark.objects.BitcoinNetwork import BitcoinNetwork
 from lightspark.objects.BlockchainBalance import BlockchainBalance
+from lightspark.objects.CancelInvoiceInput import CancelInvoiceInput
+from lightspark.objects.CancelInvoiceOutput import CancelInvoiceOutput
 from lightspark.objects.Channel import Channel
 from lightspark.objects.ChannelClosingTransaction import ChannelClosingTransaction
 from lightspark.objects.ChannelFees import ChannelFees
