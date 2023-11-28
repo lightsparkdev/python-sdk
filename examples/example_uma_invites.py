@@ -18,7 +18,8 @@ logger.setLevel(logging.DEBUG)
 
 api_token_id = os.environ.get("LIGHTSPARK_API_TOKEN_CLIENT_ID")
 api_token_secret = os.environ.get("LIGHTSPARK_API_TOKEN_CLIENT_SECRET")
-base_url = os.environ.get("LIGHTSPARK_EXAMPLE_BASE_URL")
+base_url = os.environ.get("LIGHTSPARK_API_ENDPOINT")
+vasp_domain = os.environ.get("LIGHTSPARK_UMA_VASP_DOMAIN")
 
 # Let's start by creating a client
 
@@ -33,7 +34,7 @@ client = lightspark.LightsparkSyncClient(
 
 # Create an invitation
 invitation = client.create_uma_invitation_with_incentives(
-    inviter_uma="$alice@testvasp1.com",
+    inviter_uma=f"$alice@{vasp_domain}",
     inviter_phone_number_e164="+11234567890",
     inviter_region=lightspark.RegionCode.US,
 )
@@ -47,7 +48,7 @@ print(
 
 client.claim_uma_invitation_with_incentives(
     invitation_code=invitation.code,
-    invitee_uma="$bob@testvasp2.com",
+    invitee_uma=f"$bob@{vasp_domain}",
     invitee_phone_number_e164="+520987654321",
     invitee_region=lightspark.RegionCode.MX,
 )
@@ -61,7 +62,7 @@ try:
     print("Claiming the same invitation again...")
     client.claim_uma_invitation_with_incentives(
         invitation_code=invitation.code,
-        invitee_uma="$bob@testvasp2.com",
+        invitee_uma=f"$bob@{vasp_domain}",
         invitee_phone_number_e164="+520987654321",
         invitee_region=lightspark.RegionCode.MX,
     )
