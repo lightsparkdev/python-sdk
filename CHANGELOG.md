@@ -1,5 +1,10 @@
 # Changelog
 
+# v2.4.0
+
+- Add a function for cancelling unpaid invoices.
+- Add UMA invites support.
+
 # v2.3.0
 
 - Add the Balances object to wallets and nodes for a more human-readable view of balances.
