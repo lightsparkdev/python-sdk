@@ -58,6 +58,7 @@ from lightspark.objects.WithdrawalRequest import (
 )
 from lightspark.requests.requester import Requester
 from lightspark.scripts.bitcoin_fee_estimate import BITCOIN_FEE_ESTIMATE_QUERY
+from lightspark.scripts.cancel_invoice import CANCEL_INVOICE_MUTATION
 from lightspark.scripts.claim_uma_invitation import (
     CLAIM_UMA_INVITATION_MUTATION,
     CLAIM_UMA_INVITATION_WITH_INCENTIVES_MUTATION,
@@ -209,6 +210,26 @@ class LightsparkSyncClient:
         return Invoice_from_json(
             self._requester, json["create_lnurl_invoice"]["invoice"]
         )
+
+    def cancel_invoice(
+        self,
+        invoice_id: str,
+    ) -> Invoice:
+        """Cancels an existing unpaid invoice and returns that invoice. Cancelled invoices cannot be paid.
+
+        Args:
+            invoice_id (str): The ID of the invoice to cancel.
+
+        Returns:
+            Invoice: An `Invoice` object representing the cancelled invoice.
+        """
+        logger.info("Canceling an invoice with id %s.", invoice_id)
+        json = self._requester.execute_graphql(
+            CANCEL_INVOICE_MUTATION,
+            {"invoice_id": invoice_id},
+        )
+
+        return Invoice_from_json(self._requester, json["cancel_invoice"]["invoice"])
 
     def create_node_wallet_address(
         self,
