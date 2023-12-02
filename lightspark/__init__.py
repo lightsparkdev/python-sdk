@@ -13,6 +13,9 @@ from lightspark.objects.AccountToTransactionsConnection import (
     AccountToTransactionsConnection,
 )
 from lightspark.objects.AccountToWalletsConnection import AccountToWalletsConnection
+from lightspark.objects.AccountToWithdrawalRequestsConnection import (
+    AccountToWithdrawalRequestsConnection,
+)
 from lightspark.objects.ApiToken import ApiToken
 from lightspark.objects.Balances import Balances
 from lightspark.objects.BitcoinNetwork import BitcoinNetwork
@@ -191,6 +194,9 @@ from lightspark.objects.WalletToPaymentRequestsConnection import (
 )
 from lightspark.objects.WalletToTransactionsConnection import (
     WalletToTransactionsConnection,
+)
+from lightspark.objects.WalletToWithdrawalRequestsConnection import (
+    WalletToWithdrawalRequestsConnection,
 )
 from lightspark.objects.WebhookEventType import WebhookEventType
 from lightspark.objects.Withdrawal import Withdrawal
