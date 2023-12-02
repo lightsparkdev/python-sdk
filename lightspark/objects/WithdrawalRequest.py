@@ -43,11 +43,17 @@ class WithdrawalRequest(Entity):
     updated_at: datetime
     """The date and time when the entity was last updated."""
 
+    requested_amount: CurrencyAmount
+    """The requested amount of money to be withdrawn. If the requested amount is -1, it means to withdraw all."""
+
     amount: CurrencyAmount
     """The amount of money that should be withdrawn in this request."""
 
     estimated_amount: Optional[CurrencyAmount]
     """If the requested amount is `-1` (i.e. everything), this field may contain an estimate of the amount for the withdrawal."""
+
+    amount_withdrawn: Optional[CurrencyAmount]
+    """The actual amount that is withdrawn. It will be set once the request is completed."""
 
     bitcoin_address: str
     """The bitcoin address where the funds should be sent."""
@@ -195,9 +201,13 @@ query FetchWithdrawalRequestToChannelOpeningTransactionsConnection($entity_id: I
             "withdrawal_request_id": self.id,
             "withdrawal_request_created_at": self.created_at.isoformat(),
             "withdrawal_request_updated_at": self.updated_at.isoformat(),
+            "withdrawal_request_requested_amount": self.requested_amount.to_json(),
             "withdrawal_request_amount": self.amount.to_json(),
             "withdrawal_request_estimated_amount": self.estimated_amount.to_json()
             if self.estimated_amount
+            else None,
+            "withdrawal_request_amount_withdrawn": self.amount_withdrawn.to_json()
+            if self.amount_withdrawn
             else None,
             "withdrawal_request_bitcoin_address": self.bitcoin_address,
             "withdrawal_request_withdrawal_mode": self.withdrawal_mode.value,
@@ -217,6 +227,14 @@ fragment WithdrawalRequestFragment on WithdrawalRequest {
     withdrawal_request_id: id
     withdrawal_request_created_at: created_at
     withdrawal_request_updated_at: updated_at
+    withdrawal_request_requested_amount: requested_amount {
+        __typename
+        currency_amount_original_value: original_value
+        currency_amount_original_unit: original_unit
+        currency_amount_preferred_currency_unit: preferred_currency_unit
+        currency_amount_preferred_currency_value_rounded: preferred_currency_value_rounded
+        currency_amount_preferred_currency_value_approx: preferred_currency_value_approx
+    }
     withdrawal_request_amount: amount {
         __typename
         currency_amount_original_value: original_value
@@ -226,6 +244,14 @@ fragment WithdrawalRequestFragment on WithdrawalRequest {
         currency_amount_preferred_currency_value_approx: preferred_currency_value_approx
     }
     withdrawal_request_estimated_amount: estimated_amount {
+        __typename
+        currency_amount_original_value: original_value
+        currency_amount_original_unit: original_unit
+        currency_amount_preferred_currency_unit: preferred_currency_unit
+        currency_amount_preferred_currency_value_rounded: preferred_currency_value_rounded
+        currency_amount_preferred_currency_value_approx: preferred_currency_value_approx
+    }
+    withdrawal_request_amount_withdrawn: amount_withdrawn {
         __typename
         currency_amount_original_value: original_value
         currency_amount_original_unit: original_unit
@@ -251,11 +277,19 @@ def from_json(requester: Requester, obj: Mapping[str, Any]) -> WithdrawalRequest
         id=obj["withdrawal_request_id"],
         created_at=datetime.fromisoformat(obj["withdrawal_request_created_at"]),
         updated_at=datetime.fromisoformat(obj["withdrawal_request_updated_at"]),
+        requested_amount=CurrencyAmount_from_json(
+            requester, obj["withdrawal_request_requested_amount"]
+        ),
         amount=CurrencyAmount_from_json(requester, obj["withdrawal_request_amount"]),
         estimated_amount=CurrencyAmount_from_json(
             requester, obj["withdrawal_request_estimated_amount"]
         )
         if obj["withdrawal_request_estimated_amount"]
+        else None,
+        amount_withdrawn=CurrencyAmount_from_json(
+            requester, obj["withdrawal_request_amount_withdrawn"]
+        )
+        if obj["withdrawal_request_amount_withdrawn"]
         else None,
         bitcoin_address=obj["withdrawal_request_bitcoin_address"],
         withdrawal_mode=parse_enum(

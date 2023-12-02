@@ -28,6 +28,10 @@ from .AccountToWalletsConnection import AccountToWalletsConnection
 from .AccountToWalletsConnection import (
     from_json as AccountToWalletsConnection_from_json,
 )
+from .AccountToWithdrawalRequestsConnection import AccountToWithdrawalRequestsConnection
+from .AccountToWithdrawalRequestsConnection import (
+    from_json as AccountToWithdrawalRequestsConnection_from_json,
+)
 from .BitcoinNetwork import BitcoinNetwork
 from .BlockchainBalance import BlockchainBalance
 from .BlockchainBalance import from_json as BlockchainBalance_from_json
@@ -38,6 +42,7 @@ from .LightsparkNodeOwner import LightsparkNodeOwner
 from .TransactionFailures import TransactionFailures
 from .TransactionStatus import TransactionStatus
 from .TransactionType import TransactionType
+from .WithdrawalRequestStatus import WithdrawalRequestStatus
 
 
 @dataclass
@@ -1686,6 +1691,97 @@ query FetchAccountToPaymentRequestsConnection($entity_id: ID!, $first: Int, $aft
         )
         connection = json["entity"]["payment_requests"]
         return AccountToPaymentRequestsConnection_from_json(self.requester, connection)
+
+    def get_withdrawal_requests(
+        self,
+        first: Optional[int] = None,
+        after: Optional[str] = None,
+        bitcoin_networks: Optional[List[BitcoinNetwork]] = None,
+        statuses: Optional[List[WithdrawalRequestStatus]] = None,
+        node_ids: Optional[List[str]] = None,
+        after_date: Optional[datetime] = None,
+        before_date: Optional[datetime] = None,
+    ) -> AccountToWithdrawalRequestsConnection:
+        json = self.requester.execute_graphql(
+            """
+query FetchAccountToWithdrawalRequestsConnection($entity_id: ID!, $first: Int, $after: String, $bitcoin_networks: [BitcoinNetwork!], $statuses: [WithdrawalRequestStatus!], $node_ids: [ID!], $after_date: DateTime, $before_date: DateTime) {
+    entity(id: $entity_id) {
+        ... on Account {
+            withdrawal_requests(, first: $first, after: $after, bitcoin_networks: $bitcoin_networks, statuses: $statuses, node_ids: $node_ids, after_date: $after_date, before_date: $before_date) {
+                __typename
+                account_to_withdrawal_requests_connection_count: count
+                account_to_withdrawal_requests_connection_page_info: page_info {
+                    __typename
+                    page_info_has_next_page: has_next_page
+                    page_info_has_previous_page: has_previous_page
+                    page_info_start_cursor: start_cursor
+                    page_info_end_cursor: end_cursor
+                }
+                account_to_withdrawal_requests_connection_entities: entities {
+                    __typename
+                    withdrawal_request_id: id
+                    withdrawal_request_created_at: created_at
+                    withdrawal_request_updated_at: updated_at
+                    withdrawal_request_requested_amount: requested_amount {
+                        __typename
+                        currency_amount_original_value: original_value
+                        currency_amount_original_unit: original_unit
+                        currency_amount_preferred_currency_unit: preferred_currency_unit
+                        currency_amount_preferred_currency_value_rounded: preferred_currency_value_rounded
+                        currency_amount_preferred_currency_value_approx: preferred_currency_value_approx
+                    }
+                    withdrawal_request_amount: amount {
+                        __typename
+                        currency_amount_original_value: original_value
+                        currency_amount_original_unit: original_unit
+                        currency_amount_preferred_currency_unit: preferred_currency_unit
+                        currency_amount_preferred_currency_value_rounded: preferred_currency_value_rounded
+                        currency_amount_preferred_currency_value_approx: preferred_currency_value_approx
+                    }
+                    withdrawal_request_estimated_amount: estimated_amount {
+                        __typename
+                        currency_amount_original_value: original_value
+                        currency_amount_original_unit: original_unit
+                        currency_amount_preferred_currency_unit: preferred_currency_unit
+                        currency_amount_preferred_currency_value_rounded: preferred_currency_value_rounded
+                        currency_amount_preferred_currency_value_approx: preferred_currency_value_approx
+                    }
+                    withdrawal_request_amount_withdrawn: amount_withdrawn {
+                        __typename
+                        currency_amount_original_value: original_value
+                        currency_amount_original_unit: original_unit
+                        currency_amount_preferred_currency_unit: preferred_currency_unit
+                        currency_amount_preferred_currency_value_rounded: preferred_currency_value_rounded
+                        currency_amount_preferred_currency_value_approx: preferred_currency_value_approx
+                    }
+                    withdrawal_request_bitcoin_address: bitcoin_address
+                    withdrawal_request_withdrawal_mode: withdrawal_mode
+                    withdrawal_request_status: status
+                    withdrawal_request_completed_at: completed_at
+                    withdrawal_request_withdrawal: withdrawal {
+                        id
+                    }
+                }
+            }
+        }
+    }
+}
+            """,
+            {
+                "entity_id": self.id,
+                "first": first,
+                "after": after,
+                "bitcoin_networks": bitcoin_networks,
+                "statuses": statuses,
+                "node_ids": node_ids,
+                "after_date": after_date,
+                "before_date": before_date,
+            },
+        )
+        connection = json["entity"]["withdrawal_requests"]
+        return AccountToWithdrawalRequestsConnection_from_json(
+            self.requester, connection
+        )
 
     def get_wallets(
         self,
