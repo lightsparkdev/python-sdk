@@ -19,10 +19,17 @@ from .ChannelStatus import ChannelStatus
 from .CurrencyAmount import CurrencyAmount
 from .CurrencyAmount import from_json as CurrencyAmount_from_json
 from .Entity import Entity
+from .LightningPaymentDirection import LightningPaymentDirection
 from .LightsparkNodeStatus import LightsparkNodeStatus
 from .LightsparkNodeToChannelsConnection import LightsparkNodeToChannelsConnection
 from .LightsparkNodeToChannelsConnection import (
     from_json as LightsparkNodeToChannelsConnection_from_json,
+)
+from .LightsparkNodeToDailyLiquidityForecastsConnection import (
+    LightsparkNodeToDailyLiquidityForecastsConnection,
+)
+from .LightsparkNodeToDailyLiquidityForecastsConnection import (
+    from_json as LightsparkNodeToDailyLiquidityForecastsConnection_from_json,
 )
 from .Node import Node
 from .NodeAddressType import NodeAddressType
@@ -247,6 +254,52 @@ query FetchLightsparkNodeToChannelsConnection($entity_id: ID!, $first: Int, $sta
         )
         connection = json["entity"]["channels"]
         return LightsparkNodeToChannelsConnection_from_json(self.requester, connection)
+
+    def get_daily_liquidity_forecasts(
+        self,
+        from_date: datetime,
+        to_date: datetime,
+        direction: LightningPaymentDirection,
+    ) -> LightsparkNodeToDailyLiquidityForecastsConnection:
+        json = self.requester.execute_graphql(
+            """
+query FetchLightsparkNodeToDailyLiquidityForecastsConnection($entity_id: ID!, $from_date: Date!, $to_date: Date!, $direction: LightningPaymentDirection!) {
+    entity(id: $entity_id) {
+        ... on LightsparkNode {
+            daily_liquidity_forecasts(, from_date: $from_date, to_date: $to_date, direction: $direction) {
+                __typename
+                lightspark_node_to_daily_liquidity_forecasts_connection_from_date: from_date
+                lightspark_node_to_daily_liquidity_forecasts_connection_to_date: to_date
+                lightspark_node_to_daily_liquidity_forecasts_connection_direction: direction
+                lightspark_node_to_daily_liquidity_forecasts_connection_entities: entities {
+                    __typename
+                    daily_liquidity_forecast_date: date
+                    daily_liquidity_forecast_direction: direction
+                    daily_liquidity_forecast_amount: amount {
+                        __typename
+                        currency_amount_original_value: original_value
+                        currency_amount_original_unit: original_unit
+                        currency_amount_preferred_currency_unit: preferred_currency_unit
+                        currency_amount_preferred_currency_value_rounded: preferred_currency_value_rounded
+                        currency_amount_preferred_currency_value_approx: preferred_currency_value_approx
+                    }
+                }
+            }
+        }
+    }
+}
+            """,
+            {
+                "entity_id": self.id,
+                "from_date": from_date,
+                "to_date": to_date,
+                "direction": direction,
+            },
+        )
+        connection = json["entity"]["daily_liquidity_forecasts"]
+        return LightsparkNodeToDailyLiquidityForecastsConnection_from_json(
+            self.requester, connection
+        )
 
     def to_json(self) -> Mapping[str, Any]:
         return {

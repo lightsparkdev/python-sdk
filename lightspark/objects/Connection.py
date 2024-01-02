@@ -36,6 +36,20 @@ fragment ConnectionFragment on Connection {
             id
         }
     }
+    ... on AccountToChannelsConnection {
+        __typename
+        account_to_channels_connection_count: count
+        account_to_channels_connection_page_info: page_info {
+            __typename
+            page_info_has_next_page: has_next_page
+            page_info_has_previous_page: has_previous_page
+            page_info_start_cursor: start_cursor
+            page_info_end_cursor: end_cursor
+        }
+        account_to_channels_connection_entities: entities {
+            id
+        }
+    }
     ... on AccountToNodesConnection {
         __typename
         account_to_nodes_connection_count: count

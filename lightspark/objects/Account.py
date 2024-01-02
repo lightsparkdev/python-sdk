@@ -604,15 +604,23 @@ query FetchAccountUptimePercentage($entity_id: ID!, $after_date: DateTime, $befo
         after_date: Optional[datetime] = None,
         before_date: Optional[datetime] = None,
         first: Optional[int] = None,
+        after: Optional[str] = None,
     ) -> AccountToChannelsConnection:
         json = self.requester.execute_graphql(
             """
-query FetchAccountToChannelsConnection($entity_id: ID!, $bitcoin_network: BitcoinNetwork!, $lightning_node_id: ID, $after_date: DateTime, $before_date: DateTime, $first: Int) {
+query FetchAccountToChannelsConnection($entity_id: ID!, $bitcoin_network: BitcoinNetwork!, $lightning_node_id: ID, $after_date: DateTime, $before_date: DateTime, $first: Int, $after: String) {
     entity(id: $entity_id) {
         ... on Account {
-            channels(, bitcoin_network: $bitcoin_network, lightning_node_id: $lightning_node_id, after_date: $after_date, before_date: $before_date, first: $first) {
+            channels(, bitcoin_network: $bitcoin_network, lightning_node_id: $lightning_node_id, after_date: $after_date, before_date: $before_date, first: $first, after: $after) {
                 __typename
                 account_to_channels_connection_count: count
+                account_to_channels_connection_page_info: page_info {
+                    __typename
+                    page_info_has_next_page: has_next_page
+                    page_info_has_previous_page: has_previous_page
+                    page_info_start_cursor: start_cursor
+                    page_info_end_cursor: end_cursor
+                }
                 account_to_channels_connection_entities: entities {
                     __typename
                     channel_id: id
@@ -719,6 +727,7 @@ query FetchAccountToChannelsConnection($entity_id: ID!, $bitcoin_network: Bitcoi
                 "after_date": after_date,
                 "before_date": before_date,
                 "first": first,
+                "after": after,
             },
         )
         connection = json["entity"]["channels"]

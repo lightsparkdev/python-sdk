@@ -65,6 +65,7 @@ from lightspark.objects.CreateUmaInvitationOutput import CreateUmaInvitationOutp
 from lightspark.objects.CreateUmaInvoiceInput import CreateUmaInvoiceInput
 from lightspark.objects.CurrencyAmount import CurrencyAmount
 from lightspark.objects.CurrencyUnit import CurrencyUnit
+from lightspark.objects.DailyLiquidityForecast import DailyLiquidityForecast
 from lightspark.objects.DeclineToSignMessagesInput import DeclineToSignMessagesInput
 from lightspark.objects.DeclineToSignMessagesOutput import DeclineToSignMessagesOutput
 from lightspark.objects.DeleteApiTokenInput import DeleteApiTokenInput
@@ -98,12 +99,16 @@ from lightspark.objects.LightningFeeEstimateForNodeInput import (
     LightningFeeEstimateForNodeInput,
 )
 from lightspark.objects.LightningFeeEstimateOutput import LightningFeeEstimateOutput
+from lightspark.objects.LightningPaymentDirection import LightningPaymentDirection
 from lightspark.objects.LightningTransaction import LightningTransaction
 from lightspark.objects.LightsparkNode import LightsparkNode
 from lightspark.objects.LightsparkNodeOwner import LightsparkNodeOwner
 from lightspark.objects.LightsparkNodeStatus import LightsparkNodeStatus
 from lightspark.objects.LightsparkNodeToChannelsConnection import (
     LightsparkNodeToChannelsConnection,
+)
+from lightspark.objects.LightsparkNodeToDailyLiquidityForecastsConnection import (
+    LightsparkNodeToDailyLiquidityForecastsConnection,
 )
 from lightspark.objects.LightsparkNodeWithOSK import LightsparkNodeWithOSK
 from lightspark.objects.LightsparkNodeWithRemoteSigning import (
@@ -200,6 +205,8 @@ from lightspark.objects.WalletToWithdrawalRequestsConnection import (
 )
 from lightspark.objects.WebhookEventType import WebhookEventType
 from lightspark.objects.Withdrawal import Withdrawal
+from lightspark.objects.WithdrawalFeeEstimateInput import WithdrawalFeeEstimateInput
+from lightspark.objects.WithdrawalFeeEstimateOutput import WithdrawalFeeEstimateOutput
 from lightspark.objects.WithdrawalMode import WithdrawalMode
 from lightspark.objects.WithdrawalRequest import WithdrawalRequest
 from lightspark.objects.WithdrawalRequestStatus import WithdrawalRequestStatus
