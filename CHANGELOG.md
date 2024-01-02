@@ -1,5 +1,8 @@
 # Changelog
 
+# v2.4.1
+- Update dependencies.
+
 # v2.4.0
 
 - Add a function for cancelling unpaid invoices.
