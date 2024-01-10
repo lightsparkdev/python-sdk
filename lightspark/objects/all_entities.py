@@ -25,6 +25,9 @@ from lightspark.objects.ChannelOpeningTransaction import ChannelOpeningTransacti
 from lightspark.objects.ChannelOpeningTransaction import (
     from_json as ChannelOpeningTransaction_from_json,
 )
+from lightspark.objects.ChannelSnapshot import FRAGMENT as ChannelSnapshotFragment
+from lightspark.objects.ChannelSnapshot import ChannelSnapshot
+from lightspark.objects.ChannelSnapshot import from_json as ChannelSnapshot_from_json
 from lightspark.objects.Deposit import FRAGMENT as DepositFragment
 from lightspark.objects.Deposit import Deposit
 from lightspark.objects.Deposit import from_json as Deposit_from_json
@@ -156,6 +159,10 @@ ALL_QUERIES: Mapping[Type, str] = {
             ...ChannelOpeningTransactionFragment
         }
 """,
+    ChannelSnapshot: """        ... on ChannelSnapshot {
+            ...ChannelSnapshotFragment
+        }
+""",
     Deposit: """        ... on Deposit {
             ...DepositFragment
         }
@@ -263,6 +270,7 @@ ALL_FRAGMENTS: Mapping[Type, str] = {
     Channel: ChannelFragment,
     ChannelClosingTransaction: ChannelClosingTransactionFragment,
     ChannelOpeningTransaction: ChannelOpeningTransactionFragment,
+    ChannelSnapshot: ChannelSnapshotFragment,
     Deposit: DepositFragment,
     Entity: EntityFragment,
     GraphNode: GraphNodeFragment,
@@ -295,6 +303,7 @@ ALL_JSON_LOADERS: Mapping[Type, Callable] = {
     Channel: Channel_from_json,
     ChannelClosingTransaction: ChannelClosingTransaction_from_json,
     ChannelOpeningTransaction: ChannelOpeningTransaction_from_json,
+    ChannelSnapshot: ChannelSnapshot_from_json,
     Deposit: Deposit_from_json,
     GraphNode: GraphNode_from_json,
     Hop: Hop_from_json,
