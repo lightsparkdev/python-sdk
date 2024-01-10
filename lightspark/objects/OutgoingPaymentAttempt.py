@@ -9,8 +9,6 @@ from lightspark.objects.OutgoingPaymentAttemptStatus import OutgoingPaymentAttem
 from lightspark.requests.requester import Requester
 from lightspark.utils.enums import parse_enum, parse_enum_optional
 
-from .ChannelSnapshot import ChannelSnapshot
-from .ChannelSnapshot import from_json as ChannelSnapshot_from_json
 from .CurrencyAmount import CurrencyAmount
 from .CurrencyAmount import from_json as CurrencyAmount_from_json
 from .Entity import Entity
@@ -63,7 +61,7 @@ class OutgoingPaymentAttempt(Entity):
     outgoing_payment_id: str
     """The outgoing payment for this attempt."""
 
-    channel_snapshot: Optional[ChannelSnapshot]
+    channel_snapshot_id: Optional[str]
     """The channel snapshot at the time the outgoing payment attempt was made."""
     typename: str
 
@@ -147,8 +145,10 @@ query FetchOutgoingPaymentAttemptToHopsConnection($entity_id: ID!, $first: Int, 
             "outgoing_payment_attempt_outgoing_payment": {
                 "id": self.outgoing_payment_id
             },
-            "outgoing_payment_attempt_channel_snapshot": self.channel_snapshot.to_json()
-            if self.channel_snapshot
+            "outgoing_payment_attempt_channel_snapshot": {
+                "id": self.channel_snapshot_id
+            }
+            if self.channel_snapshot_id
             else None,
         }
 
@@ -184,51 +184,7 @@ fragment OutgoingPaymentAttemptFragment on OutgoingPaymentAttempt {
         id
     }
     outgoing_payment_attempt_channel_snapshot: channel_snapshot {
-        __typename
-        channel_snapshot_channel: channel {
-            id
-        }
-        channel_snapshot_timestamp: timestamp
-        channel_snapshot_local_balance: local_balance {
-            __typename
-            currency_amount_original_value: original_value
-            currency_amount_original_unit: original_unit
-            currency_amount_preferred_currency_unit: preferred_currency_unit
-            currency_amount_preferred_currency_value_rounded: preferred_currency_value_rounded
-            currency_amount_preferred_currency_value_approx: preferred_currency_value_approx
-        }
-        channel_snapshot_local_unsettled_balance: local_unsettled_balance {
-            __typename
-            currency_amount_original_value: original_value
-            currency_amount_original_unit: original_unit
-            currency_amount_preferred_currency_unit: preferred_currency_unit
-            currency_amount_preferred_currency_value_rounded: preferred_currency_value_rounded
-            currency_amount_preferred_currency_value_approx: preferred_currency_value_approx
-        }
-        channel_snapshot_local_channel_reserve: local_channel_reserve {
-            __typename
-            currency_amount_original_value: original_value
-            currency_amount_original_unit: original_unit
-            currency_amount_preferred_currency_unit: preferred_currency_unit
-            currency_amount_preferred_currency_value_rounded: preferred_currency_value_rounded
-            currency_amount_preferred_currency_value_approx: preferred_currency_value_approx
-        }
-        channel_snapshot_remote_balance: remote_balance {
-            __typename
-            currency_amount_original_value: original_value
-            currency_amount_original_unit: original_unit
-            currency_amount_preferred_currency_unit: preferred_currency_unit
-            currency_amount_preferred_currency_value_rounded: preferred_currency_value_rounded
-            currency_amount_preferred_currency_value_approx: preferred_currency_value_approx
-        }
-        channel_snapshot_remote_unsettled_balance: remote_unsettled_balance {
-            __typename
-            currency_amount_original_value: original_value
-            currency_amount_original_unit: original_unit
-            currency_amount_preferred_currency_unit: preferred_currency_unit
-            currency_amount_preferred_currency_value_rounded: preferred_currency_value_rounded
-            currency_amount_preferred_currency_value_approx: preferred_currency_value_approx
-        }
+        id
     }
 }
 """
@@ -263,9 +219,7 @@ def from_json(requester: Requester, obj: Mapping[str, Any]) -> OutgoingPaymentAt
         if obj["outgoing_payment_attempt_fees"]
         else None,
         outgoing_payment_id=obj["outgoing_payment_attempt_outgoing_payment"]["id"],
-        channel_snapshot=ChannelSnapshot_from_json(
-            requester, obj["outgoing_payment_attempt_channel_snapshot"]
-        )
+        channel_snapshot_id=obj["outgoing_payment_attempt_channel_snapshot"]["id"]
         if obj["outgoing_payment_attempt_channel_snapshot"]
         else None,
     )
