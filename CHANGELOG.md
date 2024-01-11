@@ -1,5 +1,11 @@
 # Changelog
 
+# v2.5.0
+
+- Add is_uma flag to payment objects. Note that this is only accurate for payments/invoices created with create_uma_invoice or pay_uma_invoice.
+- Tweak the ChannelSnapshot object to make it more expressive.
+- Include type info in the package release.
+
 # v2.4.2
 - Update dependencies.
 
