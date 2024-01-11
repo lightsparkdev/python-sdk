@@ -180,6 +180,7 @@ fragment TransactionFragment on Transaction {
             currency_amount_preferred_currency_value_approx: preferred_currency_value_approx
         }
         incoming_payment_transaction_hash: transaction_hash
+        incoming_payment_is_uma: is_uma
         incoming_payment_destination: destination {
             id
         }
@@ -215,6 +216,7 @@ fragment TransactionFragment on Transaction {
             currency_amount_preferred_currency_value_approx: preferred_currency_value_approx
         }
         outgoing_payment_transaction_hash: transaction_hash
+        outgoing_payment_is_uma: is_uma
         outgoing_payment_origin: origin {
             id
         }
@@ -743,6 +745,7 @@ def from_json(requester: Requester, obj: Mapping[str, Any]) -> Transaction:
             else None,
             amount=CurrencyAmount_from_json(requester, obj["incoming_payment_amount"]),
             transaction_hash=obj["incoming_payment_transaction_hash"],
+            is_uma=obj["incoming_payment_is_uma"],
             destination_id=obj["incoming_payment_destination"]["id"],
             payment_request_id=obj["incoming_payment_payment_request"]["id"]
             if obj["incoming_payment_payment_request"]
@@ -773,6 +776,7 @@ def from_json(requester: Requester, obj: Mapping[str, Any]) -> Transaction:
             else None,
             amount=CurrencyAmount_from_json(requester, obj["outgoing_payment_amount"]),
             transaction_hash=obj["outgoing_payment_transaction_hash"],
+            is_uma=obj["outgoing_payment_is_uma"],
             origin_id=obj["outgoing_payment_origin"]["id"],
             destination_id=obj["outgoing_payment_destination"]["id"]
             if obj["outgoing_payment_destination"]

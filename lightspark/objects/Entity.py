@@ -200,6 +200,56 @@ fragment EntityFragment on Entity {
             id
         }
     }
+    ... on ChannelSnapshot {
+        __typename
+        channel_snapshot_id: id
+        channel_snapshot_created_at: created_at
+        channel_snapshot_updated_at: updated_at
+        channel_snapshot_local_balance: local_balance {
+            __typename
+            currency_amount_original_value: original_value
+            currency_amount_original_unit: original_unit
+            currency_amount_preferred_currency_unit: preferred_currency_unit
+            currency_amount_preferred_currency_value_rounded: preferred_currency_value_rounded
+            currency_amount_preferred_currency_value_approx: preferred_currency_value_approx
+        }
+        channel_snapshot_local_unsettled_balance: local_unsettled_balance {
+            __typename
+            currency_amount_original_value: original_value
+            currency_amount_original_unit: original_unit
+            currency_amount_preferred_currency_unit: preferred_currency_unit
+            currency_amount_preferred_currency_value_rounded: preferred_currency_value_rounded
+            currency_amount_preferred_currency_value_approx: preferred_currency_value_approx
+        }
+        channel_snapshot_remote_balance: remote_balance {
+            __typename
+            currency_amount_original_value: original_value
+            currency_amount_original_unit: original_unit
+            currency_amount_preferred_currency_unit: preferred_currency_unit
+            currency_amount_preferred_currency_value_rounded: preferred_currency_value_rounded
+            currency_amount_preferred_currency_value_approx: preferred_currency_value_approx
+        }
+        channel_snapshot_remote_unsettled_balance: remote_unsettled_balance {
+            __typename
+            currency_amount_original_value: original_value
+            currency_amount_original_unit: original_unit
+            currency_amount_preferred_currency_unit: preferred_currency_unit
+            currency_amount_preferred_currency_value_rounded: preferred_currency_value_rounded
+            currency_amount_preferred_currency_value_approx: preferred_currency_value_approx
+        }
+        channel_snapshot_channel: channel {
+            id
+        }
+        channel_snapshot_local_channel_reserve: local_channel_reserve {
+            __typename
+            currency_amount_original_value: original_value
+            currency_amount_original_unit: original_unit
+            currency_amount_preferred_currency_unit: preferred_currency_unit
+            currency_amount_preferred_currency_value_rounded: preferred_currency_value_rounded
+            currency_amount_preferred_currency_value_approx: preferred_currency_value_approx
+        }
+        channel_snapshot_timestamp: timestamp
+    }
     ... on Deposit {
         __typename
         deposit_id: id
@@ -288,6 +338,7 @@ fragment EntityFragment on Entity {
             currency_amount_preferred_currency_value_approx: preferred_currency_value_approx
         }
         incoming_payment_transaction_hash: transaction_hash
+        incoming_payment_is_uma: is_uma
         incoming_payment_destination: destination {
             id
         }
@@ -907,6 +958,7 @@ fragment EntityFragment on Entity {
             currency_amount_preferred_currency_value_approx: preferred_currency_value_approx
         }
         outgoing_payment_transaction_hash: transaction_hash
+        outgoing_payment_is_uma: is_uma
         outgoing_payment_origin: origin {
             id
         }
@@ -1264,51 +1316,7 @@ fragment EntityFragment on Entity {
             id
         }
         outgoing_payment_attempt_channel_snapshot: channel_snapshot {
-            __typename
-            channel_snapshot_channel: channel {
-                id
-            }
-            channel_snapshot_timestamp: timestamp
-            channel_snapshot_local_balance: local_balance {
-                __typename
-                currency_amount_original_value: original_value
-                currency_amount_original_unit: original_unit
-                currency_amount_preferred_currency_unit: preferred_currency_unit
-                currency_amount_preferred_currency_value_rounded: preferred_currency_value_rounded
-                currency_amount_preferred_currency_value_approx: preferred_currency_value_approx
-            }
-            channel_snapshot_local_unsettled_balance: local_unsettled_balance {
-                __typename
-                currency_amount_original_value: original_value
-                currency_amount_original_unit: original_unit
-                currency_amount_preferred_currency_unit: preferred_currency_unit
-                currency_amount_preferred_currency_value_rounded: preferred_currency_value_rounded
-                currency_amount_preferred_currency_value_approx: preferred_currency_value_approx
-            }
-            channel_snapshot_local_channel_reserve: local_channel_reserve {
-                __typename
-                currency_amount_original_value: original_value
-                currency_amount_original_unit: original_unit
-                currency_amount_preferred_currency_unit: preferred_currency_unit
-                currency_amount_preferred_currency_value_rounded: preferred_currency_value_rounded
-                currency_amount_preferred_currency_value_approx: preferred_currency_value_approx
-            }
-            channel_snapshot_remote_balance: remote_balance {
-                __typename
-                currency_amount_original_value: original_value
-                currency_amount_original_unit: original_unit
-                currency_amount_preferred_currency_unit: preferred_currency_unit
-                currency_amount_preferred_currency_value_rounded: preferred_currency_value_rounded
-                currency_amount_preferred_currency_value_approx: preferred_currency_value_approx
-            }
-            channel_snapshot_remote_unsettled_balance: remote_unsettled_balance {
-                __typename
-                currency_amount_original_value: original_value
-                currency_amount_original_unit: original_unit
-                currency_amount_preferred_currency_unit: preferred_currency_unit
-                currency_amount_preferred_currency_value_rounded: preferred_currency_value_rounded
-                currency_amount_preferred_currency_value_approx: preferred_currency_value_approx
-            }
+            id
         }
     }
     ... on RoutingTransaction {

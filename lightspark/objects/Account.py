@@ -898,6 +898,7 @@ query FetchAccountToTransactionsConnection($entity_id: ID!, $first: Int, $after:
                             currency_amount_preferred_currency_value_approx: preferred_currency_value_approx
                         }
                         incoming_payment_transaction_hash: transaction_hash
+                        incoming_payment_is_uma: is_uma
                         incoming_payment_destination: destination {
                             id
                         }
@@ -933,6 +934,7 @@ query FetchAccountToTransactionsConnection($entity_id: ID!, $first: Int, $after:
                             currency_amount_preferred_currency_value_approx: preferred_currency_value_approx
                         }
                         outgoing_payment_transaction_hash: transaction_hash
+                        outgoing_payment_is_uma: is_uma
                         outgoing_payment_origin: origin {
                             id
                         }
