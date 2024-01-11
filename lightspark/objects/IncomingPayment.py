@@ -50,6 +50,9 @@ class IncomingPayment(LightningTransaction, Transaction, Entity):
     transaction_hash: Optional[str]
     """The hash of this transaction, so it can be uniquely identified on the Lightning Network."""
 
+    is_uma: bool
+    """Whether this payment is an UMA payment or not. NOTE: this field is only set if the invoice that is being paid has been created using the recommended `create_uma_invoice` function."""
+
     destination_id: str
     """The recipient Lightspark node this payment was sent to."""
 
@@ -127,6 +130,7 @@ query FetchIncomingPaymentToAttemptsConnection($entity_id: ID!, $first: Int, $st
             else None,
             "incoming_payment_amount": self.amount.to_json(),
             "incoming_payment_transaction_hash": self.transaction_hash,
+            "incoming_payment_is_uma": self.is_uma,
             "incoming_payment_destination": {"id": self.destination_id},
             "incoming_payment_payment_request": {"id": self.payment_request_id}
             if self.payment_request_id
@@ -156,6 +160,7 @@ fragment IncomingPaymentFragment on IncomingPayment {
         currency_amount_preferred_currency_value_approx: preferred_currency_value_approx
     }
     incoming_payment_transaction_hash: transaction_hash
+    incoming_payment_is_uma: is_uma
     incoming_payment_destination: destination {
         id
     }
@@ -191,6 +196,7 @@ def from_json(requester: Requester, obj: Mapping[str, Any]) -> IncomingPayment:
         else None,
         amount=CurrencyAmount_from_json(requester, obj["incoming_payment_amount"]),
         transaction_hash=obj["incoming_payment_transaction_hash"],
+        is_uma=obj["incoming_payment_is_uma"],
         destination_id=obj["incoming_payment_destination"]["id"],
         payment_request_id=obj["incoming_payment_payment_request"]["id"]
         if obj["incoming_payment_payment_request"]

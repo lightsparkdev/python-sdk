@@ -6,6 +6,8 @@ from typing import Any, Mapping
 
 @dataclass
 class CancelInvoiceInput:
+    """The unique identifier of the Invoice that should be cancelled. The invoice is supposed to be open, not settled and not expired."""
+
     invoice_id: str
 
     def to_json(self) -> Mapping[str, Any]:

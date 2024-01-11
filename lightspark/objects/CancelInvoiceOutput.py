@@ -8,6 +8,8 @@ from lightspark.requests.requester import Requester
 
 @dataclass
 class CancelInvoiceOutput:
+    """The Invoice that was cancelled. If the invoice was already cancelled, the same invoice is returned."""
+
     requester: Requester
 
     invoice_id: str

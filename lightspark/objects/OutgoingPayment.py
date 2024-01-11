@@ -55,6 +55,9 @@ class OutgoingPayment(LightningTransaction, Transaction, Entity):
     transaction_hash: Optional[str]
     """The hash of this transaction, so it can be uniquely identified on the Lightning Network."""
 
+    is_uma: bool
+    """Whether this payment is an UMA payment or not. NOTE: this field is only set if the payment has been sent using the recommended `pay_uma_invoice` function."""
+
     origin_id: str
     """The Lightspark node this payment originated from."""
 
@@ -128,51 +131,7 @@ query FetchOutgoingPaymentToAttemptsConnection($entity_id: ID!, $first: Int, $af
                         id
                     }
                     outgoing_payment_attempt_channel_snapshot: channel_snapshot {
-                        __typename
-                        channel_snapshot_channel: channel {
-                            id
-                        }
-                        channel_snapshot_timestamp: timestamp
-                        channel_snapshot_local_balance: local_balance {
-                            __typename
-                            currency_amount_original_value: original_value
-                            currency_amount_original_unit: original_unit
-                            currency_amount_preferred_currency_unit: preferred_currency_unit
-                            currency_amount_preferred_currency_value_rounded: preferred_currency_value_rounded
-                            currency_amount_preferred_currency_value_approx: preferred_currency_value_approx
-                        }
-                        channel_snapshot_local_unsettled_balance: local_unsettled_balance {
-                            __typename
-                            currency_amount_original_value: original_value
-                            currency_amount_original_unit: original_unit
-                            currency_amount_preferred_currency_unit: preferred_currency_unit
-                            currency_amount_preferred_currency_value_rounded: preferred_currency_value_rounded
-                            currency_amount_preferred_currency_value_approx: preferred_currency_value_approx
-                        }
-                        channel_snapshot_local_channel_reserve: local_channel_reserve {
-                            __typename
-                            currency_amount_original_value: original_value
-                            currency_amount_original_unit: original_unit
-                            currency_amount_preferred_currency_unit: preferred_currency_unit
-                            currency_amount_preferred_currency_value_rounded: preferred_currency_value_rounded
-                            currency_amount_preferred_currency_value_approx: preferred_currency_value_approx
-                        }
-                        channel_snapshot_remote_balance: remote_balance {
-                            __typename
-                            currency_amount_original_value: original_value
-                            currency_amount_original_unit: original_unit
-                            currency_amount_preferred_currency_unit: preferred_currency_unit
-                            currency_amount_preferred_currency_value_rounded: preferred_currency_value_rounded
-                            currency_amount_preferred_currency_value_approx: preferred_currency_value_approx
-                        }
-                        channel_snapshot_remote_unsettled_balance: remote_unsettled_balance {
-                            __typename
-                            currency_amount_original_value: original_value
-                            currency_amount_original_unit: original_unit
-                            currency_amount_preferred_currency_unit: preferred_currency_unit
-                            currency_amount_preferred_currency_value_rounded: preferred_currency_value_rounded
-                            currency_amount_preferred_currency_value_approx: preferred_currency_value_approx
-                        }
+                        id
                     }
                 }
             }
@@ -197,6 +156,7 @@ query FetchOutgoingPaymentToAttemptsConnection($entity_id: ID!, $first: Int, $af
             else None,
             "outgoing_payment_amount": self.amount.to_json(),
             "outgoing_payment_transaction_hash": self.transaction_hash,
+            "outgoing_payment_is_uma": self.is_uma,
             "outgoing_payment_origin": {"id": self.origin_id},
             "outgoing_payment_destination": {"id": self.destination_id}
             if self.destination_id
@@ -237,6 +197,7 @@ fragment OutgoingPaymentFragment on OutgoingPayment {
         currency_amount_preferred_currency_value_approx: preferred_currency_value_approx
     }
     outgoing_payment_transaction_hash: transaction_hash
+    outgoing_payment_is_uma: is_uma
     outgoing_payment_origin: origin {
         id
     }
@@ -580,6 +541,7 @@ def from_json(requester: Requester, obj: Mapping[str, Any]) -> OutgoingPayment:
         else None,
         amount=CurrencyAmount_from_json(requester, obj["outgoing_payment_amount"]),
         transaction_hash=obj["outgoing_payment_transaction_hash"],
+        is_uma=obj["outgoing_payment_is_uma"],
         origin_id=obj["outgoing_payment_origin"]["id"],
         destination_id=obj["outgoing_payment_destination"]["id"]
         if obj["outgoing_payment_destination"]
