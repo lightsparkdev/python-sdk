@@ -45,7 +45,6 @@ from lightspark.objects.LightningTransaction import (
 from lightspark.objects.OutgoingPayment import OutgoingPayment
 from lightspark.objects.OutgoingPayment import from_json as OutgoingPayment_from_json
 from lightspark.objects.PaymentDirection import PaymentDirection
-from lightspark.objects.PaymentRequestData import PaymentRequestData
 from lightspark.objects.Permission import Permission
 from lightspark.objects.RegionCode import RegionCode
 from lightspark.objects.RiskRating import RiskRating
