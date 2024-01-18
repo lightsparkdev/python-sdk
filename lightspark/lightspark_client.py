@@ -32,6 +32,7 @@ from lightspark.objects.IncomingPayment import IncomingPayment
 from lightspark.objects.IncomingPayment import from_json as IncomingPayment_from_json
 from lightspark.objects.Invoice import Invoice
 from lightspark.objects.Invoice import from_json as Invoice_from_json
+from lightspark.objects.InvoiceData import InvoiceData
 from lightspark.objects.InvoiceData import from_json as InvoiceData_from_json
 from lightspark.objects.InvoiceType import InvoiceType
 from lightspark.objects.LightningFeeEstimateOutput import (
@@ -44,7 +45,6 @@ from lightspark.objects.LightningTransaction import (
 from lightspark.objects.OutgoingPayment import OutgoingPayment
 from lightspark.objects.OutgoingPayment import from_json as OutgoingPayment_from_json
 from lightspark.objects.PaymentDirection import PaymentDirection
-from lightspark.objects.PaymentRequestData import PaymentRequestData
 from lightspark.objects.Permission import Permission
 from lightspark.objects.RegionCode import RegionCode
 from lightspark.objects.RiskRating import RiskRating
@@ -376,9 +376,7 @@ class LightsparkSyncClient:
         )
         return Account_from_json(self._requester, json["current_account"])
 
-    def get_decoded_payment_request(
-        self, encoded_payment_request: str
-    ) -> PaymentRequestData:
+    def get_decoded_payment_request(self, encoded_payment_request: str) -> InvoiceData:
         logger.info(
             "Decoding payment request starting with %s...",
             encoded_payment_request[0:10],
