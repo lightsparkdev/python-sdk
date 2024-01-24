@@ -7,7 +7,7 @@ name = "pypi"
 cryptography = "*"
 pyjwt = "*"
 requests = "*"
-lightspark-crypto-python = "*"
+lightspark-crypto-python = ">=0.1.7"
 
 [dev-packages]
 black = "*"
