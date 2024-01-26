@@ -1,5 +1,10 @@
 # Changelog
 
+# v2.5.1
+
+- Ensure that the README and LICENSE are included in the pypi package.
+- Make get_decoded_payment_request return an InvoiceData type.
+
 # v2.5.0
 
 - Add is_uma flag to payment objects. Note that this is only accurate for payments/invoices created with create_uma_invoice or pay_uma_invoice.
