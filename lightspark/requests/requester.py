@@ -53,7 +53,7 @@ class Requester:
                 "operationName": operation.group(1) if operation else None,
                 "query": query,
                 "variables": variables or {},
-                "nonce": secrets.randbits(32) if signing_key else None,
+                "nonce": secrets.randbits(64) if signing_key else None,
                 "expires_at": (datetime.utcnow() + timedelta(hours=1))
                 .replace(tzinfo=timezone.utc)
                 .isoformat()
