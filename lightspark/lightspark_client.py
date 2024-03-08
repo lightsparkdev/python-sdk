@@ -30,6 +30,9 @@ from lightspark.objects.FeeEstimate import FeeEstimate
 from lightspark.objects.FeeEstimate import from_json as FeeEstimate_from_json
 from lightspark.objects.IncomingPayment import IncomingPayment
 from lightspark.objects.IncomingPayment import from_json as IncomingPayment_from_json
+from lightspark.objects.IncomingPaymentsForInvoiceQueryOutput import (
+    from_json as IncomingPaymentsForInvoiceQueryOutput_from_json,
+)
 from lightspark.objects.Invoice import Invoice
 from lightspark.objects.Invoice import from_json as Invoice_from_json
 from lightspark.objects.InvoiceData import InvoiceData
@@ -83,6 +86,9 @@ from lightspark.scripts.decoded_payment_request import DECODED_PAYMENT_REQUEST_Q
 from lightspark.scripts.delete_api_token import DELETE_API_TOKEN_MUTATION
 from lightspark.scripts.fetch_uma_invitation import FETCH_UMA_INVITATION_QUERY
 from lightspark.scripts.fund_node import FUND_NODE_MUTATION
+from lightspark.scripts.incoming_payments_for_invoice import (
+    INCOMING_PAYMENTS_FOR_INVOICE_QUERY,
+)
 from lightspark.scripts.lightning_fee_estimate_for_invoice import (
     LIGHTNING_FEE_ESTIMATE_FOR_INVOICE_QUERY,
 )
@@ -685,6 +691,32 @@ class LightsparkSyncClient:
             OutgoingPayment_from_json(self._requester, payment)
             for payment in json["outgoing_payments_for_invoice"]["payments"]
         ]
+
+    def incoming_payments_for_invoice(
+        self,
+        invoice_id: str,
+        transaction_statuses: Optional[List[TransactionStatus]] = None,
+    ) -> List[IncomingPayment]:
+        """
+        Fetches the incoming payments (if any) which have been made for a given invoice.
+
+        Args:
+            invoice_id: The encoded invoice for which to fetch the incoming payments.
+            transaction_statuses: The statuses of the transactions to fetch. If not specified, all transactions will be fetched.
+        """
+
+        variables: Dict[str, Any] = {"invoice_id": invoice_id}
+        if transaction_statuses is not None:
+            variables["transaction_statuses"] = transaction_statuses
+        json = self._requester.execute_graphql(
+            INCOMING_PAYMENTS_FOR_INVOICE_QUERY, variables
+        )
+        if "incoming_payments_for_invoice" not in json:
+            return []
+        output = IncomingPaymentsForInvoiceQueryOutput_from_json(
+            self._requester, json["incoming_payments_for_invoice"]
+        )
+        return output.payments
 
     def create_uma_invitation(
         self,
