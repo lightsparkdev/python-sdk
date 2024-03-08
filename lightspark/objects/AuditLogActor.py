@@ -9,6 +9,7 @@ from lightspark.requests.requester import Requester
 from lightspark.utils.enums import parse_enum_list
 
 from .Entity import Entity
+from .Permission import Permission
 
 
 @dataclass
