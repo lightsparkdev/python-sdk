@@ -12,12 +12,16 @@ from .RegionCode import RegionCode
 @dataclass
 class ClaimUmaInvitationWithIncentivesInput:
     invitation_code: str
+    """The unique code that identifies this invitation and was shared by the inviter."""
 
     invitee_uma: str
+    """The UMA of the user claiming the invitation. It will be sent to the inviter so that they can start transacting with the invitee."""
 
     invitee_phone_hash: str
+    """The phone hash of the user getting the invitation."""
 
     invitee_region: RegionCode
+    """The region of the user getting the invitation."""
 
     def to_json(self) -> Mapping[str, Any]:
         return {

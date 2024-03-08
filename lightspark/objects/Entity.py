@@ -41,6 +41,7 @@ fragment EntityFragment on Entity {
         api_token_client_id: client_id
         api_token_name: name
         api_token_permissions: permissions
+        api_token_is_deleted: is_deleted
     }
     ... on Channel {
         __typename
@@ -237,6 +238,7 @@ fragment EntityFragment on Entity {
             currency_amount_preferred_currency_value_rounded: preferred_currency_value_rounded
             currency_amount_preferred_currency_value_approx: preferred_currency_value_approx
         }
+        channel_snapshot_status: status
         channel_snapshot_channel: channel {
             id
         }
@@ -357,6 +359,7 @@ fragment EntityFragment on Entity {
                 currency_amount_preferred_currency_value_approx: preferred_currency_value_approx
             }
         }
+        incoming_payment_is_internal_payment: is_internal_payment
     }
     ... on IncomingPaymentAttempt {
         __typename
@@ -1285,6 +1288,7 @@ fragment EntityFragment on Entity {
             }
         }
         outgoing_payment_payment_preimage: payment_preimage
+        outgoing_payment_is_internal_payment: is_internal_payment
     }
     ... on OutgoingPaymentAttempt {
         __typename

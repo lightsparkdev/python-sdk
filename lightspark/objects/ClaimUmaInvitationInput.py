@@ -7,8 +7,10 @@ from typing import Any, Mapping
 @dataclass
 class ClaimUmaInvitationInput:
     invitation_code: str
+    """The unique code that identifies this invitation and was shared by the inviter."""
 
     invitee_uma: str
+    """The UMA of the user claiming the invitation. It will be sent to the inviter so that they can start transacting with the invitee."""
 
     def to_json(self) -> Mapping[str, Any]:
         return {

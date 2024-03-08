@@ -17,6 +17,7 @@ from lightspark.objects.AccountToWithdrawalRequestsConnection import (
     AccountToWithdrawalRequestsConnection,
 )
 from lightspark.objects.ApiToken import ApiToken
+from lightspark.objects.AuditLogActor import AuditLogActor
 from lightspark.objects.Balances import Balances
 from lightspark.objects.BitcoinNetwork import BitcoinNetwork
 from lightspark.objects.BlockchainBalance import BlockchainBalance
@@ -86,6 +87,12 @@ from lightspark.objects.IncentivesStatus import IncentivesStatus
 from lightspark.objects.IncomingPayment import IncomingPayment
 from lightspark.objects.IncomingPaymentAttempt import IncomingPaymentAttempt
 from lightspark.objects.IncomingPaymentAttemptStatus import IncomingPaymentAttemptStatus
+from lightspark.objects.IncomingPaymentsForInvoiceQueryInput import (
+    IncomingPaymentsForInvoiceQueryInput,
+)
+from lightspark.objects.IncomingPaymentsForInvoiceQueryOutput import (
+    IncomingPaymentsForInvoiceQueryOutput,
+)
 from lightspark.objects.IncomingPaymentToAttemptsConnection import (
     IncomingPaymentToAttemptsConnection,
 )
@@ -113,6 +120,9 @@ from lightspark.objects.LightsparkNodeToDailyLiquidityForecastsConnection import
 from lightspark.objects.LightsparkNodeWithOSK import LightsparkNodeWithOSK
 from lightspark.objects.LightsparkNodeWithRemoteSigning import (
     LightsparkNodeWithRemoteSigning,
+)
+from lightspark.objects.MultiSigAddressValidationParameters import (
+    MultiSigAddressValidationParameters,
 )
 from lightspark.objects.Node import Node
 from lightspark.objects.NodeAddress import NodeAddress

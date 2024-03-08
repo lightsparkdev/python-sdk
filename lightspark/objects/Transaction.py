@@ -199,6 +199,7 @@ fragment TransactionFragment on Transaction {
                 currency_amount_preferred_currency_value_approx: preferred_currency_value_approx
             }
         }
+        incoming_payment_is_internal_payment: is_internal_payment
     }
     ... on OutgoingPayment {
         __typename
@@ -543,6 +544,7 @@ fragment TransactionFragment on Transaction {
             }
         }
         outgoing_payment_payment_preimage: payment_preimage
+        outgoing_payment_is_internal_payment: is_internal_payment
     }
     ... on RoutingTransaction {
         __typename
@@ -759,6 +761,7 @@ def from_json(requester: Requester, obj: Mapping[str, Any]) -> Transaction:
             )
             if obj["incoming_payment_uma_post_transaction_data"]
             else None,
+            is_internal_payment=obj["incoming_payment_is_internal_payment"],
         )
     if obj["__typename"] == "OutgoingPayment":
         # pylint: disable=import-outside-toplevel
@@ -807,6 +810,7 @@ def from_json(requester: Requester, obj: Mapping[str, Any]) -> Transaction:
             if obj["outgoing_payment_uma_post_transaction_data"]
             else None,
             payment_preimage=obj["outgoing_payment_payment_preimage"],
+            is_internal_payment=obj["outgoing_payment_is_internal_payment"],
         )
     if obj["__typename"] == "RoutingTransaction":
         # pylint: disable=import-outside-toplevel
