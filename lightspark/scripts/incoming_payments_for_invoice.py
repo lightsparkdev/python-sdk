@@ -1,6 +1,8 @@
 # Copyright ©, 2022-present, Lightspark Group, Inc. - All Rights Reserved
 
-from lightspark.objects.IncomingPaymentsForInvoiceQueryOutput import FRAGMENT as IncomingPaymentsForInvoiceQueryOutputFragment
+from lightspark.objects.IncomingPaymentsForInvoiceQueryOutput import (
+    FRAGMENT as IncomingPaymentsForInvoiceQueryOutputFragment,
+)
 
 INCOMING_PAYMENTS_FOR_INVOICE_QUERY = f"""
 query IncomingPaymentsForInvoice(
