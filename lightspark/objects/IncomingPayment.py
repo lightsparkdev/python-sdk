@@ -61,6 +61,9 @@ class IncomingPayment(LightningTransaction, Transaction, Entity):
 
     uma_post_transaction_data: Optional[List[PostTransactionData]]
     """The post transaction data which can be used in KYT payment registration."""
+
+    is_internal_payment: bool
+    """Whether the payment is made from the same node."""
     typename: str
 
     def get_attempts(
@@ -140,6 +143,7 @@ query FetchIncomingPaymentToAttemptsConnection($entity_id: ID!, $first: Int, $st
             ]
             if self.uma_post_transaction_data
             else None,
+            "incoming_payment_is_internal_payment": self.is_internal_payment,
         }
 
 
@@ -179,6 +183,7 @@ fragment IncomingPaymentFragment on IncomingPayment {
             currency_amount_preferred_currency_value_approx: preferred_currency_value_approx
         }
     }
+    incoming_payment_is_internal_payment: is_internal_payment
 }
 """
 
@@ -210,4 +215,5 @@ def from_json(requester: Requester, obj: Mapping[str, Any]) -> IncomingPayment:
         )
         if obj["incoming_payment_uma_post_transaction_data"]
         else None,
+        is_internal_payment=obj["incoming_payment_is_internal_payment"],
     )

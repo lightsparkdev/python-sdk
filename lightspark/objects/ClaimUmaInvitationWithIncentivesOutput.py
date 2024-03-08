@@ -11,6 +11,7 @@ class ClaimUmaInvitationWithIncentivesOutput:
     requester: Requester
 
     invitation_id: str
+    """An UMA.ME invitation object."""
 
     def to_json(self) -> Mapping[str, Any]:
         return {

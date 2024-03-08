@@ -8,6 +8,9 @@ from lightspark.objects.Account import from_json as Account_from_json
 from lightspark.objects.ApiToken import FRAGMENT as ApiTokenFragment
 from lightspark.objects.ApiToken import ApiToken
 from lightspark.objects.ApiToken import from_json as ApiToken_from_json
+from lightspark.objects.AuditLogActor import FRAGMENT as AuditLogActorFragment
+from lightspark.objects.AuditLogActor import AuditLogActor
+from lightspark.objects.AuditLogActor import from_json as AuditLogActor_from_json
 from lightspark.objects.Channel import FRAGMENT as ChannelFragment
 from lightspark.objects.Channel import Channel
 from lightspark.objects.Channel import from_json as Channel_from_json
@@ -147,6 +150,10 @@ ALL_QUERIES: Mapping[Type, str] = {
             ...ApiTokenFragment
         }
 """,
+    AuditLogActor: """        ... on AuditLogActor {
+            ...AuditLogActorFragment
+        }
+""",
     Channel: """        ... on Channel {
             ...ChannelFragment
         }
@@ -267,6 +274,7 @@ ALL_QUERIES: Mapping[Type, str] = {
 ALL_FRAGMENTS: Mapping[Type, str] = {
     Account: AccountFragment,
     ApiToken: ApiTokenFragment,
+    AuditLogActor: AuditLogActorFragment,
     Channel: ChannelFragment,
     ChannelClosingTransaction: ChannelClosingTransactionFragment,
     ChannelOpeningTransaction: ChannelOpeningTransactionFragment,
@@ -300,6 +308,7 @@ ALL_FRAGMENTS: Mapping[Type, str] = {
 ALL_JSON_LOADERS: Mapping[Type, Callable] = {
     Account: Account_from_json,
     ApiToken: ApiToken_from_json,
+    AuditLogActor: AuditLogActor_from_json,
     Channel: Channel_from_json,
     ChannelClosingTransaction: ChannelClosingTransaction_from_json,
     ChannelOpeningTransaction: ChannelOpeningTransaction_from_json,

@@ -7,12 +7,13 @@ from typing import Any, List, Mapping
 from lightspark.requests.requester import Requester
 from lightspark.utils.enums import parse_enum_list
 
+from .AuditLogActor import AuditLogActor
 from .Entity import Entity
 from .Permission import Permission
 
 
 @dataclass
-class ApiToken(Entity):
+class ApiToken(AuditLogActor, Entity):
     """This is an object representing a Lightspark API token, that can be used to authenticate this account when making API calls or using our SDKs. See the “Authentication” section of our API docs for more details on its usage."""
 
     requester: Requester
@@ -34,6 +35,9 @@ class ApiToken(Entity):
 
     permissions: List[Permission]
     """A list of permissions granted to the token."""
+
+    is_deleted: bool
+    """Whether the api token has been deleted."""
     typename: str
 
     def to_json(self) -> Mapping[str, Any]:
@@ -45,6 +49,7 @@ class ApiToken(Entity):
             "api_token_client_id": self.client_id,
             "api_token_name": self.name,
             "api_token_permissions": [e.value for e in self.permissions],
+            "api_token_is_deleted": self.is_deleted,
         }
 
 
@@ -57,6 +62,7 @@ fragment ApiTokenFragment on ApiToken {
     api_token_client_id: client_id
     api_token_name: name
     api_token_permissions: permissions
+    api_token_is_deleted: is_deleted
 }
 """
 
@@ -71,4 +77,5 @@ def from_json(requester: Requester, obj: Mapping[str, Any]) -> ApiToken:
         client_id=obj["api_token_client_id"],
         name=obj["api_token_name"],
         permissions=parse_enum_list(Permission, obj["api_token_permissions"]),
+        is_deleted=obj["api_token_is_deleted"],
     )

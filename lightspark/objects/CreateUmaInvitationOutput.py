@@ -11,6 +11,7 @@ class CreateUmaInvitationOutput:
     requester: Requester
 
     invitation_id: str
+    """The created invitation in the form of a string identifier."""
 
     def to_json(self) -> Mapping[str, Any]:
         return {

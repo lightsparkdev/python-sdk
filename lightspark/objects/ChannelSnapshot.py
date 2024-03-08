@@ -32,6 +32,8 @@ class ChannelSnapshot(Entity):
 
     remote_unsettled_balance: Optional[CurrencyAmount]
 
+    status: Optional[str]
+
     channel_id: str
 
     local_channel_reserve: Optional[CurrencyAmount]
@@ -58,6 +60,7 @@ class ChannelSnapshot(Entity):
             "channel_snapshot_remote_unsettled_balance": self.remote_unsettled_balance.to_json()
             if self.remote_unsettled_balance
             else None,
+            "channel_snapshot_status": self.status,
             "channel_snapshot_channel": {"id": self.channel_id},
             "channel_snapshot_local_channel_reserve": self.local_channel_reserve.to_json()
             if self.local_channel_reserve
@@ -104,6 +107,7 @@ fragment ChannelSnapshotFragment on ChannelSnapshot {
         currency_amount_preferred_currency_value_rounded: preferred_currency_value_rounded
         currency_amount_preferred_currency_value_approx: preferred_currency_value_approx
     }
+    channel_snapshot_status: status
     channel_snapshot_channel: channel {
         id
     }
@@ -147,6 +151,7 @@ def from_json(requester: Requester, obj: Mapping[str, Any]) -> ChannelSnapshot:
         )
         if obj["channel_snapshot_remote_unsettled_balance"]
         else None,
+        status=obj["channel_snapshot_status"],
         channel_id=obj["channel_snapshot_channel"]["id"],
         local_channel_reserve=CurrencyAmount_from_json(
             requester, obj["channel_snapshot_local_channel_reserve"]

@@ -81,6 +81,9 @@ class OutgoingPayment(LightningTransaction, Transaction, Entity):
 
     payment_preimage: Optional[str]
     """The preimage of the payment."""
+
+    is_internal_payment: bool
+    """Whether the payment is made to the same node."""
     typename: str
 
     def get_attempts(
@@ -177,6 +180,7 @@ query FetchOutgoingPaymentToAttemptsConnection($entity_id: ID!, $first: Int, $af
             if self.uma_post_transaction_data
             else None,
             "outgoing_payment_payment_preimage": self.payment_preimage,
+            "outgoing_payment_is_internal_payment": self.is_internal_payment,
         }
 
 
@@ -524,6 +528,7 @@ fragment OutgoingPaymentFragment on OutgoingPayment {
         }
     }
     outgoing_payment_payment_preimage: payment_preimage
+    outgoing_payment_is_internal_payment: is_internal_payment
 }
 """
 
@@ -572,4 +577,5 @@ def from_json(requester: Requester, obj: Mapping[str, Any]) -> OutgoingPayment:
         if obj["outgoing_payment_uma_post_transaction_data"]
         else None,
         payment_preimage=obj["outgoing_payment_payment_preimage"],
+        is_internal_payment=obj["outgoing_payment_is_internal_payment"],
     )
