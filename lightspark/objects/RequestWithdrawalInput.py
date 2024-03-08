@@ -3,7 +3,6 @@
 from dataclasses import dataclass
 from typing import Any, Mapping
 
-from lightspark.objects.WithdrawalMode import WithdrawalMode
 from lightspark.utils.enums import parse_enum
 
 from .WithdrawalMode import WithdrawalMode

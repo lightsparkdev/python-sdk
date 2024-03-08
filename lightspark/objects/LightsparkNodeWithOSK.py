@@ -4,8 +4,6 @@ from dataclasses import dataclass
 from datetime import datetime
 from typing import Any, List, Mapping, Optional
 
-from lightspark.objects.BitcoinNetwork import BitcoinNetwork
-from lightspark.objects.LightsparkNodeStatus import LightsparkNodeStatus
 from lightspark.requests.requester import Requester
 from lightspark.utils.enums import parse_enum, parse_enum_optional
 

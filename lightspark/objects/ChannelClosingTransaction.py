@@ -4,7 +4,6 @@ from dataclasses import dataclass
 from datetime import datetime
 from typing import Any, List, Mapping, Optional
 
-from lightspark.objects.TransactionStatus import TransactionStatus
 from lightspark.requests.requester import Requester
 from lightspark.utils.enums import parse_enum
 

@@ -5,12 +5,12 @@ from datetime import datetime
 from typing import Any, Mapping
 
 from lightspark.exceptions import LightsparkException
-from lightspark.objects.WalletStatus import WalletStatus
 from lightspark.requests.requester import Requester
 from lightspark.utils.enums import parse_enum
 
 from .Balances import from_json as Balances_from_json
 from .Entity import Entity
+from .WalletStatus import WalletStatus
 
 
 @dataclass

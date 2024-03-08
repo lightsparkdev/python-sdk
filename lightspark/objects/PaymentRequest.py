@@ -5,7 +5,6 @@ from datetime import datetime
 from typing import Any, Mapping
 
 from lightspark.exceptions import LightsparkException
-from lightspark.objects.PaymentRequestStatus import PaymentRequestStatus
 from lightspark.requests.requester import Requester
 from lightspark.utils.enums import parse_enum
 

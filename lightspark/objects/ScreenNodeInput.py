@@ -3,7 +3,6 @@
 from dataclasses import dataclass
 from typing import Any, Mapping
 
-from lightspark.objects.ComplianceProvider import ComplianceProvider
 from lightspark.utils.enums import parse_enum
 
 from .ComplianceProvider import ComplianceProvider
