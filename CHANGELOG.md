@@ -1,5 +1,12 @@
 # Changelog
 
+# v2.6.0
+
+- Use a 64-bit nonce for signed requests to avoid conflicts.
+- Add `is_internal_payment` fields to payment objects.
+- Add `multisig_wallet_address_validation_parameters` to support validating node wallet addresses used for deposits.
+- Add `incoming_payments_for_invoice` to get all incoming payments for an invoice.
+
 # v2.5.1
 
 - Ensure that the README and LICENSE are included in the pypi package.
