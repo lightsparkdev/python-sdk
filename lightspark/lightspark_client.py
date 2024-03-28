@@ -284,7 +284,6 @@ class LightsparkSyncClient:
         json = self._requester.execute_graphql(
             CREATE_TEST_MODE_PAYMENT_MUTATION,
             variables,
-            self.get_signing_key(local_node_id),
         )
         return IncomingPayment_from_json(
             self._requester, json["create_test_mode_payment"]["incoming_payment"]
