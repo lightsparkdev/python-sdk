@@ -5,15 +5,17 @@ name = "pypi"
 
 [packages]
 cryptography = "*"
+lightspark-crypto-python = "*"
 pyjwt = "*"
 requests = "*"
-lightspark-crypto-python = "*"
+zstandard = "*"
 
 [dev-packages]
-black = "*"
+black = "<24"
 flask = "<2.3"
 importlib_metadata = "*"
 isort = "==5.11.4"
+libcst = "<1.2"  # Stopped supporting Python 3.8
 pylint = "*"
 pyre-check = "*"
 pytest = "*"
