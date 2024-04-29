@@ -4,10 +4,18 @@ import json
 import logging
 import re
 import secrets
+import zlib
 from datetime import datetime, timedelta, timezone
 from platform import python_version, release, system
 from typing import Any, Mapping, Optional
 from urllib.parse import urlparse
+
+try:
+    from zstandard import ZstdCompressor
+
+    zstd: Optional[ZstdCompressor] = ZstdCompressor()
+except ImportError:
+    zstd = None
 
 import requests
 from requests.auth import HTTPBasicAuth
@@ -69,16 +77,26 @@ class Requester:
         logger.debug(
             "Sending request to GraphQL with query = %s, payload = %s}", query, payload
         )
+
+        headers = {
+            "Content-Type": "application/json",
+            "X-GraphQL-Operation": operation.group(1) if operation else None,
+            "X-Lightspark-Signing": signing,
+            "User-Agent": user_agent + f" {default_user_agent()}",
+            "X-Lightspark-SDK": user_agent,
+        }
+        if len(payload) > 1024:
+            if zstd:
+                payload = zstd.compress(payload)
+                headers["Content-Encoding"] = "zstd"
+            else:
+                payload = zlib.compress(payload, level=zlib.Z_BEST_SPEED)
+                headers["Content-Encoding"] = "deflate"
+
         r = self.graphql_session.post(
             url=self.base_url,
             data=payload,
-            headers={
-                "Content-Type": "application/json",
-                "X-GraphQL-Operation": operation.group(1) if operation else None,
-                "X-Lightspark-Signing": signing,
-                "User-Agent": user_agent + f" {default_user_agent()}",
-                "X-Lightspark-SDK": user_agent,
-            },
+            headers=headers,
         )
         try:
             r.raise_for_status()

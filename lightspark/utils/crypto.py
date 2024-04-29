@@ -8,6 +8,7 @@ from typing import Tuple
 
 from cryptography.hazmat.primitives import hashes, padding, serialization
 from cryptography.hazmat.primitives.asymmetric import padding as asymmetric_padding
+from cryptography.hazmat.primitives.asymmetric.rsa import RSAPrivateKey
 from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 from cryptography.hazmat.primitives.ciphers.aead import AESGCM
 from lightspark.exceptions import LightsparkException
@@ -98,6 +99,8 @@ def sign_payload(payload: bytes, signing_key: bytes) -> str:
     if signing_key[0] != 48:
         signing_key = b64decode(signing_key)
     key = serialization.load_der_private_key(signing_key, password=None)
+    if not isinstance(key, RSAPrivateKey):
+        raise ValueError("Unsupported signing key type")
 
     signature = key.sign(
         payload,

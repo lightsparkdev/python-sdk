@@ -3,6 +3,9 @@ persistent=no
 
 [MESSAGES]
 
+# These should be fixed
+#   R0401: cyclic-import
+
 # Enforce minimal documentation. Probably nice to fix.
 #   C0114: missing-module-docstring
 #   C0115: missing-class-docstring
@@ -23,7 +26,7 @@ persistent=no
 #   C0103: invalid-name
 #   C0104: disallowed-name
 
-disable=C0103,C0104,C0301,C0302,C0114,C0115,C0116,C0301,R0801,R0902,R0903,R0904,R0913,R0914,R0915
+disable=C0103,C0104,C0301,C0302,C0114,C0115,C0116,C0301,R0801,R0902,R0903,R0904,R0913,R0914,R0915,R0401
 
 [MISCELLANEOUS]
 
