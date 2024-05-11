@@ -258,6 +258,18 @@ for outgoing_payment in outgoing_payments:
     print(f"    - {outgoing_payment.id}")
 print("")
 
+decoded_request = client.get_decoded_payment_request(
+    encoded_payment_request=test_invoice
+)
+assert isinstance(decoded_request, lightspark.InvoiceData)
+outgoing_payments = client.outgoing_payments_for_payment_hash(
+    payment_hash=decoded_request.payment_hash
+)
+print(f"Outgoing payments for payment hash {decoded_request.payment_hash}:")
+for outgoing_payment in outgoing_payments:
+    print(f"    - {outgoing_payment.id}")
+print("")
+
 # Key Send sample
 #
 # payment = client.send_payment(

@@ -4,7 +4,6 @@ from dataclasses import dataclass
 from typing import Any, Mapping
 
 from lightspark.exceptions import LightsparkException
-from lightspark.objects.CurrencyUnit import CurrencyUnit
 from lightspark.requests.requester import Requester
 from lightspark.utils.enums import parse_enum
 

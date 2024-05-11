@@ -4,8 +4,6 @@ from dataclasses import dataclass
 from datetime import datetime
 from typing import Any, Mapping, Optional
 
-from lightspark.objects.WithdrawalMode import WithdrawalMode
-from lightspark.objects.WithdrawalRequestStatus import WithdrawalRequestStatus
 from lightspark.requests.requester import Requester
 from lightspark.utils.enums import parse_enum
 
@@ -25,6 +23,12 @@ from .WithdrawalRequestToChannelOpeningTransactionsConnection import (
 )
 from .WithdrawalRequestToChannelOpeningTransactionsConnection import (
     from_json as WithdrawalRequestToChannelOpeningTransactionsConnection_from_json,
+)
+from .WithdrawalRequestToWithdrawalsConnection import (
+    WithdrawalRequestToWithdrawalsConnection,
+)
+from .WithdrawalRequestToWithdrawalsConnection import (
+    from_json as WithdrawalRequestToWithdrawalsConnection_from_json,
 )
 
 
@@ -53,7 +57,10 @@ class WithdrawalRequest(Entity):
     """If the requested amount is `-1` (i.e. everything), this field may contain an estimate of the amount for the withdrawal."""
 
     amount_withdrawn: Optional[CurrencyAmount]
-    """The actual amount that is withdrawn. It will be set once the request is completed."""
+    """The actual amount that is withdrawn to the bitcoin address. It will be set once the request is completed."""
+
+    total_fees: Optional[CurrencyAmount]
+    """The total fees the node paid for the withdrawal. It will be set once the request is completed."""
 
     bitcoin_address: str
     """The bitcoin address where the funds should be sent."""
@@ -72,15 +79,16 @@ class WithdrawalRequest(Entity):
     typename: str
 
     def get_channel_closing_transactions(
-        self, first: Optional[int] = None
+        self, first: Optional[int] = None, after: Optional[str] = None
     ) -> WithdrawalRequestToChannelClosingTransactionsConnection:
         json = self.requester.execute_graphql(
             """
-query FetchWithdrawalRequestToChannelClosingTransactionsConnection($entity_id: ID!, $first: Int) {
+query FetchWithdrawalRequestToChannelClosingTransactionsConnection($entity_id: ID!, $first: Int, $after: String) {
     entity(id: $entity_id) {
         ... on WithdrawalRequest {
-            channel_closing_transactions(, first: $first) {
+            channel_closing_transactions(, first: $first, after: $after) {
                 __typename
+                withdrawal_request_to_channel_closing_transactions_connection_count: count
                 withdrawal_request_to_channel_closing_transactions_connection_page_info: page_info {
                     __typename
                     page_info_has_next_page: has_next_page
@@ -88,7 +96,6 @@ query FetchWithdrawalRequestToChannelClosingTransactionsConnection($entity_id: I
                     page_info_start_cursor: start_cursor
                     page_info_end_cursor: end_cursor
                 }
-                withdrawal_request_to_channel_closing_transactions_connection_count: count
                 withdrawal_request_to_channel_closing_transactions_connection_entities: entities {
                     __typename
                     channel_closing_transaction_id: id
@@ -126,7 +133,7 @@ query FetchWithdrawalRequestToChannelClosingTransactionsConnection($entity_id: I
     }
 }
             """,
-            {"entity_id": self.id, "first": first},
+            {"entity_id": self.id, "first": first, "after": after},
         )
         connection = json["entity"]["channel_closing_transactions"]
         return WithdrawalRequestToChannelClosingTransactionsConnection_from_json(
@@ -134,15 +141,16 @@ query FetchWithdrawalRequestToChannelClosingTransactionsConnection($entity_id: I
         )
 
     def get_channel_opening_transactions(
-        self, first: Optional[int] = None
+        self, first: Optional[int] = None, after: Optional[str] = None
     ) -> WithdrawalRequestToChannelOpeningTransactionsConnection:
         json = self.requester.execute_graphql(
             """
-query FetchWithdrawalRequestToChannelOpeningTransactionsConnection($entity_id: ID!, $first: Int) {
+query FetchWithdrawalRequestToChannelOpeningTransactionsConnection($entity_id: ID!, $first: Int, $after: String) {
     entity(id: $entity_id) {
         ... on WithdrawalRequest {
-            channel_opening_transactions(, first: $first) {
+            channel_opening_transactions(, first: $first, after: $after) {
                 __typename
+                withdrawal_request_to_channel_opening_transactions_connection_count: count
                 withdrawal_request_to_channel_opening_transactions_connection_page_info: page_info {
                     __typename
                     page_info_has_next_page: has_next_page
@@ -150,7 +158,6 @@ query FetchWithdrawalRequestToChannelOpeningTransactionsConnection($entity_id: I
                     page_info_start_cursor: start_cursor
                     page_info_end_cursor: end_cursor
                 }
-                withdrawal_request_to_channel_opening_transactions_connection_count: count
                 withdrawal_request_to_channel_opening_transactions_connection_entities: entities {
                     __typename
                     channel_opening_transaction_id: id
@@ -188,10 +195,65 @@ query FetchWithdrawalRequestToChannelOpeningTransactionsConnection($entity_id: I
     }
 }
             """,
-            {"entity_id": self.id, "first": first},
+            {"entity_id": self.id, "first": first, "after": after},
         )
         connection = json["entity"]["channel_opening_transactions"]
         return WithdrawalRequestToChannelOpeningTransactionsConnection_from_json(
+            self.requester, connection
+        )
+
+    def get_withdrawals(
+        self, first: Optional[int] = None
+    ) -> WithdrawalRequestToWithdrawalsConnection:
+        json = self.requester.execute_graphql(
+            """
+query FetchWithdrawalRequestToWithdrawalsConnection($entity_id: ID!, $first: Int) {
+    entity(id: $entity_id) {
+        ... on WithdrawalRequest {
+            withdrawals(, first: $first) {
+                __typename
+                withdrawal_request_to_withdrawals_connection_count: count
+                withdrawal_request_to_withdrawals_connection_entities: entities {
+                    __typename
+                    withdrawal_id: id
+                    withdrawal_created_at: created_at
+                    withdrawal_updated_at: updated_at
+                    withdrawal_status: status
+                    withdrawal_resolved_at: resolved_at
+                    withdrawal_amount: amount {
+                        __typename
+                        currency_amount_original_value: original_value
+                        currency_amount_original_unit: original_unit
+                        currency_amount_preferred_currency_unit: preferred_currency_unit
+                        currency_amount_preferred_currency_value_rounded: preferred_currency_value_rounded
+                        currency_amount_preferred_currency_value_approx: preferred_currency_value_approx
+                    }
+                    withdrawal_transaction_hash: transaction_hash
+                    withdrawal_fees: fees {
+                        __typename
+                        currency_amount_original_value: original_value
+                        currency_amount_original_unit: original_unit
+                        currency_amount_preferred_currency_unit: preferred_currency_unit
+                        currency_amount_preferred_currency_value_rounded: preferred_currency_value_rounded
+                        currency_amount_preferred_currency_value_approx: preferred_currency_value_approx
+                    }
+                    withdrawal_block_hash: block_hash
+                    withdrawal_block_height: block_height
+                    withdrawal_destination_addresses: destination_addresses
+                    withdrawal_num_confirmations: num_confirmations
+                    withdrawal_origin: origin {
+                        id
+                    }
+                }
+            }
+        }
+    }
+}
+            """,
+            {"entity_id": self.id, "first": first},
+        )
+        connection = json["entity"]["withdrawals"]
+        return WithdrawalRequestToWithdrawalsConnection_from_json(
             self.requester, connection
         )
 
@@ -208,6 +270,9 @@ query FetchWithdrawalRequestToChannelOpeningTransactionsConnection($entity_id: I
             else None,
             "withdrawal_request_amount_withdrawn": self.amount_withdrawn.to_json()
             if self.amount_withdrawn
+            else None,
+            "withdrawal_request_total_fees": self.total_fees.to_json()
+            if self.total_fees
             else None,
             "withdrawal_request_bitcoin_address": self.bitcoin_address,
             "withdrawal_request_withdrawal_mode": self.withdrawal_mode.value,
@@ -259,6 +324,14 @@ fragment WithdrawalRequestFragment on WithdrawalRequest {
         currency_amount_preferred_currency_value_rounded: preferred_currency_value_rounded
         currency_amount_preferred_currency_value_approx: preferred_currency_value_approx
     }
+    withdrawal_request_total_fees: total_fees {
+        __typename
+        currency_amount_original_value: original_value
+        currency_amount_original_unit: original_unit
+        currency_amount_preferred_currency_unit: preferred_currency_unit
+        currency_amount_preferred_currency_value_rounded: preferred_currency_value_rounded
+        currency_amount_preferred_currency_value_approx: preferred_currency_value_approx
+    }
     withdrawal_request_bitcoin_address: bitcoin_address
     withdrawal_request_withdrawal_mode: withdrawal_mode
     withdrawal_request_status: status
@@ -290,6 +363,11 @@ def from_json(requester: Requester, obj: Mapping[str, Any]) -> WithdrawalRequest
             requester, obj["withdrawal_request_amount_withdrawn"]
         )
         if obj["withdrawal_request_amount_withdrawn"]
+        else None,
+        total_fees=CurrencyAmount_from_json(
+            requester, obj["withdrawal_request_total_fees"]
+        )
+        if obj["withdrawal_request_total_fees"]
         else None,
         bitcoin_address=obj["withdrawal_request_bitcoin_address"],
         withdrawal_mode=parse_enum(

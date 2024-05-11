@@ -73,6 +73,8 @@ from lightspark.objects.DeleteApiTokenInput import DeleteApiTokenInput
 from lightspark.objects.DeleteApiTokenOutput import DeleteApiTokenOutput
 from lightspark.objects.Deposit import Deposit
 from lightspark.objects.Entity import Entity
+from lightspark.objects.FailHtlcsInput import FailHtlcsInput
+from lightspark.objects.FailHtlcsOutput import FailHtlcsOutput
 from lightspark.objects.FeeEstimate import FeeEstimate
 from lightspark.objects.FundNodeInput import FundNodeInput
 from lightspark.objects.FundNodeOutput import FundNodeOutput
@@ -225,6 +227,9 @@ from lightspark.objects.WithdrawalRequestToChannelClosingTransactionsConnection 
 )
 from lightspark.objects.WithdrawalRequestToChannelOpeningTransactionsConnection import (
     WithdrawalRequestToChannelOpeningTransactionsConnection,
+)
+from lightspark.objects.WithdrawalRequestToWithdrawalsConnection import (
+    WithdrawalRequestToWithdrawalsConnection,
 )
 from lightspark.remote_signing import *
 from lightspark.version import __version__
