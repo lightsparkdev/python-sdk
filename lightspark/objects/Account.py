@@ -1768,6 +1768,14 @@ query FetchAccountToWithdrawalRequestsConnection($entity_id: ID!, $first: Int, $
                         currency_amount_preferred_currency_value_rounded: preferred_currency_value_rounded
                         currency_amount_preferred_currency_value_approx: preferred_currency_value_approx
                     }
+                    withdrawal_request_total_fees: total_fees {
+                        __typename
+                        currency_amount_original_value: original_value
+                        currency_amount_original_unit: original_unit
+                        currency_amount_preferred_currency_unit: preferred_currency_unit
+                        currency_amount_preferred_currency_value_rounded: preferred_currency_value_rounded
+                        currency_amount_preferred_currency_value_approx: preferred_currency_value_approx
+                    }
                     withdrawal_request_bitcoin_address: bitcoin_address
                     withdrawal_request_withdrawal_mode: withdrawal_mode
                     withdrawal_request_status: status

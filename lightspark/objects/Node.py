@@ -5,8 +5,6 @@ from datetime import datetime
 from typing import Any, List, Mapping, Optional
 
 from lightspark.exceptions import LightsparkException
-from lightspark.objects.BitcoinNetwork import BitcoinNetwork
-from lightspark.objects.LightsparkNodeStatus import LightsparkNodeStatus
 from lightspark.requests.requester import Requester
 from lightspark.utils.enums import parse_enum, parse_enum_optional
 
@@ -15,6 +13,7 @@ from .BitcoinNetwork import BitcoinNetwork
 from .BlockchainBalance import from_json as BlockchainBalance_from_json
 from .CurrencyAmount import from_json as CurrencyAmount_from_json
 from .Entity import Entity
+from .LightsparkNodeStatus import LightsparkNodeStatus
 from .NodeAddressType import NodeAddressType
 from .NodeToAddressesConnection import NodeToAddressesConnection
 from .NodeToAddressesConnection import from_json as NodeToAddressesConnection_from_json

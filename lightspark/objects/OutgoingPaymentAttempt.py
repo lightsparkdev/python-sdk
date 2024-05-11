@@ -4,8 +4,6 @@ from dataclasses import dataclass
 from datetime import datetime
 from typing import Any, Mapping, Optional
 
-from lightspark.objects.HtlcAttemptFailureCode import HtlcAttemptFailureCode
-from lightspark.objects.OutgoingPaymentAttemptStatus import OutgoingPaymentAttemptStatus
 from lightspark.requests.requester import Requester
 from lightspark.utils.enums import parse_enum, parse_enum_optional
 

@@ -84,6 +84,7 @@ from lightspark.scripts.create_uma_invoice import CREATE_UMA_INVOICE_MUTATION
 from lightspark.scripts.current_account import CURRENT_ACCOUNT_QUERY
 from lightspark.scripts.decoded_payment_request import DECODED_PAYMENT_REQUEST_QUERY
 from lightspark.scripts.delete_api_token import DELETE_API_TOKEN_MUTATION
+from lightspark.scripts.fail_htlcs import FAIL_HTLCS_MUTATION
 from lightspark.scripts.fetch_uma_invitation import FETCH_UMA_INVITATION_QUERY
 from lightspark.scripts.fund_node import FUND_NODE_MUTATION
 from lightspark.scripts.incoming_payments_for_invoice import (
@@ -97,6 +98,9 @@ from lightspark.scripts.lightning_fee_estimate_for_node import (
 )
 from lightspark.scripts.outgoing_payments_for_invoice import (
     OUTGOING_PAYMENTS_FOR_INVOICE_QUERY,
+)
+from lightspark.scripts.outgoing_payments_for_payment_hash import (
+    OUTGOING_PAYMENTS_FOR_PAYMENT_HASH_QUERY,
 )
 from lightspark.scripts.pay_invoice import PAY_INVOICE_MUTATION
 from lightspark.scripts.pay_uma_invoice import PAY_UMA_INVOICE_MUTATION
@@ -691,6 +695,34 @@ class LightsparkSyncClient:
             for payment in json["outgoing_payments_for_invoice"]["payments"]
         ]
 
+    def outgoing_payments_for_payment_hash(
+        self,
+        payment_hash: str,
+        transaction_statuses: Optional[List[TransactionStatus]] = None,
+    ) -> List[OutgoingPayment]:
+        """
+        Fetches the outgoing payments (if any) which have been made for a given payment hash.
+
+        Args:
+            payment_hash: The payment hash for which to fetch the outgoing payments.
+            transaction_statuses: The statuses of the transactions to fetch. If not specified, all transactions will be fetched.
+        """
+
+        variables: Dict[str, Any] = {"payment_hash": payment_hash}
+        if transaction_statuses is not None:
+            variables["transaction_statuses"] = transaction_statuses
+        json = self._requester.execute_graphql(
+            OUTGOING_PAYMENTS_FOR_PAYMENT_HASH_QUERY, variables
+        )
+        if "outgoing_payments_for_payment_hash" not in json:
+            return []
+        if "payments" not in json["outgoing_payments_for_payment_hash"]:
+            return []
+        return [
+            OutgoingPayment_from_json(self._requester, payment)
+            for payment in json["outgoing_payments_for_payment_hash"]["payments"]
+        ]
+
     def incoming_payments_for_invoice(
         self,
         invoice_id: str,
@@ -847,6 +879,21 @@ class LightsparkSyncClient:
                 "InvalidPhoneNumber", "The phone number must follow the E.164 format."
             )
         return sha256(phone_number_e164_format.encode()).hexdigest()
+
+    def fail_htlcs(self, invoice_id: str, cancel_invoice: bool = True) -> str:
+        """
+        Fails all pending HTLCs associated with an invoice.
+
+        Args:
+            invoice_id: The ID of the invoice to fail.
+            cancel_invoice: Whether to cancel the invoice after failing the HTLCs.
+        """
+        json = self._requester.execute_graphql(
+            FAIL_HTLCS_MUTATION,
+            {"invoice_id": invoice_id, "cancel_invoice": cancel_invoice},
+        )
+
+        return json["fail_htlcs"]["invoice"]["id"]
 
 
 # pylint: disable=anomalous-backslash-in-string

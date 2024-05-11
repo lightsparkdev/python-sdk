@@ -4,8 +4,6 @@ from dataclasses import dataclass
 from datetime import datetime
 from typing import Any, List, Mapping, Optional
 
-from lightspark.objects.BitcoinNetwork import BitcoinNetwork
-from lightspark.objects.LightsparkNodeStatus import LightsparkNodeStatus
 from lightspark.requests.requester import Requester
 from lightspark.utils.enums import parse_enum, parse_enum_optional
 
@@ -127,15 +125,17 @@ query FetchNodeToAddressesConnection($entity_id: ID!, $first: Int, $types: [Node
     def get_channels(
         self,
         first: Optional[int] = None,
-        statuses: Optional[List[ChannelStatus]] = None,
         after: Optional[str] = None,
+        before_date: Optional[datetime] = None,
+        after_date: Optional[datetime] = None,
+        statuses: Optional[List[ChannelStatus]] = None,
     ) -> LightsparkNodeToChannelsConnection:
         json = self.requester.execute_graphql(
             """
-query FetchLightsparkNodeToChannelsConnection($entity_id: ID!, $first: Int, $statuses: [ChannelStatus!], $after: String) {
+query FetchLightsparkNodeToChannelsConnection($entity_id: ID!, $first: Int, $after: String, $before_date: DateTime, $after_date: DateTime, $statuses: [ChannelStatus!]) {
     entity(id: $entity_id) {
         ... on LightsparkNodeWithRemoteSigning {
-            channels(, first: $first, statuses: $statuses, after: $after) {
+            channels(, first: $first, after: $after, before_date: $before_date, after_date: $after_date, statuses: $statuses) {
                 __typename
                 lightspark_node_to_channels_connection_count: count
                 lightspark_node_to_channels_connection_page_info: page_info {
@@ -247,8 +247,10 @@ query FetchLightsparkNodeToChannelsConnection($entity_id: ID!, $first: Int, $sta
             {
                 "entity_id": self.id,
                 "first": first,
-                "statuses": statuses,
                 "after": after,
+                "before_date": before_date,
+                "after_date": after_date,
+                "statuses": statuses,
             },
         )
         connection = json["entity"]["channels"]

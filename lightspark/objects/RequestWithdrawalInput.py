@@ -1,9 +1,8 @@
 # Copyright ©, 2022-present, Lightspark Group, Inc. - All Rights Reserved
 
 from dataclasses import dataclass
-from typing import Any, Mapping
+from typing import Any, Mapping, Optional
 
-from lightspark.objects.WithdrawalMode import WithdrawalMode
 from lightspark.utils.enums import parse_enum
 
 from .WithdrawalMode import WithdrawalMode
@@ -23,12 +22,16 @@ class RequestWithdrawalInput:
     withdrawal_mode: WithdrawalMode
     """The strategy that should be used to withdraw the funds from this node."""
 
+    idempotency_key: Optional[str]
+    """The idempotency key of the request. The same result will be returned for the same idempotency key."""
+
     def to_json(self) -> Mapping[str, Any]:
         return {
             "request_withdrawal_input_node_id": self.node_id,
             "request_withdrawal_input_bitcoin_address": self.bitcoin_address,
             "request_withdrawal_input_amount_sats": self.amount_sats,
             "request_withdrawal_input_withdrawal_mode": self.withdrawal_mode.value,
+            "request_withdrawal_input_idempotency_key": self.idempotency_key,
         }
 
 
@@ -40,4 +43,5 @@ def from_json(obj: Mapping[str, Any]) -> RequestWithdrawalInput:
         withdrawal_mode=parse_enum(
             WithdrawalMode, obj["request_withdrawal_input_withdrawal_mode"]
         ),
+        idempotency_key=obj["request_withdrawal_input_idempotency_key"],
     )

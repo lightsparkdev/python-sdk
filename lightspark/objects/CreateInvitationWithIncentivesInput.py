@@ -3,7 +3,6 @@
 from dataclasses import dataclass
 from typing import Any, Mapping
 
-from lightspark.objects.RegionCode import RegionCode
 from lightspark.utils.enums import parse_enum
 
 from .RegionCode import RegionCode

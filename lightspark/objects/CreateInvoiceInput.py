@@ -3,7 +3,6 @@
 from dataclasses import dataclass
 from typing import Any, Mapping, Optional
 
-from lightspark.objects.InvoiceType import InvoiceType
 from lightspark.utils.enums import parse_enum_optional
 
 from .InvoiceType import InvoiceType

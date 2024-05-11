@@ -4,7 +4,6 @@ from dataclasses import dataclass
 from datetime import datetime
 from typing import Any, Mapping, Optional
 
-from lightspark.objects.SignablePayloadStatus import SignablePayloadStatus
 from lightspark.requests.requester import Requester
 from lightspark.utils.enums import parse_enum
 

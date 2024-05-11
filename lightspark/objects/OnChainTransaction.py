@@ -5,7 +5,6 @@ from datetime import datetime
 from typing import Any, List, Mapping, Optional
 
 from lightspark.exceptions import LightsparkException
-from lightspark.objects.TransactionStatus import TransactionStatus
 from lightspark.requests.requester import Requester
 from lightspark.utils.enums import parse_enum
 
@@ -44,7 +43,7 @@ class OnChainTransaction(Transaction, Entity):
     """The hash of this transaction, so it can be uniquely identified on the Lightning Network."""
 
     fees: Optional[CurrencyAmount]
-    """The fees that were paid by the wallet sending the transaction to commit it to the Bitcoin blockchain."""
+    """The fees that were paid by the node for this transaction."""
 
     block_hash: Optional[str]
     """The hash of the block that included this transaction. This will be null for unconfirmed transactions."""
