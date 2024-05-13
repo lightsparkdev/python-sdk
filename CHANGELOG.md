@@ -1,5 +1,11 @@
 # Changelog
 
+# v2.7.0
+
+- Add `fail_htlcs` function to cancel pending htlcs (for example for HODL invoices).
+- Add `outgoing_payments_for_payment_hash` to get all outgoing payments for a specific hash.
+- Compress requests and support zstd.
+
 # v2.6.0
 
 - Use a 64-bit nonce for signed requests to avoid conflicts.
