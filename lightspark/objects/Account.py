@@ -1264,6 +1264,7 @@ query FetchAccountToTransactionsConnection($entity_id: ID!, $first: Int, $after:
                         }
                         outgoing_payment_payment_preimage: payment_preimage
                         outgoing_payment_is_internal_payment: is_internal_payment
+                        outgoing_payment_idempotency_key: idempotency_key
                     }
                     ... on RoutingTransaction {
                         __typename
@@ -1713,15 +1714,16 @@ query FetchAccountToPaymentRequestsConnection($entity_id: ID!, $first: Int, $aft
         bitcoin_networks: Optional[List[BitcoinNetwork]] = None,
         statuses: Optional[List[WithdrawalRequestStatus]] = None,
         node_ids: Optional[List[str]] = None,
+        idempotency_keys: Optional[List[str]] = None,
         after_date: Optional[datetime] = None,
         before_date: Optional[datetime] = None,
     ) -> AccountToWithdrawalRequestsConnection:
         json = self.requester.execute_graphql(
             """
-query FetchAccountToWithdrawalRequestsConnection($entity_id: ID!, $first: Int, $after: String, $bitcoin_networks: [BitcoinNetwork!], $statuses: [WithdrawalRequestStatus!], $node_ids: [ID!], $after_date: DateTime, $before_date: DateTime) {
+query FetchAccountToWithdrawalRequestsConnection($entity_id: ID!, $first: Int, $after: String, $bitcoin_networks: [BitcoinNetwork!], $statuses: [WithdrawalRequestStatus!], $node_ids: [ID!], $idempotency_keys: [String!], $after_date: DateTime, $before_date: DateTime) {
     entity(id: $entity_id) {
         ... on Account {
-            withdrawal_requests(, first: $first, after: $after, bitcoin_networks: $bitcoin_networks, statuses: $statuses, node_ids: $node_ids, after_date: $after_date, before_date: $before_date) {
+            withdrawal_requests(, first: $first, after: $after, bitcoin_networks: $bitcoin_networks, statuses: $statuses, node_ids: $node_ids, idempotency_keys: $idempotency_keys, after_date: $after_date, before_date: $before_date) {
                 __typename
                 account_to_withdrawal_requests_connection_count: count
                 account_to_withdrawal_requests_connection_page_info: page_info {
@@ -1783,6 +1785,7 @@ query FetchAccountToWithdrawalRequestsConnection($entity_id: ID!, $first: Int, $
                     withdrawal_request_withdrawal: withdrawal {
                         id
                     }
+                    withdrawal_request_idempotency_key: idempotency_key
                 }
             }
         }
@@ -1796,6 +1799,7 @@ query FetchAccountToWithdrawalRequestsConnection($entity_id: ID!, $first: Int, $
                 "bitcoin_networks": bitcoin_networks,
                 "statuses": statuses,
                 "node_ids": node_ids,
+                "idempotency_keys": idempotency_keys,
                 "after_date": after_date,
                 "before_date": before_date,
             },

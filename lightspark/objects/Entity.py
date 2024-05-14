@@ -1289,6 +1289,7 @@ fragment EntityFragment on Entity {
         }
         outgoing_payment_payment_preimage: payment_preimage
         outgoing_payment_is_internal_payment: is_internal_payment
+        outgoing_payment_idempotency_key: idempotency_key
     }
     ... on OutgoingPaymentAttempt {
         __typename
@@ -1514,6 +1515,7 @@ fragment EntityFragment on Entity {
         withdrawal_request_withdrawal: withdrawal {
             id
         }
+        withdrawal_request_idempotency_key: idempotency_key
     }
 }
 """

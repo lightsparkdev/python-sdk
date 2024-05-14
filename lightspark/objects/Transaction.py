@@ -542,6 +542,7 @@ fragment TransactionFragment on Transaction {
         }
         outgoing_payment_payment_preimage: payment_preimage
         outgoing_payment_is_internal_payment: is_internal_payment
+        outgoing_payment_idempotency_key: idempotency_key
     }
     ... on RoutingTransaction {
         __typename
@@ -808,6 +809,7 @@ def from_json(requester: Requester, obj: Mapping[str, Any]) -> Transaction:
             else None,
             payment_preimage=obj["outgoing_payment_payment_preimage"],
             is_internal_payment=obj["outgoing_payment_is_internal_payment"],
+            idempotency_key=obj["outgoing_payment_idempotency_key"],
         )
     if obj["__typename"] == "RoutingTransaction":
         # pylint: disable=import-outside-toplevel

@@ -82,6 +82,9 @@ class OutgoingPayment(LightningTransaction, Transaction, Entity):
 
     is_internal_payment: bool
     """Whether the payment is made to the same node."""
+
+    idempotency_key: Optional[str]
+    """The idempotency key of the payment."""
     typename: str
 
     def get_attempts(
@@ -179,6 +182,7 @@ query FetchOutgoingPaymentToAttemptsConnection($entity_id: ID!, $first: Int, $af
             else None,
             "outgoing_payment_payment_preimage": self.payment_preimage,
             "outgoing_payment_is_internal_payment": self.is_internal_payment,
+            "outgoing_payment_idempotency_key": self.idempotency_key,
         }
 
 
@@ -527,6 +531,7 @@ fragment OutgoingPaymentFragment on OutgoingPayment {
     }
     outgoing_payment_payment_preimage: payment_preimage
     outgoing_payment_is_internal_payment: is_internal_payment
+    outgoing_payment_idempotency_key: idempotency_key
 }
 """
 
@@ -576,4 +581,5 @@ def from_json(requester: Requester, obj: Mapping[str, Any]) -> OutgoingPayment:
         else None,
         payment_preimage=obj["outgoing_payment_payment_preimage"],
         is_internal_payment=obj["outgoing_payment_is_internal_payment"],
+        idempotency_key=obj["outgoing_payment_idempotency_key"],
     )

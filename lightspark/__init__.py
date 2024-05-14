@@ -137,11 +137,23 @@ from lightspark.objects.OutgoingPaymentAttemptStatus import OutgoingPaymentAttem
 from lightspark.objects.OutgoingPaymentAttemptToHopsConnection import (
     OutgoingPaymentAttemptToHopsConnection,
 )
+from lightspark.objects.OutgoingPaymentForIdempotencyKeyInput import (
+    OutgoingPaymentForIdempotencyKeyInput,
+)
+from lightspark.objects.OutgoingPaymentForIdempotencyKeyOutput import (
+    OutgoingPaymentForIdempotencyKeyOutput,
+)
 from lightspark.objects.OutgoingPaymentsForInvoiceQueryInput import (
     OutgoingPaymentsForInvoiceQueryInput,
 )
 from lightspark.objects.OutgoingPaymentsForInvoiceQueryOutput import (
     OutgoingPaymentsForInvoiceQueryOutput,
+)
+from lightspark.objects.OutgoingPaymentsForPaymentHashQueryInput import (
+    OutgoingPaymentsForPaymentHashQueryInput,
+)
+from lightspark.objects.OutgoingPaymentsForPaymentHashQueryOutput import (
+    OutgoingPaymentsForPaymentHashQueryOutput,
 )
 from lightspark.objects.OutgoingPaymentToAttemptsConnection import (
     OutgoingPaymentToAttemptsConnection,
