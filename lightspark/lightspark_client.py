@@ -96,6 +96,9 @@ from lightspark.scripts.lightning_fee_estimate_for_invoice import (
 from lightspark.scripts.lightning_fee_estimate_for_node import (
     LIGHTNING_FEE_ESTIMATE_FOR_NODE_QUERY,
 )
+from lightspark.scripts.outgoing_payment_for_idempotency_key import (
+    OUTGOING_PAYMENT_FOR_IDEMPOTENCY_KEY_QUERY,
+)
 from lightspark.scripts.outgoing_payments_for_invoice import (
     OUTGOING_PAYMENTS_FOR_INVOICE_QUERY,
 )
@@ -497,6 +500,7 @@ class LightsparkSyncClient:
         timeout_secs: int,
         maximum_fees_msats: int,
         amount_msats: Optional[int] = None,
+        idempotency_key: Optional[str] = None,
     ) -> OutgoingPayment:
         variables = {
             "node_id": node_id,
@@ -506,6 +510,8 @@ class LightsparkSyncClient:
         }
         if amount_msats is not None:
             variables["amount_msats"] = amount_msats
+        if idempotency_key is not None:
+            variables["idempotency_key"] = idempotency_key
         json = self._requester.execute_graphql(
             PAY_INVOICE_MUTATION,
             variables,
@@ -522,6 +528,7 @@ class LightsparkSyncClient:
         timeout_secs: int,
         maximum_fees_msats: int,
         amount_msats: Optional[int] = None,
+        idempotency_key: Optional[str] = None,
     ) -> OutgoingPayment:
         variables = {
             "node_id": node_id,
@@ -531,6 +538,8 @@ class LightsparkSyncClient:
         }
         if amount_msats is not None:
             variables["amount_msats"] = amount_msats
+        if idempotency_key is not None:
+            variables["idempotency_key"] = idempotency_key
         json = self._requester.execute_graphql(
             PAY_UMA_INVOICE_MUTATION,
             variables,
@@ -615,21 +624,24 @@ class LightsparkSyncClient:
         amount_sats: int,
         bitcoin_address: str,
         withdrawal_mode: WithdrawalMode,
+        idempotency_key: Optional[str] = None,
     ) -> WithdrawalRequest:
         """Withdraws funds from the account and sends it to the requested bitcoin address.
 
         Depending on the chosen mode, it will first take the funds from the wallet, and if applicable, close channels appropriately to recover enough funds and reopen channels with the remaining funds.
         The process is asynchronous and may take up to a few minutes. You can check the progress by polling the `WithdrawalRequest` that is created, or by subscribing to a webhook.
         """
-
+        variables = {
+            "node_id": node_id,
+            "amount_sats": amount_sats,
+            "bitcoin_address": bitcoin_address,
+            "withdrawal_mode": withdrawal_mode,
+        }
+        if idempotency_key is not None:
+            variables["idempotency_key"] = idempotency_key
         json = self._requester.execute_graphql(
             REQUEST_WITHDRAWAL_MUTATION,
-            {
-                "node_id": node_id,
-                "amount_sats": amount_sats,
-                "bitcoin_address": bitcoin_address,
-                "withdrawal_mode": withdrawal_mode,
-            },
+            variables,
             self.get_signing_key(node_id),
         )
         return WithdrawalRequest_from_json(
@@ -722,6 +734,26 @@ class LightsparkSyncClient:
             OutgoingPayment_from_json(self._requester, payment)
             for payment in json["outgoing_payments_for_payment_hash"]["payments"]
         ]
+
+    def outgoing_payment_for_idempotency_key(
+        self,
+        idempotency_key: str,
+    ) -> Optional[OutgoingPayment]:
+        """
+        Fetches the outgoing payment (if any) which have been made for a given idempotency key.
+        """
+
+        json = self._requester.execute_graphql(
+            OUTGOING_PAYMENT_FOR_IDEMPOTENCY_KEY_QUERY,
+            {"idempotency_key": idempotency_key},
+        )
+        if "outgoing_payment_for_idempotency_key" not in json:
+            return None
+        if "payment" not in json["outgoing_payment_for_idempotency_key"]:
+            return None
+        return OutgoingPayment_from_json(
+            self._requester, json["outgoing_payment_for_idempotency_key"]["payment"]
+        )
 
     def incoming_payments_for_invoice(
         self,
