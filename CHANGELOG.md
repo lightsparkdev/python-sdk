@@ -1,5 +1,9 @@
 # Changelog
 
+# v2.7.1
+
+- Minor type fix in the `outgoing_payments_for_payment_hash` query.
+
 # v2.7.0
 
 - Add `fail_htlcs` function to cancel pending htlcs (for example for HODL invoices).
