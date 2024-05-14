@@ -16,6 +16,8 @@ class PayUmaInvoiceInput:
 
     amount_msats: Optional[int]
 
+    idempotency_key: Optional[str]
+
     def to_json(self) -> Mapping[str, Any]:
         return {
             "pay_uma_invoice_input_node_id": self.node_id,
@@ -23,6 +25,7 @@ class PayUmaInvoiceInput:
             "pay_uma_invoice_input_timeout_secs": self.timeout_secs,
             "pay_uma_invoice_input_maximum_fees_msats": self.maximum_fees_msats,
             "pay_uma_invoice_input_amount_msats": self.amount_msats,
+            "pay_uma_invoice_input_idempotency_key": self.idempotency_key,
         }
 
 
@@ -33,4 +36,5 @@ def from_json(obj: Mapping[str, Any]) -> PayUmaInvoiceInput:
         timeout_secs=obj["pay_uma_invoice_input_timeout_secs"],
         maximum_fees_msats=obj["pay_uma_invoice_input_maximum_fees_msats"],
         amount_msats=obj["pay_uma_invoice_input_amount_msats"],
+        idempotency_key=obj["pay_uma_invoice_input_idempotency_key"],
     )

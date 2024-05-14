@@ -21,6 +21,9 @@ class PayInvoiceInput:
     amount_msats: Optional[int]
     """The amount you will pay for this invoice, expressed in msats. It should ONLY be set when the invoice amount is zero."""
 
+    idempotency_key: Optional[str]
+    """The idempotency key of the request. The same result will be returned for the same idempotency key."""
+
     def to_json(self) -> Mapping[str, Any]:
         return {
             "pay_invoice_input_node_id": self.node_id,
@@ -28,6 +31,7 @@ class PayInvoiceInput:
             "pay_invoice_input_timeout_secs": self.timeout_secs,
             "pay_invoice_input_maximum_fees_msats": self.maximum_fees_msats,
             "pay_invoice_input_amount_msats": self.amount_msats,
+            "pay_invoice_input_idempotency_key": self.idempotency_key,
         }
 
 
@@ -38,4 +42,5 @@ def from_json(obj: Mapping[str, Any]) -> PayInvoiceInput:
         timeout_secs=obj["pay_invoice_input_timeout_secs"],
         maximum_fees_msats=obj["pay_invoice_input_maximum_fees_msats"],
         amount_msats=obj["pay_invoice_input_amount_msats"],
+        idempotency_key=obj["pay_invoice_input_idempotency_key"],
     )
