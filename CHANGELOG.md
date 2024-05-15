@@ -1,5 +1,12 @@
 # Changelog
 
+# 2.8.0
+
+- Add idempotency where useful!
+  - Add optional `idempotency_key` to `pay_invoice` and `request_withdrawal`.
+  - Add `idempotency_key` to `OutgoingPayment` and `Withdrawal` objects.
+  - Add new `outgoing_payment_for_idempotency_key` query.
+
 # v2.7.1
 
 - Minor type fix in the `outgoing_payments_for_payment_hash` query.
