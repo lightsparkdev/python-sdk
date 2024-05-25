@@ -12,10 +12,8 @@ from urllib.parse import urlparse
 
 try:
     from zstandard import ZstdCompressor
-
-    zstd: Optional[ZstdCompressor] = ZstdCompressor()
 except ImportError:
-    zstd = None
+    ZstdCompressor = None
 
 import requests
 from requests.auth import HTTPBasicAuth
@@ -86,8 +84,8 @@ class Requester:
             "X-Lightspark-SDK": user_agent,
         }
         if len(payload) > 1024:
-            if zstd:
-                payload = zstd.compress(payload)
+            if ZstdCompressor:
+                payload = ZstdCompressor().compress(payload)
                 headers["Content-Encoding"] = "zstd"
             else:
                 payload = zlib.compress(payload, level=zlib.Z_BEST_SPEED)
