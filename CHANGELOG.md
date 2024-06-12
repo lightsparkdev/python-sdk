@@ -1,5 +1,9 @@
 # Changelog
 
+# 2.9.0
+
+- Add new `invoice_for_payment_hash` query.
+
 # 2.8.0
 
 - Add idempotency where useful!
