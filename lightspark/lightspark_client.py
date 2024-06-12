@@ -90,6 +90,7 @@ from lightspark.scripts.fund_node import FUND_NODE_MUTATION
 from lightspark.scripts.incoming_payments_for_invoice import (
     INCOMING_PAYMENTS_FOR_INVOICE_QUERY,
 )
+from lightspark.scripts.invoice_for_payment_hash import INVOICE_FOR_PAYMENT_HASH_QUERY
 from lightspark.scripts.lightning_fee_estimate_for_invoice import (
     LIGHTNING_FEE_ESTIMATE_FOR_INVOICE_QUERY,
 )
@@ -780,6 +781,26 @@ class LightsparkSyncClient:
             self._requester, json["incoming_payments_for_invoice"]
         )
         return output.payments
+
+    def invoice_for_payment_hash(
+        self,
+        payment_hash: str,
+    ) -> Optional[Invoice]:
+        """
+        Fetches the invoice (if any) which have been created with a given payment hash.
+        """
+
+        json = self._requester.execute_graphql(
+            INVOICE_FOR_PAYMENT_HASH_QUERY,
+            {"payment_hash": payment_hash},
+        )
+        if "invoice_for_payment_hash" not in json:
+            return None
+        if "invoice" not in json["invoice_for_payment_hash"]:
+            return None
+        return Invoice_from_json(
+            self._requester, json["invoice_for_payment_hash"]["invoice"]
+        )
 
     def create_uma_invitation(
         self,
