@@ -11,6 +11,7 @@ from .Withdrawal import from_json as Withdrawal_from_json
 
 @dataclass
 class WithdrawalRequestToWithdrawalsConnection:
+
     requester: Requester
 
     count: int

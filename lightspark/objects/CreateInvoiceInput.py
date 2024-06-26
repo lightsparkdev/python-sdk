@@ -10,6 +10,7 @@ from .InvoiceType import InvoiceType
 
 @dataclass
 class CreateInvoiceInput:
+
     node_id: str
     """The node from which to create the invoice."""
 
@@ -28,9 +29,9 @@ class CreateInvoiceInput:
             "create_invoice_input_node_id": self.node_id,
             "create_invoice_input_amount_msats": self.amount_msats,
             "create_invoice_input_memo": self.memo,
-            "create_invoice_input_invoice_type": self.invoice_type.value
-            if self.invoice_type
-            else None,
+            "create_invoice_input_invoice_type": (
+                self.invoice_type.value if self.invoice_type else None
+            ),
             "create_invoice_input_expiry_secs": self.expiry_secs,
         }
 

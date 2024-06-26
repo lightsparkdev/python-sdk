@@ -10,6 +10,7 @@ from .TransactionStatus import TransactionStatus
 
 @dataclass
 class OutgoingPaymentsForPaymentHashQueryInput:
+
     payment_hash: str
     """The 32-byte hash of the payment preimage for which to fetch payments"""
 
@@ -19,11 +20,9 @@ class OutgoingPaymentsForPaymentHashQueryInput:
     def to_json(self) -> Mapping[str, Any]:
         return {
             "outgoing_payments_for_payment_hash_query_input_payment_hash": self.payment_hash,
-            "outgoing_payments_for_payment_hash_query_input_statuses": [
-                e.value for e in self.statuses
-            ]
-            if self.statuses
-            else None,
+            "outgoing_payments_for_payment_hash_query_input_statuses": (
+                [e.value for e in self.statuses] if self.statuses else None
+            ),
         }
 
 

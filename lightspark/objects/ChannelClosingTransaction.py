@@ -68,21 +68,21 @@ class ChannelClosingTransaction(OnChainTransaction, Transaction, Entity):
             "channel_closing_transaction_created_at": self.created_at.isoformat(),
             "channel_closing_transaction_updated_at": self.updated_at.isoformat(),
             "channel_closing_transaction_status": self.status.value,
-            "channel_closing_transaction_resolved_at": self.resolved_at.isoformat()
-            if self.resolved_at
-            else None,
+            "channel_closing_transaction_resolved_at": (
+                self.resolved_at.isoformat() if self.resolved_at else None
+            ),
             "channel_closing_transaction_amount": self.amount.to_json(),
             "channel_closing_transaction_transaction_hash": self.transaction_hash,
-            "channel_closing_transaction_fees": self.fees.to_json()
-            if self.fees
-            else None,
+            "channel_closing_transaction_fees": (
+                self.fees.to_json() if self.fees else None
+            ),
             "channel_closing_transaction_block_hash": self.block_hash,
             "channel_closing_transaction_block_height": self.block_height,
             "channel_closing_transaction_destination_addresses": self.destination_addresses,
             "channel_closing_transaction_num_confirmations": self.num_confirmations,
-            "channel_closing_transaction_channel": {"id": self.channel_id}
-            if self.channel_id
-            else None,
+            "channel_closing_transaction_channel": (
+                {"id": self.channel_id} if self.channel_id else None
+            ),
         }
 
 
@@ -136,25 +136,27 @@ def from_json(
             obj["channel_closing_transaction_updated_at"]
         ),
         status=parse_enum(TransactionStatus, obj["channel_closing_transaction_status"]),
-        resolved_at=datetime.fromisoformat(
-            obj["channel_closing_transaction_resolved_at"]
-        )
-        if obj["channel_closing_transaction_resolved_at"]
-        else None,
+        resolved_at=(
+            datetime.fromisoformat(obj["channel_closing_transaction_resolved_at"])
+            if obj["channel_closing_transaction_resolved_at"]
+            else None
+        ),
         amount=CurrencyAmount_from_json(
             requester, obj["channel_closing_transaction_amount"]
         ),
         transaction_hash=obj["channel_closing_transaction_transaction_hash"],
-        fees=CurrencyAmount_from_json(
-            requester, obj["channel_closing_transaction_fees"]
-        )
-        if obj["channel_closing_transaction_fees"]
-        else None,
+        fees=(
+            CurrencyAmount_from_json(requester, obj["channel_closing_transaction_fees"])
+            if obj["channel_closing_transaction_fees"]
+            else None
+        ),
         block_hash=obj["channel_closing_transaction_block_hash"],
         block_height=obj["channel_closing_transaction_block_height"],
         destination_addresses=obj["channel_closing_transaction_destination_addresses"],
         num_confirmations=obj["channel_closing_transaction_num_confirmations"],
-        channel_id=obj["channel_closing_transaction_channel"]["id"]
-        if obj["channel_closing_transaction_channel"]
-        else None,
+        channel_id=(
+            obj["channel_closing_transaction_channel"]["id"]
+            if obj["channel_closing_transaction_channel"]
+            else None
+        ),
     )

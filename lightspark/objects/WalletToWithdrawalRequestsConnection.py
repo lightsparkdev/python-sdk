@@ -14,6 +14,7 @@ from .WithdrawalRequest import from_json as WithdrawalRequest_from_json
 
 @dataclass
 class WalletToWithdrawalRequestsConnection(Connection):
+
     requester: Requester
 
     count: int

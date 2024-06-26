@@ -65,9 +65,9 @@ class OnChainTransaction(Transaction, Entity):
             "on_chain_transaction_created_at": self.created_at.isoformat(),
             "on_chain_transaction_updated_at": self.updated_at.isoformat(),
             "on_chain_transaction_status": self.status.value,
-            "on_chain_transaction_resolved_at": self.resolved_at.isoformat()
-            if self.resolved_at
-            else None,
+            "on_chain_transaction_resolved_at": (
+                self.resolved_at.isoformat() if self.resolved_at else None
+            ),
             "on_chain_transaction_amount": self.amount.to_json(),
             "on_chain_transaction_transaction_hash": self.transaction_hash,
             "on_chain_transaction_fees": self.fees.to_json() if self.fees else None,
@@ -233,29 +233,33 @@ def from_json(requester: Requester, obj: Mapping[str, Any]) -> OnChainTransactio
             status=parse_enum(
                 TransactionStatus, obj["channel_closing_transaction_status"]
             ),
-            resolved_at=datetime.fromisoformat(
-                obj["channel_closing_transaction_resolved_at"]
-            )
-            if obj["channel_closing_transaction_resolved_at"]
-            else None,
+            resolved_at=(
+                datetime.fromisoformat(obj["channel_closing_transaction_resolved_at"])
+                if obj["channel_closing_transaction_resolved_at"]
+                else None
+            ),
             amount=CurrencyAmount_from_json(
                 requester, obj["channel_closing_transaction_amount"]
             ),
             transaction_hash=obj["channel_closing_transaction_transaction_hash"],
-            fees=CurrencyAmount_from_json(
-                requester, obj["channel_closing_transaction_fees"]
-            )
-            if obj["channel_closing_transaction_fees"]
-            else None,
+            fees=(
+                CurrencyAmount_from_json(
+                    requester, obj["channel_closing_transaction_fees"]
+                )
+                if obj["channel_closing_transaction_fees"]
+                else None
+            ),
             block_hash=obj["channel_closing_transaction_block_hash"],
             block_height=obj["channel_closing_transaction_block_height"],
             destination_addresses=obj[
                 "channel_closing_transaction_destination_addresses"
             ],
             num_confirmations=obj["channel_closing_transaction_num_confirmations"],
-            channel_id=obj["channel_closing_transaction_channel"]["id"]
-            if obj["channel_closing_transaction_channel"]
-            else None,
+            channel_id=(
+                obj["channel_closing_transaction_channel"]["id"]
+                if obj["channel_closing_transaction_channel"]
+                else None
+            ),
         )
     if obj["__typename"] == "ChannelOpeningTransaction":
         # pylint: disable=import-outside-toplevel
@@ -276,29 +280,33 @@ def from_json(requester: Requester, obj: Mapping[str, Any]) -> OnChainTransactio
             status=parse_enum(
                 TransactionStatus, obj["channel_opening_transaction_status"]
             ),
-            resolved_at=datetime.fromisoformat(
-                obj["channel_opening_transaction_resolved_at"]
-            )
-            if obj["channel_opening_transaction_resolved_at"]
-            else None,
+            resolved_at=(
+                datetime.fromisoformat(obj["channel_opening_transaction_resolved_at"])
+                if obj["channel_opening_transaction_resolved_at"]
+                else None
+            ),
             amount=CurrencyAmount_from_json(
                 requester, obj["channel_opening_transaction_amount"]
             ),
             transaction_hash=obj["channel_opening_transaction_transaction_hash"],
-            fees=CurrencyAmount_from_json(
-                requester, obj["channel_opening_transaction_fees"]
-            )
-            if obj["channel_opening_transaction_fees"]
-            else None,
+            fees=(
+                CurrencyAmount_from_json(
+                    requester, obj["channel_opening_transaction_fees"]
+                )
+                if obj["channel_opening_transaction_fees"]
+                else None
+            ),
             block_hash=obj["channel_opening_transaction_block_hash"],
             block_height=obj["channel_opening_transaction_block_height"],
             destination_addresses=obj[
                 "channel_opening_transaction_destination_addresses"
             ],
             num_confirmations=obj["channel_opening_transaction_num_confirmations"],
-            channel_id=obj["channel_opening_transaction_channel"]["id"]
-            if obj["channel_opening_transaction_channel"]
-            else None,
+            channel_id=(
+                obj["channel_opening_transaction_channel"]["id"]
+                if obj["channel_opening_transaction_channel"]
+                else None
+            ),
         )
     if obj["__typename"] == "Deposit":
         # pylint: disable=import-outside-toplevel
@@ -311,14 +319,18 @@ def from_json(requester: Requester, obj: Mapping[str, Any]) -> OnChainTransactio
             created_at=datetime.fromisoformat(obj["deposit_created_at"]),
             updated_at=datetime.fromisoformat(obj["deposit_updated_at"]),
             status=parse_enum(TransactionStatus, obj["deposit_status"]),
-            resolved_at=datetime.fromisoformat(obj["deposit_resolved_at"])
-            if obj["deposit_resolved_at"]
-            else None,
+            resolved_at=(
+                datetime.fromisoformat(obj["deposit_resolved_at"])
+                if obj["deposit_resolved_at"]
+                else None
+            ),
             amount=CurrencyAmount_from_json(requester, obj["deposit_amount"]),
             transaction_hash=obj["deposit_transaction_hash"],
-            fees=CurrencyAmount_from_json(requester, obj["deposit_fees"])
-            if obj["deposit_fees"]
-            else None,
+            fees=(
+                CurrencyAmount_from_json(requester, obj["deposit_fees"])
+                if obj["deposit_fees"]
+                else None
+            ),
             block_hash=obj["deposit_block_hash"],
             block_height=obj["deposit_block_height"],
             destination_addresses=obj["deposit_destination_addresses"],
@@ -336,14 +348,18 @@ def from_json(requester: Requester, obj: Mapping[str, Any]) -> OnChainTransactio
             created_at=datetime.fromisoformat(obj["withdrawal_created_at"]),
             updated_at=datetime.fromisoformat(obj["withdrawal_updated_at"]),
             status=parse_enum(TransactionStatus, obj["withdrawal_status"]),
-            resolved_at=datetime.fromisoformat(obj["withdrawal_resolved_at"])
-            if obj["withdrawal_resolved_at"]
-            else None,
+            resolved_at=(
+                datetime.fromisoformat(obj["withdrawal_resolved_at"])
+                if obj["withdrawal_resolved_at"]
+                else None
+            ),
             amount=CurrencyAmount_from_json(requester, obj["withdrawal_amount"]),
             transaction_hash=obj["withdrawal_transaction_hash"],
-            fees=CurrencyAmount_from_json(requester, obj["withdrawal_fees"])
-            if obj["withdrawal_fees"]
-            else None,
+            fees=(
+                CurrencyAmount_from_json(requester, obj["withdrawal_fees"])
+                if obj["withdrawal_fees"]
+                else None
+            ),
             block_hash=obj["withdrawal_block_hash"],
             block_height=obj["withdrawal_block_height"],
             destination_addresses=obj["withdrawal_destination_addresses"],

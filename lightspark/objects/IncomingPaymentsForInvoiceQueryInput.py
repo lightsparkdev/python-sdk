@@ -10,6 +10,7 @@ from .TransactionStatus import TransactionStatus
 
 @dataclass
 class IncomingPaymentsForInvoiceQueryInput:
+
     invoice_id: str
 
     statuses: Optional[List[TransactionStatus]]
@@ -18,11 +19,9 @@ class IncomingPaymentsForInvoiceQueryInput:
     def to_json(self) -> Mapping[str, Any]:
         return {
             "incoming_payments_for_invoice_query_input_invoice_id": self.invoice_id,
-            "incoming_payments_for_invoice_query_input_statuses": [
-                e.value for e in self.statuses
-            ]
-            if self.statuses
-            else None,
+            "incoming_payments_for_invoice_query_input_statuses": (
+                [e.value for e in self.statuses] if self.statuses else None
+            ),
         }
 
 

@@ -68,9 +68,9 @@ class Withdrawal(OnChainTransaction, Transaction, Entity):
             "withdrawal_created_at": self.created_at.isoformat(),
             "withdrawal_updated_at": self.updated_at.isoformat(),
             "withdrawal_status": self.status.value,
-            "withdrawal_resolved_at": self.resolved_at.isoformat()
-            if self.resolved_at
-            else None,
+            "withdrawal_resolved_at": (
+                self.resolved_at.isoformat() if self.resolved_at else None
+            ),
             "withdrawal_amount": self.amount.to_json(),
             "withdrawal_transaction_hash": self.transaction_hash,
             "withdrawal_fees": self.fees.to_json() if self.fees else None,
@@ -126,14 +126,18 @@ def from_json(requester: Requester, obj: Mapping[str, Any]) -> Withdrawal:
         created_at=datetime.fromisoformat(obj["withdrawal_created_at"]),
         updated_at=datetime.fromisoformat(obj["withdrawal_updated_at"]),
         status=parse_enum(TransactionStatus, obj["withdrawal_status"]),
-        resolved_at=datetime.fromisoformat(obj["withdrawal_resolved_at"])
-        if obj["withdrawal_resolved_at"]
-        else None,
+        resolved_at=(
+            datetime.fromisoformat(obj["withdrawal_resolved_at"])
+            if obj["withdrawal_resolved_at"]
+            else None
+        ),
         amount=CurrencyAmount_from_json(requester, obj["withdrawal_amount"]),
         transaction_hash=obj["withdrawal_transaction_hash"],
-        fees=CurrencyAmount_from_json(requester, obj["withdrawal_fees"])
-        if obj["withdrawal_fees"]
-        else None,
+        fees=(
+            CurrencyAmount_from_json(requester, obj["withdrawal_fees"])
+            if obj["withdrawal_fees"]
+            else None
+        ),
         block_hash=obj["withdrawal_block_hash"],
         block_height=obj["withdrawal_block_height"],
         destination_addresses=obj["withdrawal_destination_addresses"],

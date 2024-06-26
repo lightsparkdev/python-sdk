@@ -48,9 +48,9 @@ class IncomingPaymentAttempt(Entity):
             "incoming_payment_attempt_created_at": self.created_at.isoformat(),
             "incoming_payment_attempt_updated_at": self.updated_at.isoformat(),
             "incoming_payment_attempt_status": self.status.value,
-            "incoming_payment_attempt_resolved_at": self.resolved_at.isoformat()
-            if self.resolved_at
-            else None,
+            "incoming_payment_attempt_resolved_at": (
+                self.resolved_at.isoformat() if self.resolved_at else None
+            ),
             "incoming_payment_attempt_amount": self.amount.to_json(),
             "incoming_payment_attempt_channel": {"id": self.channel_id},
         }
@@ -89,9 +89,11 @@ def from_json(requester: Requester, obj: Mapping[str, Any]) -> IncomingPaymentAt
         status=parse_enum(
             IncomingPaymentAttemptStatus, obj["incoming_payment_attempt_status"]
         ),
-        resolved_at=datetime.fromisoformat(obj["incoming_payment_attempt_resolved_at"])
-        if obj["incoming_payment_attempt_resolved_at"]
-        else None,
+        resolved_at=(
+            datetime.fromisoformat(obj["incoming_payment_attempt_resolved_at"])
+            if obj["incoming_payment_attempt_resolved_at"]
+            else None
+        ),
         amount=CurrencyAmount_from_json(
             requester, obj["incoming_payment_attempt_amount"]
         ),

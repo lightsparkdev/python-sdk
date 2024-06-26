@@ -6,6 +6,7 @@ from typing import Any, Mapping, Optional
 
 @dataclass
 class PayUmaInvoiceInput:
+
     node_id: str
 
     encoded_invoice: str
@@ -18,6 +19,9 @@ class PayUmaInvoiceInput:
 
     idempotency_key: Optional[str]
 
+    sender_hash: Optional[str]
+    """An optional, monthly-rotated, unique hashed identifier corresponding to the sender of the payment."""
+
     def to_json(self) -> Mapping[str, Any]:
         return {
             "pay_uma_invoice_input_node_id": self.node_id,
@@ -26,6 +30,7 @@ class PayUmaInvoiceInput:
             "pay_uma_invoice_input_maximum_fees_msats": self.maximum_fees_msats,
             "pay_uma_invoice_input_amount_msats": self.amount_msats,
             "pay_uma_invoice_input_idempotency_key": self.idempotency_key,
+            "pay_uma_invoice_input_sender_hash": self.sender_hash,
         }
 
 
@@ -37,4 +42,5 @@ def from_json(obj: Mapping[str, Any]) -> PayUmaInvoiceInput:
         maximum_fees_msats=obj["pay_uma_invoice_input_maximum_fees_msats"],
         amount_msats=obj["pay_uma_invoice_input_amount_msats"],
         idempotency_key=obj["pay_uma_invoice_input_idempotency_key"],
+        sender_hash=obj["pay_uma_invoice_input_sender_hash"],
     )

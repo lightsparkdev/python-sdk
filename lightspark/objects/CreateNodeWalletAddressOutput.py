@@ -13,6 +13,7 @@ from .MultiSigAddressValidationParameters import (
 
 @dataclass
 class CreateNodeWalletAddressOutput:
+
     requester: Requester
 
     node_id: str
@@ -28,9 +29,11 @@ class CreateNodeWalletAddressOutput:
         return {
             "create_node_wallet_address_output_node": {"id": self.node_id},
             "create_node_wallet_address_output_wallet_address": self.wallet_address,
-            "create_node_wallet_address_output_multisig_wallet_address_validation_parameters": self.multisig_wallet_address_validation_parameters.to_json()
-            if self.multisig_wallet_address_validation_parameters
-            else None,
+            "create_node_wallet_address_output_multisig_wallet_address_validation_parameters": (
+                self.multisig_wallet_address_validation_parameters.to_json()
+                if self.multisig_wallet_address_validation_parameters
+                else None
+            ),
         }
 
 
@@ -57,14 +60,16 @@ def from_json(
         requester=requester,
         node_id=obj["create_node_wallet_address_output_node"]["id"],
         wallet_address=obj["create_node_wallet_address_output_wallet_address"],
-        multisig_wallet_address_validation_parameters=MultiSigAddressValidationParameters_from_json(
-            requester,
-            obj[
+        multisig_wallet_address_validation_parameters=(
+            MultiSigAddressValidationParameters_from_json(
+                requester,
+                obj[
+                    "create_node_wallet_address_output_multisig_wallet_address_validation_parameters"
+                ],
+            )
+            if obj[
                 "create_node_wallet_address_output_multisig_wallet_address_validation_parameters"
-            ],
-        )
-        if obj[
-            "create_node_wallet_address_output_multisig_wallet_address_validation_parameters"
-        ]
-        else None,
+            ]
+            else None
+        ),
     )

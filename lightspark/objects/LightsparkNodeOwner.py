@@ -114,12 +114,16 @@ def from_json(requester: Requester, obj: Mapping[str, Any]) -> LightsparkNodeOwn
             id=obj["wallet_id"],
             created_at=datetime.fromisoformat(obj["wallet_created_at"]),
             updated_at=datetime.fromisoformat(obj["wallet_updated_at"]),
-            last_login_at=datetime.fromisoformat(obj["wallet_last_login_at"])
-            if obj["wallet_last_login_at"]
-            else None,
-            balances=Balances_from_json(requester, obj["wallet_balances"])
-            if obj["wallet_balances"]
-            else None,
+            last_login_at=(
+                datetime.fromisoformat(obj["wallet_last_login_at"])
+                if obj["wallet_last_login_at"]
+                else None
+            ),
+            balances=(
+                Balances_from_json(requester, obj["wallet_balances"])
+                if obj["wallet_balances"]
+                else None
+            ),
             third_party_identifier=obj["wallet_third_party_identifier"],
             account_id=obj["wallet_account"]["id"] if obj["wallet_account"] else None,
             status=parse_enum(WalletStatus, obj["wallet_status"]),

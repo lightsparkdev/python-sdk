@@ -10,6 +10,7 @@ from .TransactionStatus import TransactionStatus
 
 @dataclass
 class OutgoingPaymentsForInvoiceQueryInput:
+
     encoded_invoice: str
     """The encoded invoice that the outgoing payments paid to."""
 
@@ -19,11 +20,9 @@ class OutgoingPaymentsForInvoiceQueryInput:
     def to_json(self) -> Mapping[str, Any]:
         return {
             "outgoing_payments_for_invoice_query_input_encoded_invoice": self.encoded_invoice,
-            "outgoing_payments_for_invoice_query_input_statuses": [
-                e.value for e in self.statuses
-            ]
-            if self.statuses
-            else None,
+            "outgoing_payments_for_invoice_query_input_statuses": (
+                [e.value for e in self.statuses] if self.statuses else None
+            ),
         }
 
 

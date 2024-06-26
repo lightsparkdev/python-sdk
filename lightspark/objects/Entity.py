@@ -1516,6 +1516,7 @@ fragment EntityFragment on Entity {
             id
         }
         withdrawal_request_idempotency_key: idempotency_key
+        withdrawal_request_initiator: initiator
     }
 }
 """

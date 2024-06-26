@@ -6,6 +6,7 @@ from typing import Any, Mapping
 
 @dataclass
 class SignInvoiceInput:
+
     invoice_id: str
     """The unique identifier of the invoice to be signed."""
 

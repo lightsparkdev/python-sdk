@@ -55,9 +55,9 @@ class LightningTransaction(Transaction, Entity):
             "lightning_transaction_created_at": self.created_at.isoformat(),
             "lightning_transaction_updated_at": self.updated_at.isoformat(),
             "lightning_transaction_status": self.status.value,
-            "lightning_transaction_resolved_at": self.resolved_at.isoformat()
-            if self.resolved_at
-            else None,
+            "lightning_transaction_resolved_at": (
+                self.resolved_at.isoformat() if self.resolved_at else None
+            ),
             "lightning_transaction_amount": self.amount.to_json(),
             "lightning_transaction_transaction_hash": self.transaction_hash,
         }
@@ -501,25 +501,31 @@ def from_json(requester: Requester, obj: Mapping[str, Any]) -> LightningTransact
             created_at=datetime.fromisoformat(obj["incoming_payment_created_at"]),
             updated_at=datetime.fromisoformat(obj["incoming_payment_updated_at"]),
             status=parse_enum(TransactionStatus, obj["incoming_payment_status"]),
-            resolved_at=datetime.fromisoformat(obj["incoming_payment_resolved_at"])
-            if obj["incoming_payment_resolved_at"]
-            else None,
+            resolved_at=(
+                datetime.fromisoformat(obj["incoming_payment_resolved_at"])
+                if obj["incoming_payment_resolved_at"]
+                else None
+            ),
             amount=CurrencyAmount_from_json(requester, obj["incoming_payment_amount"]),
             transaction_hash=obj["incoming_payment_transaction_hash"],
             is_uma=obj["incoming_payment_is_uma"],
             destination_id=obj["incoming_payment_destination"]["id"],
-            payment_request_id=obj["incoming_payment_payment_request"]["id"]
-            if obj["incoming_payment_payment_request"]
-            else None,
-            uma_post_transaction_data=list(
-                map(
-                    # pylint: disable=unnecessary-lambda
-                    lambda e: PostTransactionData_from_json(requester, e),
-                    obj["incoming_payment_uma_post_transaction_data"],
+            payment_request_id=(
+                obj["incoming_payment_payment_request"]["id"]
+                if obj["incoming_payment_payment_request"]
+                else None
+            ),
+            uma_post_transaction_data=(
+                list(
+                    map(
+                        # pylint: disable=unnecessary-lambda
+                        lambda e: PostTransactionData_from_json(requester, e),
+                        obj["incoming_payment_uma_post_transaction_data"],
+                    )
                 )
-            )
-            if obj["incoming_payment_uma_post_transaction_data"]
-            else None,
+                if obj["incoming_payment_uma_post_transaction_data"]
+                else None
+            ),
             is_internal_payment=obj["incoming_payment_is_internal_payment"],
         )
     if obj["__typename"] == "OutgoingPayment":
@@ -533,41 +539,51 @@ def from_json(requester: Requester, obj: Mapping[str, Any]) -> LightningTransact
             created_at=datetime.fromisoformat(obj["outgoing_payment_created_at"]),
             updated_at=datetime.fromisoformat(obj["outgoing_payment_updated_at"]),
             status=parse_enum(TransactionStatus, obj["outgoing_payment_status"]),
-            resolved_at=datetime.fromisoformat(obj["outgoing_payment_resolved_at"])
-            if obj["outgoing_payment_resolved_at"]
-            else None,
+            resolved_at=(
+                datetime.fromisoformat(obj["outgoing_payment_resolved_at"])
+                if obj["outgoing_payment_resolved_at"]
+                else None
+            ),
             amount=CurrencyAmount_from_json(requester, obj["outgoing_payment_amount"]),
             transaction_hash=obj["outgoing_payment_transaction_hash"],
             is_uma=obj["outgoing_payment_is_uma"],
             origin_id=obj["outgoing_payment_origin"]["id"],
-            destination_id=obj["outgoing_payment_destination"]["id"]
-            if obj["outgoing_payment_destination"]
-            else None,
-            fees=CurrencyAmount_from_json(requester, obj["outgoing_payment_fees"])
-            if obj["outgoing_payment_fees"]
-            else None,
-            payment_request_data=PaymentRequestData_from_json(
-                requester, obj["outgoing_payment_payment_request_data"]
-            )
-            if obj["outgoing_payment_payment_request_data"]
-            else None,
+            destination_id=(
+                obj["outgoing_payment_destination"]["id"]
+                if obj["outgoing_payment_destination"]
+                else None
+            ),
+            fees=(
+                CurrencyAmount_from_json(requester, obj["outgoing_payment_fees"])
+                if obj["outgoing_payment_fees"]
+                else None
+            ),
+            payment_request_data=(
+                PaymentRequestData_from_json(
+                    requester, obj["outgoing_payment_payment_request_data"]
+                )
+                if obj["outgoing_payment_payment_request_data"]
+                else None
+            ),
             failure_reason=parse_enum_optional(
                 PaymentFailureReason, obj["outgoing_payment_failure_reason"]
             ),
-            failure_message=RichText_from_json(
-                requester, obj["outgoing_payment_failure_message"]
-            )
-            if obj["outgoing_payment_failure_message"]
-            else None,
-            uma_post_transaction_data=list(
-                map(
-                    # pylint: disable=unnecessary-lambda
-                    lambda e: PostTransactionData_from_json(requester, e),
-                    obj["outgoing_payment_uma_post_transaction_data"],
+            failure_message=(
+                RichText_from_json(requester, obj["outgoing_payment_failure_message"])
+                if obj["outgoing_payment_failure_message"]
+                else None
+            ),
+            uma_post_transaction_data=(
+                list(
+                    map(
+                        # pylint: disable=unnecessary-lambda
+                        lambda e: PostTransactionData_from_json(requester, e),
+                        obj["outgoing_payment_uma_post_transaction_data"],
+                    )
                 )
-            )
-            if obj["outgoing_payment_uma_post_transaction_data"]
-            else None,
+                if obj["outgoing_payment_uma_post_transaction_data"]
+                else None
+            ),
             payment_preimage=obj["outgoing_payment_payment_preimage"],
             is_internal_payment=obj["outgoing_payment_is_internal_payment"],
             idempotency_key=obj["outgoing_payment_idempotency_key"],
@@ -583,27 +599,37 @@ def from_json(requester: Requester, obj: Mapping[str, Any]) -> LightningTransact
             created_at=datetime.fromisoformat(obj["routing_transaction_created_at"]),
             updated_at=datetime.fromisoformat(obj["routing_transaction_updated_at"]),
             status=parse_enum(TransactionStatus, obj["routing_transaction_status"]),
-            resolved_at=datetime.fromisoformat(obj["routing_transaction_resolved_at"])
-            if obj["routing_transaction_resolved_at"]
-            else None,
+            resolved_at=(
+                datetime.fromisoformat(obj["routing_transaction_resolved_at"])
+                if obj["routing_transaction_resolved_at"]
+                else None
+            ),
             amount=CurrencyAmount_from_json(
                 requester, obj["routing_transaction_amount"]
             ),
             transaction_hash=obj["routing_transaction_transaction_hash"],
-            incoming_channel_id=obj["routing_transaction_incoming_channel"]["id"]
-            if obj["routing_transaction_incoming_channel"]
-            else None,
-            outgoing_channel_id=obj["routing_transaction_outgoing_channel"]["id"]
-            if obj["routing_transaction_outgoing_channel"]
-            else None,
-            fees=CurrencyAmount_from_json(requester, obj["routing_transaction_fees"])
-            if obj["routing_transaction_fees"]
-            else None,
-            failure_message=RichText_from_json(
-                requester, obj["routing_transaction_failure_message"]
-            )
-            if obj["routing_transaction_failure_message"]
-            else None,
+            incoming_channel_id=(
+                obj["routing_transaction_incoming_channel"]["id"]
+                if obj["routing_transaction_incoming_channel"]
+                else None
+            ),
+            outgoing_channel_id=(
+                obj["routing_transaction_outgoing_channel"]["id"]
+                if obj["routing_transaction_outgoing_channel"]
+                else None
+            ),
+            fees=(
+                CurrencyAmount_from_json(requester, obj["routing_transaction_fees"])
+                if obj["routing_transaction_fees"]
+                else None
+            ),
+            failure_message=(
+                RichText_from_json(
+                    requester, obj["routing_transaction_failure_message"]
+                )
+                if obj["routing_transaction_failure_message"]
+                else None
+            ),
             failure_reason=parse_enum_optional(
                 RoutingTransactionFailureReason,
                 obj["routing_transaction_failure_reason"],
