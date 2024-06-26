@@ -10,7 +10,6 @@ from .RegionCode import RegionCode
 
 @dataclass
 class ClaimUmaInvitationWithIncentivesInput:
-
     invitation_code: str
     """The unique code that identifies this invitation and was shared by the inviter."""
 

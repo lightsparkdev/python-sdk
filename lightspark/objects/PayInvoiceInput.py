@@ -6,7 +6,6 @@ from typing import Any, Mapping, Optional
 
 @dataclass
 class PayInvoiceInput:
-
     node_id: str
     """The node from where you want to send the payment."""
 

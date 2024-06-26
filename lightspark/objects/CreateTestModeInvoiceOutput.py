@@ -8,7 +8,6 @@ from lightspark.requests.requester import Requester
 
 @dataclass
 class CreateTestModeInvoiceOutput:
-
     requester: Requester
 
     encoded_payment_request: str

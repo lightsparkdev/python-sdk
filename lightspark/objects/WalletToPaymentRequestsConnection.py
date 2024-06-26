@@ -14,7 +14,6 @@ from .PaymentRequest import from_json as PaymentRequest_from_json
 
 @dataclass
 class WalletToPaymentRequestsConnection(Connection):
-
     requester: Requester
 
     count: int

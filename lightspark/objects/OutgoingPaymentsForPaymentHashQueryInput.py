@@ -10,7 +10,6 @@ from .TransactionStatus import TransactionStatus
 
 @dataclass
 class OutgoingPaymentsForPaymentHashQueryInput:
-
     payment_hash: str
     """The 32-byte hash of the payment preimage for which to fetch payments"""
 

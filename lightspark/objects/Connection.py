@@ -9,7 +9,6 @@ from .PageInfo import PageInfo
 
 @dataclass
 class Connection:
-
     requester: Requester
 
     count: int

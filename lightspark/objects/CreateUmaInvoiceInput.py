@@ -6,7 +6,6 @@ from typing import Any, Mapping, Optional
 
 @dataclass
 class CreateUmaInvoiceInput:
-
     node_id: str
 
     amount_msats: int

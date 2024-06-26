@@ -6,7 +6,6 @@ from typing import Any, Mapping
 
 @dataclass
 class UpdateChannelPerCommitmentPointInput:
-
     channel_id: str
 
     per_commitment_point: str
