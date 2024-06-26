@@ -10,6 +10,7 @@ from lightspark.utils.enums import parse_enum
 from .CurrencyAmount import CurrencyAmount
 from .CurrencyAmount import from_json as CurrencyAmount_from_json
 from .Entity import Entity
+from .RequestInitiator import RequestInitiator
 from .WithdrawalMode import WithdrawalMode
 from .WithdrawalRequestStatus import WithdrawalRequestStatus
 from .WithdrawalRequestToChannelClosingTransactionsConnection import (
@@ -79,6 +80,9 @@ class WithdrawalRequest(Entity):
 
     idempotency_key: Optional[str]
     """The idempotency key of the withdrawal request."""
+
+    initiator: RequestInitiator
+    """The initiator of the withdrawal."""
     typename: str
 
     def get_channel_closing_transactions(
@@ -268,25 +272,26 @@ query FetchWithdrawalRequestToWithdrawalsConnection($entity_id: ID!, $first: Int
             "withdrawal_request_updated_at": self.updated_at.isoformat(),
             "withdrawal_request_requested_amount": self.requested_amount.to_json(),
             "withdrawal_request_amount": self.amount.to_json(),
-            "withdrawal_request_estimated_amount": self.estimated_amount.to_json()
-            if self.estimated_amount
-            else None,
-            "withdrawal_request_amount_withdrawn": self.amount_withdrawn.to_json()
-            if self.amount_withdrawn
-            else None,
-            "withdrawal_request_total_fees": self.total_fees.to_json()
-            if self.total_fees
-            else None,
+            "withdrawal_request_estimated_amount": (
+                self.estimated_amount.to_json() if self.estimated_amount else None
+            ),
+            "withdrawal_request_amount_withdrawn": (
+                self.amount_withdrawn.to_json() if self.amount_withdrawn else None
+            ),
+            "withdrawal_request_total_fees": (
+                self.total_fees.to_json() if self.total_fees else None
+            ),
             "withdrawal_request_bitcoin_address": self.bitcoin_address,
             "withdrawal_request_withdrawal_mode": self.withdrawal_mode.value,
             "withdrawal_request_status": self.status.value,
-            "withdrawal_request_completed_at": self.completed_at.isoformat()
-            if self.completed_at
-            else None,
-            "withdrawal_request_withdrawal": {"id": self.withdrawal_id}
-            if self.withdrawal_id
-            else None,
+            "withdrawal_request_completed_at": (
+                self.completed_at.isoformat() if self.completed_at else None
+            ),
+            "withdrawal_request_withdrawal": (
+                {"id": self.withdrawal_id} if self.withdrawal_id else None
+            ),
             "withdrawal_request_idempotency_key": self.idempotency_key,
+            "withdrawal_request_initiator": self.initiator.value,
         }
 
 
@@ -344,6 +349,7 @@ fragment WithdrawalRequestFragment on WithdrawalRequest {
         id
     }
     withdrawal_request_idempotency_key: idempotency_key
+    withdrawal_request_initiator: initiator
 }
 """
 
@@ -359,31 +365,40 @@ def from_json(requester: Requester, obj: Mapping[str, Any]) -> WithdrawalRequest
             requester, obj["withdrawal_request_requested_amount"]
         ),
         amount=CurrencyAmount_from_json(requester, obj["withdrawal_request_amount"]),
-        estimated_amount=CurrencyAmount_from_json(
-            requester, obj["withdrawal_request_estimated_amount"]
-        )
-        if obj["withdrawal_request_estimated_amount"]
-        else None,
-        amount_withdrawn=CurrencyAmount_from_json(
-            requester, obj["withdrawal_request_amount_withdrawn"]
-        )
-        if obj["withdrawal_request_amount_withdrawn"]
-        else None,
-        total_fees=CurrencyAmount_from_json(
-            requester, obj["withdrawal_request_total_fees"]
-        )
-        if obj["withdrawal_request_total_fees"]
-        else None,
+        estimated_amount=(
+            CurrencyAmount_from_json(
+                requester, obj["withdrawal_request_estimated_amount"]
+            )
+            if obj["withdrawal_request_estimated_amount"]
+            else None
+        ),
+        amount_withdrawn=(
+            CurrencyAmount_from_json(
+                requester, obj["withdrawal_request_amount_withdrawn"]
+            )
+            if obj["withdrawal_request_amount_withdrawn"]
+            else None
+        ),
+        total_fees=(
+            CurrencyAmount_from_json(requester, obj["withdrawal_request_total_fees"])
+            if obj["withdrawal_request_total_fees"]
+            else None
+        ),
         bitcoin_address=obj["withdrawal_request_bitcoin_address"],
         withdrawal_mode=parse_enum(
             WithdrawalMode, obj["withdrawal_request_withdrawal_mode"]
         ),
         status=parse_enum(WithdrawalRequestStatus, obj["withdrawal_request_status"]),
-        completed_at=datetime.fromisoformat(obj["withdrawal_request_completed_at"])
-        if obj["withdrawal_request_completed_at"]
-        else None,
-        withdrawal_id=obj["withdrawal_request_withdrawal"]["id"]
-        if obj["withdrawal_request_withdrawal"]
-        else None,
+        completed_at=(
+            datetime.fromisoformat(obj["withdrawal_request_completed_at"])
+            if obj["withdrawal_request_completed_at"]
+            else None
+        ),
+        withdrawal_id=(
+            obj["withdrawal_request_withdrawal"]["id"]
+            if obj["withdrawal_request_withdrawal"]
+            else None
+        ),
         idempotency_key=obj["withdrawal_request_idempotency_key"],
+        initiator=parse_enum(RequestInitiator, obj["withdrawal_request_initiator"]),
     )

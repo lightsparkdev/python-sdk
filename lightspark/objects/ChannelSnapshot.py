@@ -48,23 +48,29 @@ class ChannelSnapshot(Entity):
             "channel_snapshot_id": self.id,
             "channel_snapshot_created_at": self.created_at.isoformat(),
             "channel_snapshot_updated_at": self.updated_at.isoformat(),
-            "channel_snapshot_local_balance": self.local_balance.to_json()
-            if self.local_balance
-            else None,
-            "channel_snapshot_local_unsettled_balance": self.local_unsettled_balance.to_json()
-            if self.local_unsettled_balance
-            else None,
-            "channel_snapshot_remote_balance": self.remote_balance.to_json()
-            if self.remote_balance
-            else None,
-            "channel_snapshot_remote_unsettled_balance": self.remote_unsettled_balance.to_json()
-            if self.remote_unsettled_balance
-            else None,
+            "channel_snapshot_local_balance": (
+                self.local_balance.to_json() if self.local_balance else None
+            ),
+            "channel_snapshot_local_unsettled_balance": (
+                self.local_unsettled_balance.to_json()
+                if self.local_unsettled_balance
+                else None
+            ),
+            "channel_snapshot_remote_balance": (
+                self.remote_balance.to_json() if self.remote_balance else None
+            ),
+            "channel_snapshot_remote_unsettled_balance": (
+                self.remote_unsettled_balance.to_json()
+                if self.remote_unsettled_balance
+                else None
+            ),
             "channel_snapshot_status": self.status,
             "channel_snapshot_channel": {"id": self.channel_id},
-            "channel_snapshot_local_channel_reserve": self.local_channel_reserve.to_json()
-            if self.local_channel_reserve
-            else None,
+            "channel_snapshot_local_channel_reserve": (
+                self.local_channel_reserve.to_json()
+                if self.local_channel_reserve
+                else None
+            ),
             "channel_snapshot_timestamp": self.timestamp.isoformat(),
         }
 
@@ -131,32 +137,38 @@ def from_json(requester: Requester, obj: Mapping[str, Any]) -> ChannelSnapshot:
         id=obj["channel_snapshot_id"],
         created_at=datetime.fromisoformat(obj["channel_snapshot_created_at"]),
         updated_at=datetime.fromisoformat(obj["channel_snapshot_updated_at"]),
-        local_balance=CurrencyAmount_from_json(
-            requester, obj["channel_snapshot_local_balance"]
-        )
-        if obj["channel_snapshot_local_balance"]
-        else None,
-        local_unsettled_balance=CurrencyAmount_from_json(
-            requester, obj["channel_snapshot_local_unsettled_balance"]
-        )
-        if obj["channel_snapshot_local_unsettled_balance"]
-        else None,
-        remote_balance=CurrencyAmount_from_json(
-            requester, obj["channel_snapshot_remote_balance"]
-        )
-        if obj["channel_snapshot_remote_balance"]
-        else None,
-        remote_unsettled_balance=CurrencyAmount_from_json(
-            requester, obj["channel_snapshot_remote_unsettled_balance"]
-        )
-        if obj["channel_snapshot_remote_unsettled_balance"]
-        else None,
+        local_balance=(
+            CurrencyAmount_from_json(requester, obj["channel_snapshot_local_balance"])
+            if obj["channel_snapshot_local_balance"]
+            else None
+        ),
+        local_unsettled_balance=(
+            CurrencyAmount_from_json(
+                requester, obj["channel_snapshot_local_unsettled_balance"]
+            )
+            if obj["channel_snapshot_local_unsettled_balance"]
+            else None
+        ),
+        remote_balance=(
+            CurrencyAmount_from_json(requester, obj["channel_snapshot_remote_balance"])
+            if obj["channel_snapshot_remote_balance"]
+            else None
+        ),
+        remote_unsettled_balance=(
+            CurrencyAmount_from_json(
+                requester, obj["channel_snapshot_remote_unsettled_balance"]
+            )
+            if obj["channel_snapshot_remote_unsettled_balance"]
+            else None
+        ),
         status=obj["channel_snapshot_status"],
         channel_id=obj["channel_snapshot_channel"]["id"],
-        local_channel_reserve=CurrencyAmount_from_json(
-            requester, obj["channel_snapshot_local_channel_reserve"]
-        )
-        if obj["channel_snapshot_local_channel_reserve"]
-        else None,
+        local_channel_reserve=(
+            CurrencyAmount_from_json(
+                requester, obj["channel_snapshot_local_channel_reserve"]
+            )
+            if obj["channel_snapshot_local_channel_reserve"]
+            else None
+        ),
         timestamp=datetime.fromisoformat(obj["channel_snapshot_timestamp"]),
     )

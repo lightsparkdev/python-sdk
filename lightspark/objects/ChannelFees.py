@@ -45,8 +45,10 @@ fragment ChannelFeesFragment on ChannelFees {
 def from_json(requester: Requester, obj: Mapping[str, Any]) -> ChannelFees:
     return ChannelFees(
         requester=requester,
-        base_fee=CurrencyAmount_from_json(requester, obj["channel_fees_base_fee"])
-        if obj["channel_fees_base_fee"]
-        else None,
+        base_fee=(
+            CurrencyAmount_from_json(requester, obj["channel_fees_base_fee"])
+            if obj["channel_fees_base_fee"]
+            else None
+        ),
         fee_rate_per_mil=obj["channel_fees_fee_rate_per_mil"],
     )

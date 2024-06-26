@@ -164,37 +164,43 @@ query FetchChannelToTransactionsConnection($entity_id: ID!, $types: [Transaction
             "channel_id": self.id,
             "channel_created_at": self.created_at.isoformat(),
             "channel_updated_at": self.updated_at.isoformat(),
-            "channel_funding_transaction": {"id": self.funding_transaction_id}
-            if self.funding_transaction_id
-            else None,
+            "channel_funding_transaction": (
+                {"id": self.funding_transaction_id}
+                if self.funding_transaction_id
+                else None
+            ),
             "channel_capacity": self.capacity.to_json() if self.capacity else None,
-            "channel_local_balance": self.local_balance.to_json()
-            if self.local_balance
-            else None,
-            "channel_local_unsettled_balance": self.local_unsettled_balance.to_json()
-            if self.local_unsettled_balance
-            else None,
-            "channel_remote_balance": self.remote_balance.to_json()
-            if self.remote_balance
-            else None,
-            "channel_remote_unsettled_balance": self.remote_unsettled_balance.to_json()
-            if self.remote_unsettled_balance
-            else None,
-            "channel_unsettled_balance": self.unsettled_balance.to_json()
-            if self.unsettled_balance
-            else None,
-            "channel_total_balance": self.total_balance.to_json()
-            if self.total_balance
-            else None,
+            "channel_local_balance": (
+                self.local_balance.to_json() if self.local_balance else None
+            ),
+            "channel_local_unsettled_balance": (
+                self.local_unsettled_balance.to_json()
+                if self.local_unsettled_balance
+                else None
+            ),
+            "channel_remote_balance": (
+                self.remote_balance.to_json() if self.remote_balance else None
+            ),
+            "channel_remote_unsettled_balance": (
+                self.remote_unsettled_balance.to_json()
+                if self.remote_unsettled_balance
+                else None
+            ),
+            "channel_unsettled_balance": (
+                self.unsettled_balance.to_json() if self.unsettled_balance else None
+            ),
+            "channel_total_balance": (
+                self.total_balance.to_json() if self.total_balance else None
+            ),
             "channel_status": self.status.value if self.status else None,
             "channel_estimated_force_closure_wait_minutes": self.estimated_force_closure_wait_minutes,
-            "channel_commit_fee": self.commit_fee.to_json()
-            if self.commit_fee
-            else None,
+            "channel_commit_fee": (
+                self.commit_fee.to_json() if self.commit_fee else None
+            ),
             "channel_fees": self.fees.to_json() if self.fees else None,
-            "channel_remote_node": {"id": self.remote_node_id}
-            if self.remote_node_id
-            else None,
+            "channel_remote_node": (
+                {"id": self.remote_node_id} if self.remote_node_id else None
+            ),
             "channel_local_node": {"id": self.local_node_id},
             "channel_short_channel_id": self.short_channel_id,
         }
@@ -305,51 +311,63 @@ def from_json(requester: Requester, obj: Mapping[str, Any]) -> Channel:
         id=obj["channel_id"],
         created_at=datetime.fromisoformat(obj["channel_created_at"]),
         updated_at=datetime.fromisoformat(obj["channel_updated_at"]),
-        funding_transaction_id=obj["channel_funding_transaction"]["id"]
-        if obj["channel_funding_transaction"]
-        else None,
-        capacity=CurrencyAmount_from_json(requester, obj["channel_capacity"])
-        if obj["channel_capacity"]
-        else None,
-        local_balance=CurrencyAmount_from_json(requester, obj["channel_local_balance"])
-        if obj["channel_local_balance"]
-        else None,
-        local_unsettled_balance=CurrencyAmount_from_json(
-            requester, obj["channel_local_unsettled_balance"]
-        )
-        if obj["channel_local_unsettled_balance"]
-        else None,
-        remote_balance=CurrencyAmount_from_json(
-            requester, obj["channel_remote_balance"]
-        )
-        if obj["channel_remote_balance"]
-        else None,
-        remote_unsettled_balance=CurrencyAmount_from_json(
-            requester, obj["channel_remote_unsettled_balance"]
-        )
-        if obj["channel_remote_unsettled_balance"]
-        else None,
-        unsettled_balance=CurrencyAmount_from_json(
-            requester, obj["channel_unsettled_balance"]
-        )
-        if obj["channel_unsettled_balance"]
-        else None,
-        total_balance=CurrencyAmount_from_json(requester, obj["channel_total_balance"])
-        if obj["channel_total_balance"]
-        else None,
+        funding_transaction_id=(
+            obj["channel_funding_transaction"]["id"]
+            if obj["channel_funding_transaction"]
+            else None
+        ),
+        capacity=(
+            CurrencyAmount_from_json(requester, obj["channel_capacity"])
+            if obj["channel_capacity"]
+            else None
+        ),
+        local_balance=(
+            CurrencyAmount_from_json(requester, obj["channel_local_balance"])
+            if obj["channel_local_balance"]
+            else None
+        ),
+        local_unsettled_balance=(
+            CurrencyAmount_from_json(requester, obj["channel_local_unsettled_balance"])
+            if obj["channel_local_unsettled_balance"]
+            else None
+        ),
+        remote_balance=(
+            CurrencyAmount_from_json(requester, obj["channel_remote_balance"])
+            if obj["channel_remote_balance"]
+            else None
+        ),
+        remote_unsettled_balance=(
+            CurrencyAmount_from_json(requester, obj["channel_remote_unsettled_balance"])
+            if obj["channel_remote_unsettled_balance"]
+            else None
+        ),
+        unsettled_balance=(
+            CurrencyAmount_from_json(requester, obj["channel_unsettled_balance"])
+            if obj["channel_unsettled_balance"]
+            else None
+        ),
+        total_balance=(
+            CurrencyAmount_from_json(requester, obj["channel_total_balance"])
+            if obj["channel_total_balance"]
+            else None
+        ),
         status=parse_enum_optional(ChannelStatus, obj["channel_status"]),
         estimated_force_closure_wait_minutes=obj[
             "channel_estimated_force_closure_wait_minutes"
         ],
-        commit_fee=CurrencyAmount_from_json(requester, obj["channel_commit_fee"])
-        if obj["channel_commit_fee"]
-        else None,
-        fees=ChannelFees_from_json(requester, obj["channel_fees"])
-        if obj["channel_fees"]
-        else None,
-        remote_node_id=obj["channel_remote_node"]["id"]
-        if obj["channel_remote_node"]
-        else None,
+        commit_fee=(
+            CurrencyAmount_from_json(requester, obj["channel_commit_fee"])
+            if obj["channel_commit_fee"]
+            else None
+        ),
+        fees=(
+            ChannelFees_from_json(requester, obj["channel_fees"])
+            if obj["channel_fees"]
+            else None
+        ),
+        remote_node_id=(
+            obj["channel_remote_node"]["id"] if obj["channel_remote_node"] else None
+        ),
         local_node_id=obj["channel_local_node"]["id"],
         short_channel_id=obj["channel_short_channel_id"],
     )

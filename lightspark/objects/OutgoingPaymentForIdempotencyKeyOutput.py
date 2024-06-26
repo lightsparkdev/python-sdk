@@ -14,11 +14,9 @@ class OutgoingPaymentForIdempotencyKeyOutput:
 
     def to_json(self) -> Mapping[str, Any]:
         return {
-            "outgoing_payment_for_idempotency_key_output_payment": {
-                "id": self.payment_id
-            }
-            if self.payment_id
-            else None,
+            "outgoing_payment_for_idempotency_key_output_payment": (
+                {"id": self.payment_id} if self.payment_id else None
+            ),
         }
 
 
@@ -37,7 +35,9 @@ def from_json(
 ) -> OutgoingPaymentForIdempotencyKeyOutput:
     return OutgoingPaymentForIdempotencyKeyOutput(
         requester=requester,
-        payment_id=obj["outgoing_payment_for_idempotency_key_output_payment"]["id"]
-        if obj["outgoing_payment_for_idempotency_key_output_payment"]
-        else None,
+        payment_id=(
+            obj["outgoing_payment_for_idempotency_key_output_payment"]["id"]
+            if obj["outgoing_payment_for_idempotency_key_output_payment"]
+            else None
+        ),
     )

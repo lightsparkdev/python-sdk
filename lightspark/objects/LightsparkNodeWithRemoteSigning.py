@@ -315,28 +315,28 @@ query FetchLightsparkNodeToDailyLiquidityForecastsConnection($entity_id: ID!, $f
             "lightspark_node_with_remote_signing_display_name": self.display_name,
             "lightspark_node_with_remote_signing_public_key": self.public_key,
             "lightspark_node_with_remote_signing_owner": {"id": self.owner_id},
-            "lightspark_node_with_remote_signing_status": self.status.value
-            if self.status
-            else None,
-            "lightspark_node_with_remote_signing_total_balance": self.total_balance.to_json()
-            if self.total_balance
-            else None,
-            "lightspark_node_with_remote_signing_total_local_balance": self.total_local_balance.to_json()
-            if self.total_local_balance
-            else None,
-            "lightspark_node_with_remote_signing_local_balance": self.local_balance.to_json()
-            if self.local_balance
-            else None,
-            "lightspark_node_with_remote_signing_remote_balance": self.remote_balance.to_json()
-            if self.remote_balance
-            else None,
-            "lightspark_node_with_remote_signing_blockchain_balance": self.blockchain_balance.to_json()
-            if self.blockchain_balance
-            else None,
+            "lightspark_node_with_remote_signing_status": (
+                self.status.value if self.status else None
+            ),
+            "lightspark_node_with_remote_signing_total_balance": (
+                self.total_balance.to_json() if self.total_balance else None
+            ),
+            "lightspark_node_with_remote_signing_total_local_balance": (
+                self.total_local_balance.to_json() if self.total_local_balance else None
+            ),
+            "lightspark_node_with_remote_signing_local_balance": (
+                self.local_balance.to_json() if self.local_balance else None
+            ),
+            "lightspark_node_with_remote_signing_remote_balance": (
+                self.remote_balance.to_json() if self.remote_balance else None
+            ),
+            "lightspark_node_with_remote_signing_blockchain_balance": (
+                self.blockchain_balance.to_json() if self.blockchain_balance else None
+            ),
             "lightspark_node_with_remote_signing_uma_prescreening_utxos": self.uma_prescreening_utxos,
-            "lightspark_node_with_remote_signing_balances": self.balances.to_json()
-            if self.balances
-            else None,
+            "lightspark_node_with_remote_signing_balances": (
+                self.balances.to_json() if self.balances else None
+            ),
         }
 
 
@@ -496,37 +496,50 @@ def from_json(
         status=parse_enum_optional(
             LightsparkNodeStatus, obj["lightspark_node_with_remote_signing_status"]
         ),
-        total_balance=CurrencyAmount_from_json(
-            requester, obj["lightspark_node_with_remote_signing_total_balance"]
-        )
-        if obj["lightspark_node_with_remote_signing_total_balance"]
-        else None,
-        total_local_balance=CurrencyAmount_from_json(
-            requester, obj["lightspark_node_with_remote_signing_total_local_balance"]
-        )
-        if obj["lightspark_node_with_remote_signing_total_local_balance"]
-        else None,
-        local_balance=CurrencyAmount_from_json(
-            requester, obj["lightspark_node_with_remote_signing_local_balance"]
-        )
-        if obj["lightspark_node_with_remote_signing_local_balance"]
-        else None,
-        remote_balance=CurrencyAmount_from_json(
-            requester, obj["lightspark_node_with_remote_signing_remote_balance"]
-        )
-        if obj["lightspark_node_with_remote_signing_remote_balance"]
-        else None,
-        blockchain_balance=BlockchainBalance_from_json(
-            requester, obj["lightspark_node_with_remote_signing_blockchain_balance"]
-        )
-        if obj["lightspark_node_with_remote_signing_blockchain_balance"]
-        else None,
+        total_balance=(
+            CurrencyAmount_from_json(
+                requester, obj["lightspark_node_with_remote_signing_total_balance"]
+            )
+            if obj["lightspark_node_with_remote_signing_total_balance"]
+            else None
+        ),
+        total_local_balance=(
+            CurrencyAmount_from_json(
+                requester,
+                obj["lightspark_node_with_remote_signing_total_local_balance"],
+            )
+            if obj["lightspark_node_with_remote_signing_total_local_balance"]
+            else None
+        ),
+        local_balance=(
+            CurrencyAmount_from_json(
+                requester, obj["lightspark_node_with_remote_signing_local_balance"]
+            )
+            if obj["lightspark_node_with_remote_signing_local_balance"]
+            else None
+        ),
+        remote_balance=(
+            CurrencyAmount_from_json(
+                requester, obj["lightspark_node_with_remote_signing_remote_balance"]
+            )
+            if obj["lightspark_node_with_remote_signing_remote_balance"]
+            else None
+        ),
+        blockchain_balance=(
+            BlockchainBalance_from_json(
+                requester, obj["lightspark_node_with_remote_signing_blockchain_balance"]
+            )
+            if obj["lightspark_node_with_remote_signing_blockchain_balance"]
+            else None
+        ),
         uma_prescreening_utxos=obj[
             "lightspark_node_with_remote_signing_uma_prescreening_utxos"
         ],
-        balances=Balances_from_json(
-            requester, obj["lightspark_node_with_remote_signing_balances"]
-        )
-        if obj["lightspark_node_with_remote_signing_balances"]
-        else None,
+        balances=(
+            Balances_from_json(
+                requester, obj["lightspark_node_with_remote_signing_balances"]
+            )
+            if obj["lightspark_node_with_remote_signing_balances"]
+            else None
+        ),
     )

@@ -1108,6 +1108,7 @@ query FetchWalletToWithdrawalRequestsConnection($entity_id: ID!, $first: Int, $a
                         id
                     }
                     withdrawal_request_idempotency_key: idempotency_key
+                    withdrawal_request_initiator: initiator
                 }
             }
         }
@@ -1165,9 +1166,9 @@ query FetchWalletTotalAmountSent($entity_id: ID!, $created_after_date: DateTime,
             "wallet_id": self.id,
             "wallet_created_at": self.created_at.isoformat(),
             "wallet_updated_at": self.updated_at.isoformat(),
-            "wallet_last_login_at": self.last_login_at.isoformat()
-            if self.last_login_at
-            else None,
+            "wallet_last_login_at": (
+                self.last_login_at.isoformat() if self.last_login_at else None
+            ),
             "wallet_balances": self.balances.to_json() if self.balances else None,
             "wallet_third_party_identifier": self.third_party_identifier,
             "wallet_account": {"id": self.account_id} if self.account_id else None,
@@ -1225,12 +1226,16 @@ def from_json(requester: Requester, obj: Mapping[str, Any]) -> Wallet:
         id=obj["wallet_id"],
         created_at=datetime.fromisoformat(obj["wallet_created_at"]),
         updated_at=datetime.fromisoformat(obj["wallet_updated_at"]),
-        last_login_at=datetime.fromisoformat(obj["wallet_last_login_at"])
-        if obj["wallet_last_login_at"]
-        else None,
-        balances=Balances_from_json(requester, obj["wallet_balances"])
-        if obj["wallet_balances"]
-        else None,
+        last_login_at=(
+            datetime.fromisoformat(obj["wallet_last_login_at"])
+            if obj["wallet_last_login_at"]
+            else None
+        ),
+        balances=(
+            Balances_from_json(requester, obj["wallet_balances"])
+            if obj["wallet_balances"]
+            else None
+        ),
         third_party_identifier=obj["wallet_third_party_identifier"],
         account_id=obj["wallet_account"]["id"] if obj["wallet_account"] else None,
         status=parse_enum(WalletStatus, obj["wallet_status"]),

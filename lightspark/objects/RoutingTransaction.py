@@ -68,24 +68,24 @@ class RoutingTransaction(LightningTransaction, Transaction, Entity):
             "routing_transaction_created_at": self.created_at.isoformat(),
             "routing_transaction_updated_at": self.updated_at.isoformat(),
             "routing_transaction_status": self.status.value,
-            "routing_transaction_resolved_at": self.resolved_at.isoformat()
-            if self.resolved_at
-            else None,
+            "routing_transaction_resolved_at": (
+                self.resolved_at.isoformat() if self.resolved_at else None
+            ),
             "routing_transaction_amount": self.amount.to_json(),
             "routing_transaction_transaction_hash": self.transaction_hash,
-            "routing_transaction_incoming_channel": {"id": self.incoming_channel_id}
-            if self.incoming_channel_id
-            else None,
-            "routing_transaction_outgoing_channel": {"id": self.outgoing_channel_id}
-            if self.outgoing_channel_id
-            else None,
+            "routing_transaction_incoming_channel": (
+                {"id": self.incoming_channel_id} if self.incoming_channel_id else None
+            ),
+            "routing_transaction_outgoing_channel": (
+                {"id": self.outgoing_channel_id} if self.outgoing_channel_id else None
+            ),
             "routing_transaction_fees": self.fees.to_json() if self.fees else None,
-            "routing_transaction_failure_message": self.failure_message.to_json()
-            if self.failure_message
-            else None,
-            "routing_transaction_failure_reason": self.failure_reason.value
-            if self.failure_reason
-            else None,
+            "routing_transaction_failure_message": (
+                self.failure_message.to_json() if self.failure_message else None
+            ),
+            "routing_transaction_failure_reason": (
+                self.failure_reason.value if self.failure_reason else None
+            ),
         }
 
 
@@ -137,25 +137,33 @@ def from_json(requester: Requester, obj: Mapping[str, Any]) -> RoutingTransactio
         created_at=datetime.fromisoformat(obj["routing_transaction_created_at"]),
         updated_at=datetime.fromisoformat(obj["routing_transaction_updated_at"]),
         status=parse_enum(TransactionStatus, obj["routing_transaction_status"]),
-        resolved_at=datetime.fromisoformat(obj["routing_transaction_resolved_at"])
-        if obj["routing_transaction_resolved_at"]
-        else None,
+        resolved_at=(
+            datetime.fromisoformat(obj["routing_transaction_resolved_at"])
+            if obj["routing_transaction_resolved_at"]
+            else None
+        ),
         amount=CurrencyAmount_from_json(requester, obj["routing_transaction_amount"]),
         transaction_hash=obj["routing_transaction_transaction_hash"],
-        incoming_channel_id=obj["routing_transaction_incoming_channel"]["id"]
-        if obj["routing_transaction_incoming_channel"]
-        else None,
-        outgoing_channel_id=obj["routing_transaction_outgoing_channel"]["id"]
-        if obj["routing_transaction_outgoing_channel"]
-        else None,
-        fees=CurrencyAmount_from_json(requester, obj["routing_transaction_fees"])
-        if obj["routing_transaction_fees"]
-        else None,
-        failure_message=RichText_from_json(
-            requester, obj["routing_transaction_failure_message"]
-        )
-        if obj["routing_transaction_failure_message"]
-        else None,
+        incoming_channel_id=(
+            obj["routing_transaction_incoming_channel"]["id"]
+            if obj["routing_transaction_incoming_channel"]
+            else None
+        ),
+        outgoing_channel_id=(
+            obj["routing_transaction_outgoing_channel"]["id"]
+            if obj["routing_transaction_outgoing_channel"]
+            else None
+        ),
+        fees=(
+            CurrencyAmount_from_json(requester, obj["routing_transaction_fees"])
+            if obj["routing_transaction_fees"]
+            else None
+        ),
+        failure_message=(
+            RichText_from_json(requester, obj["routing_transaction_failure_message"])
+            if obj["routing_transaction_failure_message"]
+            else None
+        ),
         failure_reason=parse_enum_optional(
             RoutingTransactionFailureReason, obj["routing_transaction_failure_reason"]
         ),

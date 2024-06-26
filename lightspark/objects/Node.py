@@ -419,45 +419,59 @@ def from_json(requester: Requester, obj: Mapping[str, Any]) -> Node:
             status=parse_enum_optional(
                 LightsparkNodeStatus, obj["lightspark_node_with_o_s_k_status"]
             ),
-            total_balance=CurrencyAmount_from_json(
-                requester, obj["lightspark_node_with_o_s_k_total_balance"]
-            )
-            if obj["lightspark_node_with_o_s_k_total_balance"]
-            else None,
-            total_local_balance=CurrencyAmount_from_json(
-                requester, obj["lightspark_node_with_o_s_k_total_local_balance"]
-            )
-            if obj["lightspark_node_with_o_s_k_total_local_balance"]
-            else None,
-            local_balance=CurrencyAmount_from_json(
-                requester, obj["lightspark_node_with_o_s_k_local_balance"]
-            )
-            if obj["lightspark_node_with_o_s_k_local_balance"]
-            else None,
-            remote_balance=CurrencyAmount_from_json(
-                requester, obj["lightspark_node_with_o_s_k_remote_balance"]
-            )
-            if obj["lightspark_node_with_o_s_k_remote_balance"]
-            else None,
-            blockchain_balance=BlockchainBalance_from_json(
-                requester, obj["lightspark_node_with_o_s_k_blockchain_balance"]
-            )
-            if obj["lightspark_node_with_o_s_k_blockchain_balance"]
-            else None,
+            total_balance=(
+                CurrencyAmount_from_json(
+                    requester, obj["lightspark_node_with_o_s_k_total_balance"]
+                )
+                if obj["lightspark_node_with_o_s_k_total_balance"]
+                else None
+            ),
+            total_local_balance=(
+                CurrencyAmount_from_json(
+                    requester, obj["lightspark_node_with_o_s_k_total_local_balance"]
+                )
+                if obj["lightspark_node_with_o_s_k_total_local_balance"]
+                else None
+            ),
+            local_balance=(
+                CurrencyAmount_from_json(
+                    requester, obj["lightspark_node_with_o_s_k_local_balance"]
+                )
+                if obj["lightspark_node_with_o_s_k_local_balance"]
+                else None
+            ),
+            remote_balance=(
+                CurrencyAmount_from_json(
+                    requester, obj["lightspark_node_with_o_s_k_remote_balance"]
+                )
+                if obj["lightspark_node_with_o_s_k_remote_balance"]
+                else None
+            ),
+            blockchain_balance=(
+                BlockchainBalance_from_json(
+                    requester, obj["lightspark_node_with_o_s_k_blockchain_balance"]
+                )
+                if obj["lightspark_node_with_o_s_k_blockchain_balance"]
+                else None
+            ),
             uma_prescreening_utxos=obj[
                 "lightspark_node_with_o_s_k_uma_prescreening_utxos"
             ],
-            balances=Balances_from_json(
-                requester, obj["lightspark_node_with_o_s_k_balances"]
-            )
-            if obj["lightspark_node_with_o_s_k_balances"]
-            else None,
-            encrypted_signing_private_key=Secret_from_json(
-                requester,
-                obj["lightspark_node_with_o_s_k_encrypted_signing_private_key"],
-            )
-            if obj["lightspark_node_with_o_s_k_encrypted_signing_private_key"]
-            else None,
+            balances=(
+                Balances_from_json(
+                    requester, obj["lightspark_node_with_o_s_k_balances"]
+                )
+                if obj["lightspark_node_with_o_s_k_balances"]
+                else None
+            ),
+            encrypted_signing_private_key=(
+                Secret_from_json(
+                    requester,
+                    obj["lightspark_node_with_o_s_k_encrypted_signing_private_key"],
+                )
+                if obj["lightspark_node_with_o_s_k_encrypted_signing_private_key"]
+                else None
+            ),
         )
     if obj["__typename"] == "LightsparkNodeWithRemoteSigning":
         # pylint: disable=import-outside-toplevel
@@ -488,40 +502,53 @@ def from_json(requester: Requester, obj: Mapping[str, Any]) -> Node:
             status=parse_enum_optional(
                 LightsparkNodeStatus, obj["lightspark_node_with_remote_signing_status"]
             ),
-            total_balance=CurrencyAmount_from_json(
-                requester, obj["lightspark_node_with_remote_signing_total_balance"]
-            )
-            if obj["lightspark_node_with_remote_signing_total_balance"]
-            else None,
-            total_local_balance=CurrencyAmount_from_json(
-                requester,
-                obj["lightspark_node_with_remote_signing_total_local_balance"],
-            )
-            if obj["lightspark_node_with_remote_signing_total_local_balance"]
-            else None,
-            local_balance=CurrencyAmount_from_json(
-                requester, obj["lightspark_node_with_remote_signing_local_balance"]
-            )
-            if obj["lightspark_node_with_remote_signing_local_balance"]
-            else None,
-            remote_balance=CurrencyAmount_from_json(
-                requester, obj["lightspark_node_with_remote_signing_remote_balance"]
-            )
-            if obj["lightspark_node_with_remote_signing_remote_balance"]
-            else None,
-            blockchain_balance=BlockchainBalance_from_json(
-                requester, obj["lightspark_node_with_remote_signing_blockchain_balance"]
-            )
-            if obj["lightspark_node_with_remote_signing_blockchain_balance"]
-            else None,
+            total_balance=(
+                CurrencyAmount_from_json(
+                    requester, obj["lightspark_node_with_remote_signing_total_balance"]
+                )
+                if obj["lightspark_node_with_remote_signing_total_balance"]
+                else None
+            ),
+            total_local_balance=(
+                CurrencyAmount_from_json(
+                    requester,
+                    obj["lightspark_node_with_remote_signing_total_local_balance"],
+                )
+                if obj["lightspark_node_with_remote_signing_total_local_balance"]
+                else None
+            ),
+            local_balance=(
+                CurrencyAmount_from_json(
+                    requester, obj["lightspark_node_with_remote_signing_local_balance"]
+                )
+                if obj["lightspark_node_with_remote_signing_local_balance"]
+                else None
+            ),
+            remote_balance=(
+                CurrencyAmount_from_json(
+                    requester, obj["lightspark_node_with_remote_signing_remote_balance"]
+                )
+                if obj["lightspark_node_with_remote_signing_remote_balance"]
+                else None
+            ),
+            blockchain_balance=(
+                BlockchainBalance_from_json(
+                    requester,
+                    obj["lightspark_node_with_remote_signing_blockchain_balance"],
+                )
+                if obj["lightspark_node_with_remote_signing_blockchain_balance"]
+                else None
+            ),
             uma_prescreening_utxos=obj[
                 "lightspark_node_with_remote_signing_uma_prescreening_utxos"
             ],
-            balances=Balances_from_json(
-                requester, obj["lightspark_node_with_remote_signing_balances"]
-            )
-            if obj["lightspark_node_with_remote_signing_balances"]
-            else None,
+            balances=(
+                Balances_from_json(
+                    requester, obj["lightspark_node_with_remote_signing_balances"]
+                )
+                if obj["lightspark_node_with_remote_signing_balances"]
+                else None
+            ),
         )
     graphql_typename = obj["__typename"]
     raise LightsparkException(

@@ -49,9 +49,9 @@ class Invoice(PaymentRequest, Entity):
             "invoice_updated_at": self.updated_at.isoformat(),
             "invoice_data": self.data.to_json(),
             "invoice_status": self.status.value,
-            "invoice_amount_paid": self.amount_paid.to_json()
-            if self.amount_paid
-            else None,
+            "invoice_amount_paid": (
+                self.amount_paid.to_json() if self.amount_paid else None
+            ),
         }
 
 
@@ -374,7 +374,9 @@ def from_json(requester: Requester, obj: Mapping[str, Any]) -> Invoice:
         updated_at=datetime.fromisoformat(obj["invoice_updated_at"]),
         data=InvoiceData_from_json(requester, obj["invoice_data"]),
         status=parse_enum(PaymentRequestStatus, obj["invoice_status"]),
-        amount_paid=CurrencyAmount_from_json(requester, obj["invoice_amount_paid"])
-        if obj["invoice_amount_paid"]
-        else None,
+        amount_paid=(
+            CurrencyAmount_from_json(requester, obj["invoice_amount_paid"])
+            if obj["invoice_amount_paid"]
+            else None
+        ),
     )

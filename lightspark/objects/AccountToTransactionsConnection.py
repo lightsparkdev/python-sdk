@@ -42,15 +42,17 @@ class AccountToTransactionsConnection(Connection):
             "__typename": "AccountToTransactionsConnection",
             "account_to_transactions_connection_count": self.count,
             "account_to_transactions_connection_page_info": self.page_info.to_json(),
-            "account_to_transactions_connection_profit_loss": self.profit_loss.to_json()
-            if self.profit_loss
-            else None,
-            "account_to_transactions_connection_average_fee_earned": self.average_fee_earned.to_json()
-            if self.average_fee_earned
-            else None,
-            "account_to_transactions_connection_total_amount_transacted": self.total_amount_transacted.to_json()
-            if self.total_amount_transacted
-            else None,
+            "account_to_transactions_connection_profit_loss": (
+                self.profit_loss.to_json() if self.profit_loss else None
+            ),
+            "account_to_transactions_connection_average_fee_earned": (
+                self.average_fee_earned.to_json() if self.average_fee_earned else None
+            ),
+            "account_to_transactions_connection_total_amount_transacted": (
+                self.total_amount_transacted.to_json()
+                if self.total_amount_transacted
+                else None
+            ),
             "account_to_transactions_connection_entities": [
                 e.to_json() for e in self.entities
             ],
@@ -109,21 +111,28 @@ def from_json(
         page_info=PageInfo_from_json(
             requester, obj["account_to_transactions_connection_page_info"]
         ),
-        profit_loss=CurrencyAmount_from_json(
-            requester, obj["account_to_transactions_connection_profit_loss"]
-        )
-        if obj["account_to_transactions_connection_profit_loss"]
-        else None,
-        average_fee_earned=CurrencyAmount_from_json(
-            requester, obj["account_to_transactions_connection_average_fee_earned"]
-        )
-        if obj["account_to_transactions_connection_average_fee_earned"]
-        else None,
-        total_amount_transacted=CurrencyAmount_from_json(
-            requester, obj["account_to_transactions_connection_total_amount_transacted"]
-        )
-        if obj["account_to_transactions_connection_total_amount_transacted"]
-        else None,
+        profit_loss=(
+            CurrencyAmount_from_json(
+                requester, obj["account_to_transactions_connection_profit_loss"]
+            )
+            if obj["account_to_transactions_connection_profit_loss"]
+            else None
+        ),
+        average_fee_earned=(
+            CurrencyAmount_from_json(
+                requester, obj["account_to_transactions_connection_average_fee_earned"]
+            )
+            if obj["account_to_transactions_connection_average_fee_earned"]
+            else None
+        ),
+        total_amount_transacted=(
+            CurrencyAmount_from_json(
+                requester,
+                obj["account_to_transactions_connection_total_amount_transacted"],
+            )
+            if obj["account_to_transactions_connection_total_amount_transacted"]
+            else None
+        ),
         entities=list(
             map(
                 # pylint: disable=unnecessary-lambda

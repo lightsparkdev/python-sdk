@@ -28,15 +28,17 @@ class ChannelToTransactionsConnection:
     def to_json(self) -> Mapping[str, Any]:
         return {
             "channel_to_transactions_connection_count": self.count,
-            "channel_to_transactions_connection_average_fee": self.average_fee.to_json()
-            if self.average_fee
-            else None,
-            "channel_to_transactions_connection_total_amount_transacted": self.total_amount_transacted.to_json()
-            if self.total_amount_transacted
-            else None,
-            "channel_to_transactions_connection_total_fees": self.total_fees.to_json()
-            if self.total_fees
-            else None,
+            "channel_to_transactions_connection_average_fee": (
+                self.average_fee.to_json() if self.average_fee else None
+            ),
+            "channel_to_transactions_connection_total_amount_transacted": (
+                self.total_amount_transacted.to_json()
+                if self.total_amount_transacted
+                else None
+            ),
+            "channel_to_transactions_connection_total_fees": (
+                self.total_fees.to_json() if self.total_fees else None
+            ),
         }
 
 
@@ -78,19 +80,26 @@ def from_json(
     return ChannelToTransactionsConnection(
         requester=requester,
         count=obj["channel_to_transactions_connection_count"],
-        average_fee=CurrencyAmount_from_json(
-            requester, obj["channel_to_transactions_connection_average_fee"]
-        )
-        if obj["channel_to_transactions_connection_average_fee"]
-        else None,
-        total_amount_transacted=CurrencyAmount_from_json(
-            requester, obj["channel_to_transactions_connection_total_amount_transacted"]
-        )
-        if obj["channel_to_transactions_connection_total_amount_transacted"]
-        else None,
-        total_fees=CurrencyAmount_from_json(
-            requester, obj["channel_to_transactions_connection_total_fees"]
-        )
-        if obj["channel_to_transactions_connection_total_fees"]
-        else None,
+        average_fee=(
+            CurrencyAmount_from_json(
+                requester, obj["channel_to_transactions_connection_average_fee"]
+            )
+            if obj["channel_to_transactions_connection_average_fee"]
+            else None
+        ),
+        total_amount_transacted=(
+            CurrencyAmount_from_json(
+                requester,
+                obj["channel_to_transactions_connection_total_amount_transacted"],
+            )
+            if obj["channel_to_transactions_connection_total_amount_transacted"]
+            else None
+        ),
+        total_fees=(
+            CurrencyAmount_from_json(
+                requester, obj["channel_to_transactions_connection_total_fees"]
+            )
+            if obj["channel_to_transactions_connection_total_fees"]
+            else None
+        ),
     )

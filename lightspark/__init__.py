@@ -100,6 +100,8 @@ from lightspark.objects.IncomingPaymentToAttemptsConnection import (
 )
 from lightspark.objects.Invoice import Invoice
 from lightspark.objects.InvoiceData import InvoiceData
+from lightspark.objects.InvoiceForPaymentHashInput import InvoiceForPaymentHashInput
+from lightspark.objects.InvoiceForPaymentHashOutput import InvoiceForPaymentHashOutput
 from lightspark.objects.InvoiceType import InvoiceType
 from lightspark.objects.LightningFeeEstimateForInvoiceInput import (
     LightningFeeEstimateForInvoiceInput,
@@ -130,6 +132,7 @@ from lightspark.objects.Node import Node
 from lightspark.objects.NodeAddress import NodeAddress
 from lightspark.objects.NodeAddressType import NodeAddressType
 from lightspark.objects.NodeToAddressesConnection import NodeToAddressesConnection
+from lightspark.objects.OnChainFeeTarget import OnChainFeeTarget
 from lightspark.objects.OnChainTransaction import OnChainTransaction
 from lightspark.objects.OutgoingPayment import OutgoingPayment
 from lightspark.objects.OutgoingPaymentAttempt import OutgoingPaymentAttempt
@@ -181,6 +184,7 @@ from lightspark.objects.ReleaseChannelPerCommitmentSecretOutput import (
 from lightspark.objects.ReleasePaymentPreimageInput import ReleasePaymentPreimageInput
 from lightspark.objects.ReleasePaymentPreimageOutput import ReleasePaymentPreimageOutput
 from lightspark.objects.RemoteSigningSubEventType import RemoteSigningSubEventType
+from lightspark.objects.RequestInitiator import RequestInitiator
 from lightspark.objects.RequestWithdrawalInput import RequestWithdrawalInput
 from lightspark.objects.RequestWithdrawalOutput import RequestWithdrawalOutput
 from lightspark.objects.RichText import RichText

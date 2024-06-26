@@ -57,9 +57,11 @@ class UmaInvitation(Entity):
             "uma_invitation_inviter_uma": self.inviter_uma,
             "uma_invitation_invitee_uma": self.invitee_uma,
             "uma_invitation_incentives_status": self.incentives_status.value,
-            "uma_invitation_incentives_ineligibility_reason": self.incentives_ineligibility_reason.value
-            if self.incentives_ineligibility_reason
-            else None,
+            "uma_invitation_incentives_ineligibility_reason": (
+                self.incentives_ineligibility_reason.value
+                if self.incentives_ineligibility_reason
+                else None
+            ),
         }
 
 

@@ -374,9 +374,11 @@ def from_json(requester: Requester, obj: Mapping[str, Any]) -> PaymentRequest:
             updated_at=datetime.fromisoformat(obj["invoice_updated_at"]),
             data=InvoiceData_from_json(requester, obj["invoice_data"]),
             status=parse_enum(PaymentRequestStatus, obj["invoice_status"]),
-            amount_paid=CurrencyAmount_from_json(requester, obj["invoice_amount_paid"])
-            if obj["invoice_amount_paid"]
-            else None,
+            amount_paid=(
+                CurrencyAmount_from_json(requester, obj["invoice_amount_paid"])
+                if obj["invoice_amount_paid"]
+                else None
+            ),
         )
     graphql_typename = obj["__typename"]
     raise LightsparkException(

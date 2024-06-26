@@ -60,11 +60,13 @@ class Requester:
                 "query": query,
                 "variables": variables or {},
                 "nonce": secrets.randbits(64) if signing_key else None,
-                "expires_at": (datetime.utcnow() + timedelta(hours=1))
-                .replace(tzinfo=timezone.utc)
-                .isoformat()
-                if signing_key
-                else None,
+                "expires_at": (
+                    (datetime.utcnow() + timedelta(hours=1))
+                    .replace(tzinfo=timezone.utc)
+                    .isoformat()
+                    if signing_key
+                    else None
+                ),
             },
             cls=Encoder,
         ).encode("utf8")
