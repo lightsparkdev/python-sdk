@@ -328,7 +328,7 @@ class LightsparkSyncClient:
                     "CreateUmaInvoiceError",
                     "Receiver identifier provided without signing private key",
                 )
-            receiver_hash = self._hash_uma_identifier(
+            receiver_hash = self.hash_uma_identifier(
                 receiver_identifier, signing_private_key
             )
 
@@ -587,7 +587,7 @@ class LightsparkSyncClient:
                     "PayUmaInvoiceError",
                     "Sender identifier provided without signing private key",
                 )
-            sender_hash = self._hash_uma_identifier(
+            sender_hash = self.hash_uma_identifier(
                 sender_identifier, signing_private_key
             )
 
@@ -996,7 +996,7 @@ class LightsparkSyncClient:
         return sha256(phone_number_e164_format.encode()).hexdigest()
 
     def hash_uma_identifier(self, identifier: str, signing_private_key: bytes) -> str:
-        now = datetime.datetime.utcnow()
+        now = datetime.now(timezone.utc)
         input_data = (
             identifier + f"{now.month}-{now.year}" + signing_private_key.decode("utf-8")
         )
