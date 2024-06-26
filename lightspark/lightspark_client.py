@@ -303,16 +303,47 @@ class LightsparkSyncClient:
         amount_msats: int,
         metadata: str,
         expiry_secs: Optional[int] = None,
+        signing_private_key: Optional[bytes] = None,
+        receiver_identifier: Optional[str] = None,
     ) -> Invoice:
+        """Creates a new invoice for the UMA protocol. The metadata is hashed and included in the invoice. This API
+        generates a Lightning Invoice (follows the Bolt 11 specification) to request a payment from another Lightning Node.
+        This should only be used for generating invoices for UMA, with `create_invoice` preferred in the general case.
+
+        Args:
+            node_id: The node ID for which to create an invoice.
+            amount_msats: The amount of the invoice in msats. You can create a zero-amount invoice to accept any payment amount.
+            metadata: The LNURL metadata payload field in the initial payreq response. This wil be hashed and present in the
+            h-tag (SHA256 purpose of payment) of the resulting Bolt 11 invoice. See
+            [this spec](https://github.com/lnurl/luds/blob/luds/06.md#pay-to-static-qrnfclink) for details.
+            expiry_secs: The number of seconds until the invoice expires. Defaults to 600.
+            signing_private_key: The receiver's signing private key. Used to hash the receiver identifier.
+            receiver_identifier: Optional identifier of the receiver. If provided, this will be hashed using a monthly-rotated
+            seed and used for anonymized analysis.
+        """
+        receiver_hash = None
+        if receiver_identifier is not None:
+            if signing_private_key is None:
+                raise LightsparkException(
+                    "CreateUmaInvoiceError",
+                    "Receiver identifier provided without signing private key",
+                )
+            receiver_hash = self._hash_uma_identifier(
+                receiver_identifier, signing_private_key
+            )
+
+        variables = {
+            "amount_msats": amount_msats,
+            "node_id": node_id,
+            "metadata_hash": sha256(metadata.encode("utf-8")).hexdigest(),
+            "expiry_secs": expiry_secs if expiry_secs is not None else 600,
+        }
+        if receiver_hash is not None:
+            variables["receiver_hash"] = receiver_hash
         logger.info("Creating an uma invoice for node %s.", node_id)
         json = self._requester.execute_graphql(
             CREATE_UMA_INVOICE_MUTATION,
-            {
-                "amount_msats": amount_msats,
-                "node_id": node_id,
-                "metadata_hash": sha256(metadata.encode("utf-8")).hexdigest(),
-                "expiry_secs": expiry_secs if expiry_secs is not None else 600,
-            },
+            variables,
         )
 
         return Invoice_from_json(self._requester, json["create_uma_invoice"]["invoice"])
@@ -530,7 +561,36 @@ class LightsparkSyncClient:
         maximum_fees_msats: int,
         amount_msats: Optional[int] = None,
         idempotency_key: Optional[str] = None,
+        signing_private_key: Optional[bytes] = None,
+        sender_identifier: Optional[str] = None,
     ) -> OutgoingPayment:
+        """Sends an UMA payment to a node on the Lightning Network, based on the invoice (as defined by the BOLT11
+        specification) that you provide. This should only be used for paying UMA invoices, with `pay_invoice` preferred
+        in the general case.
+
+        Args:
+            node_id: The ID of the node that will pay the invoice.
+            encoded_invoice: The encoded invoice to pay.
+            timeout_secs: A timeout for the payment in seconds.
+            maximum_fees_msats: Maximum fees (in msats) to pay for the payment.
+            amount_msats: The amount to pay in msats for a zero-amount invoice. Defaults to the full amount of the
+            invoice. Note, this parameter can only be passed for a zero-amount invoice. Otherwise, the call will fail.
+            idempotency_key: An optional key to ensure idempotency of the payment.
+            signing_private_key: The sender's signing private key. Used to hash the sender identifier.
+            sender_identifier: Optional identifier of the sender. If provided, this will be hashed using a monthly-rotated
+            seed and used for anonymized analysis.
+        """
+        sender_hash = None
+        if sender_identifier is not None:
+            if signing_private_key is None:
+                raise LightsparkException(
+                    "PayUmaInvoiceError",
+                    "Sender identifier provided without signing private key",
+                )
+            sender_hash = self._hash_uma_identifier(
+                sender_identifier, signing_private_key
+            )
+
         variables = {
             "node_id": node_id,
             "encoded_invoice": encoded_invoice,
@@ -541,6 +601,8 @@ class LightsparkSyncClient:
             variables["amount_msats"] = amount_msats
         if idempotency_key is not None:
             variables["idempotency_key"] = idempotency_key
+        if sender_hash is not None:
+            variables["sender_hash"] = sender_hash
         json = self._requester.execute_graphql(
             PAY_UMA_INVOICE_MUTATION,
             variables,
@@ -932,6 +994,13 @@ class LightsparkSyncClient:
                 "InvalidPhoneNumber", "The phone number must follow the E.164 format."
             )
         return sha256(phone_number_e164_format.encode()).hexdigest()
+
+    def hash_uma_identifier(self, identifier: str, signing_private_key: bytes) -> str:
+        now = datetime.datetime.utcnow()
+        input_data = (
+            identifier + f"{now.month}-{now.year}" + signing_private_key.decode("utf-8")
+        )
+        return sha256(input_data.encode()).hexdigest()
 
     def fail_htlcs(self, invoice_id: str, cancel_invoice: bool = True) -> str:
         """
