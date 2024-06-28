@@ -10,6 +10,7 @@ mutation PayUmaInvoice(
     $maximum_fees_msats: Long!
     $amount_msats: Long
     $idempotency_key: String
+    $sender_hash: String = null
 ) {{
     pay_uma_invoice(input: {{
         node_id: $node_id
@@ -18,6 +19,7 @@ mutation PayUmaInvoice(
         maximum_fees_msats: $maximum_fees_msats
         amount_msats: $amount_msats
         idempotency_key: $idempotency_key
+        sender_hash: $sender_hash
     }}) {{
         payment {{
             ...OutgoingPaymentFragment
