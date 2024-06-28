@@ -998,7 +998,7 @@ class LightsparkSyncClient:
     def hash_uma_identifier(self, identifier: str, signing_private_key: bytes) -> str:
         now = datetime.now(timezone.utc)
         input_data = (
-            identifier + f"{now.month}-{now.year}" + signing_private_key.decode("utf-8")
+            identifier + f"{now.month}-{now.year}" + signing_private_key.hex()
         )
         return sha256(input_data.encode()).hexdigest()
 
