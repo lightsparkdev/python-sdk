@@ -1,5 +1,9 @@
 # Changelog
 
+# 2.10.0
+
+- Add extra params to `create_uma_invoice` and `pay_uma_invoice` for analytics.
+
 # 2.9.0
 
 - Add new `invoice_for_payment_hash` query.
