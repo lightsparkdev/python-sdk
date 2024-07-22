@@ -5,7 +5,7 @@ from lightspark.objects.OutgoingPayment import FRAGMENT as OutgoingPaymentFragme
 OUTGOING_PAYMENTS_FOR_INVOICE_QUERY = f"""
 query OutgoingPaymentsForInvoice(
     $encoded_invoice: String!,
-    $transaction_statuses: [TransactionStatus!] = null
+    $transaction_statuses: [TransactionStatus!]
 ) {{
     outgoing_payments_for_invoice(input: {{
         encoded_invoice: $encoded_invoice,

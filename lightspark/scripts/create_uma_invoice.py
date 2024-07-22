@@ -8,7 +8,7 @@ mutation CreateUmaInvoice(
     $amount_msats: Long!
     $metadata_hash: String!
     $expiry_secs: Int
-    $receiver_hash: String = null
+    $receiver_hash: String
 ) {{
     create_uma_invoice(input: {{
         node_id: $node_id
