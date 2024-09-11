@@ -103,21 +103,34 @@ class Requester:
             result = r.json()
             if "errors" in result:
                 errors = result["errors"]
-                request_id = r.headers.get("X-Request-ID", "Unknown")  # Get X-Request-ID from headers
-                logger.error("GraphQL error occurred. Request ID: %s, Errors: %s", request_id, errors)
+                request_id = r.headers.get(
+                    "X-Request-ID", "Unknown"
+                )  # Get X-Request-ID from headers
+                logger.error(
+                    "GraphQL error occurred. Request ID: %s, Errors: %s",
+                    request_id,
+                    errors,
+                )
                 raise LightsparkException(
-                    "GRAPHQL_ERROR", f"A GraphQL error occurred: {errors}. Request ID: {request_id}"
+                    "GRAPHQL_ERROR",
+                    f"A GraphQL error occurred: {errors}. Request ID: {request_id}",
                 )  # TODO better error handling
             return result["data"]
         except requests.HTTPError as e:
-            request_id = r.headers.get("X-Request-ID", "Unknown")  # Get X-Request-ID from headers
+            request_id = r.headers.get(
+                "X-Request-ID", "Unknown"
+            )  # Get X-Request-ID from headers
             logger.error("HTTP request error. Status code: %d", r.status_code)
-            raise LightsparkException("HTTP_ERROR", f"{str(e)}. Request ID: {request_id}") from e
+            raise LightsparkException(
+                "HTTP_ERROR", f"{str(e)}. Request ID: {request_id}"
+            ) from e
         except Exception as e:
             logger.exception(e)
 
             try:
-                request_id = r.headers.get("X-Request-ID", "Unknown")  # Extract X-Request-ID
+                request_id = r.headers.get(
+                    "X-Request-ID", "Unknown"
+                )  # Extract X-Request-ID
                 logger.error("Request ID: %s, Response Text: %s", request_id, r.text)
             # TODO pylint is right here... let's make it better.
             except Exception:  # pylint: disable=broad-except
