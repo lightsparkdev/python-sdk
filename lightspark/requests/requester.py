@@ -104,7 +104,7 @@ class Requester:
             if "errors" in result:
                 errors = result["errors"]
                 request_id = r.headers.get("X-Request-ID", "Unknown")  # Get X-Request-ID from headers
-                logger.error(f"GraphQL error occurred. Request ID: {request_id}, Errors: {errors}")
+                logger.error("GraphQL error occurred. Request ID: %s, Errors: %s", request_id, errors)
                 raise LightsparkException(
                     "GRAPHQL_ERROR", f"A GraphQL error occurred: {errors}. Request ID: {request_id}"
                 )  # TODO better error handling
@@ -118,7 +118,7 @@ class Requester:
 
             try:
                 request_id = r.headers.get("X-Request-ID", "Unknown")  # Extract X-Request-ID
-                logger.error(f"Request ID: {request_id}, Response Text: {r.text}")
+                logger.error("Request ID: %s, Response Text: %s", request_id, r.text)
             # TODO pylint is right here... let's make it better.
             except Exception:  # pylint: disable=broad-except
                 pass
