@@ -16,6 +16,8 @@ class CurrencyUnit(Enum):
     """0.001 Satoshi, or 10e-11 Bitcoin. We recommend using the Satoshi unit instead when possible."""
     USD = "USD"
     """United States Dollar."""
+    MXN = "MXN"
+    """Mexican Peso."""
     NANOBITCOIN = "NANOBITCOIN"
     """0.000000001 (10e-9) Bitcoin or a billionth of a Bitcoin. We recommend using the Satoshi unit instead when possible."""
     MICROBITCOIN = "MICROBITCOIN"

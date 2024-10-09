@@ -8,6 +8,7 @@ from lightspark.requests.requester import Requester
 
 @dataclass
 class UpdateNodeSharedSecretOutput:
+
     requester: Requester
 
     node_id: str

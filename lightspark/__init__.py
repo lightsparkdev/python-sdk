@@ -95,6 +95,12 @@ from lightspark.objects.IncomingPaymentsForInvoiceQueryInput import (
 from lightspark.objects.IncomingPaymentsForInvoiceQueryOutput import (
     IncomingPaymentsForInvoiceQueryOutput,
 )
+from lightspark.objects.IncomingPaymentsForPaymentHashQueryInput import (
+    IncomingPaymentsForPaymentHashQueryInput,
+)
+from lightspark.objects.IncomingPaymentsForPaymentHashQueryOutput import (
+    IncomingPaymentsForPaymentHashQueryOutput,
+)
 from lightspark.objects.IncomingPaymentToAttemptsConnection import (
     IncomingPaymentToAttemptsConnection,
 )
