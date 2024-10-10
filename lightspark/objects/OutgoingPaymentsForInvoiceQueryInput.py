@@ -10,7 +10,6 @@ from .TransactionStatus import TransactionStatus
 
 @dataclass
 class OutgoingPaymentsForInvoiceQueryInput:
-
     encoded_invoice: str
     """The encoded invoice that the outgoing payments paid to."""
 

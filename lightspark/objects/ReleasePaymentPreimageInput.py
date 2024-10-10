@@ -6,7 +6,6 @@ from typing import Any, Mapping
 
 @dataclass
 class ReleasePaymentPreimageInput:
-
     invoice_id: str
     """The invoice the preimage belongs to."""
 

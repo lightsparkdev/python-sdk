@@ -11,7 +11,6 @@ from .IncomingPayment import from_json as IncomingPayment_from_json
 
 @dataclass
 class IncomingPaymentsForInvoiceQueryOutput:
-
     requester: Requester
 
     payments: List[IncomingPayment]

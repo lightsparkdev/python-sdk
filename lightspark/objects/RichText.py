@@ -8,7 +8,6 @@ from lightspark.requests.requester import Requester
 
 @dataclass
 class RichText:
-
     requester: Requester
 
     text: str

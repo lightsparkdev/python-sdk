@@ -8,7 +8,6 @@ from lightspark.requests.requester import Requester
 
 @dataclass
 class DeleteApiTokenOutput:
-
     requester: Requester
 
     account_id: str

@@ -11,7 +11,6 @@ from .Entity import Entity
 
 @dataclass
 class Signable(Entity):
-
     requester: Requester
 
     id: str

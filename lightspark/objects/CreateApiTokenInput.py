@@ -10,7 +10,6 @@ from .Permission import Permission
 
 @dataclass
 class CreateApiTokenInput:
-
     name: str
     """An arbitrary name that the user can choose to identify the API token in a list."""
 
