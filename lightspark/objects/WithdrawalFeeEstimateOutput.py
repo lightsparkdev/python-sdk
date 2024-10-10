@@ -11,6 +11,7 @@ from .CurrencyAmount import from_json as CurrencyAmount_from_json
 
 @dataclass
 class WithdrawalFeeEstimateOutput:
+
     requester: Requester
 
     fee_estimate: CurrencyAmount

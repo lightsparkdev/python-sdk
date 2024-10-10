@@ -6,6 +6,7 @@ from typing import Any, Mapping
 
 @dataclass
 class CreateNodeWalletAddressInput:
+
     node_id: str
 
     def to_json(self) -> Mapping[str, Any]:

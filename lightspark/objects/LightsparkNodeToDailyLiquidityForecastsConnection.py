@@ -14,6 +14,7 @@ from .LightningPaymentDirection import LightningPaymentDirection
 
 @dataclass
 class LightsparkNodeToDailyLiquidityForecastsConnection:
+
     requester: Requester
 
     from_date: datetime

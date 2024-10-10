@@ -506,3 +506,5 @@ class RegionCode(Enum):
     """The code representing the country of Zambia."""
     ZW = "ZW"
     """The code representing the country of Zimbabwe."""
+    NN = "NN"
+    """The code representing a fake region for testing."""
