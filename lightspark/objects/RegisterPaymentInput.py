@@ -11,7 +11,6 @@ from .PaymentDirection import PaymentDirection
 
 @dataclass
 class RegisterPaymentInput:
-
     provider: ComplianceProvider
     """The compliance provider that is going to screen the node. You need to be a customer of the selected provider and store the API key on the Lightspark account setting page."""
 

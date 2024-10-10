@@ -6,7 +6,6 @@ from typing import Any, Mapping, Optional
 
 @dataclass
 class CreateLnurlInvoiceInput:
-
     node_id: str
     """The node from which to create the invoice."""
 

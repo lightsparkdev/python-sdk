@@ -10,7 +10,6 @@ from .InvoiceType import InvoiceType
 
 @dataclass
 class CreateTestModeInvoiceInput:
-
     local_node_id: str
 
     amount_msats: int

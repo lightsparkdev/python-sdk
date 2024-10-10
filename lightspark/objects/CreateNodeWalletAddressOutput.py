@@ -13,7 +13,6 @@ from .MultiSigAddressValidationParameters import (
 
 @dataclass
 class CreateNodeWalletAddressOutput:
-
     requester: Requester
 
     node_id: str

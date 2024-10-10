@@ -8,7 +8,6 @@ from lightspark.requests.requester import Requester
 
 @dataclass
 class ReleaseChannelPerCommitmentSecretOutput:
-
     requester: Requester
 
     channel_id: str

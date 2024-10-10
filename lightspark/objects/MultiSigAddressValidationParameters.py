@@ -8,7 +8,6 @@ from lightspark.requests.requester import Requester
 
 @dataclass
 class MultiSigAddressValidationParameters:
-
     requester: Requester
 
     counterparty_funding_pubkey: str

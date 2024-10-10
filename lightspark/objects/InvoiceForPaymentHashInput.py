@@ -6,7 +6,6 @@ from typing import Any, Mapping
 
 @dataclass
 class InvoiceForPaymentHashInput:
-
     payment_hash: str
     """The 32-byte hash of the payment preimage for which to fetch an invoice."""
 

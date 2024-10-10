@@ -11,7 +11,6 @@ from .ApiToken import from_json as ApiToken_from_json
 
 @dataclass
 class CreateApiTokenOutput:
-
     requester: Requester
 
     api_token: ApiToken

@@ -10,7 +10,6 @@ from .RegionCode import RegionCode
 
 @dataclass
 class CreateInvitationWithIncentivesInput:
-
     inviter_uma: str
     """The UMA of the user creating the invitation. It will be used to identify the inviter when receiving the invitation."""
 

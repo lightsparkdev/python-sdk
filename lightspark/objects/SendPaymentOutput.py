@@ -8,7 +8,6 @@ from lightspark.requests.requester import Requester
 
 @dataclass
 class SendPaymentOutput:
-
     requester: Requester
 
     payment_id: str

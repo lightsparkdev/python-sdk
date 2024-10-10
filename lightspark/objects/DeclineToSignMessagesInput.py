@@ -6,7 +6,6 @@ from typing import Any, List, Mapping
 
 @dataclass
 class DeclineToSignMessagesInput:
-
     payload_ids: List[str]
     """List of payload ids to decline to sign because validation failed."""
 

@@ -6,7 +6,6 @@ from typing import Any, Mapping
 
 @dataclass
 class CreateUmaInvitationInput:
-
     inviter_uma: str
     """The UMA of the user creating the invitation. It will be used to identify the inviter when receiving the invitation."""
 

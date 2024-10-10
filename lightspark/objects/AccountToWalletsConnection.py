@@ -14,7 +14,6 @@ from .Wallet import from_json as Wallet_from_json
 
 @dataclass
 class AccountToWalletsConnection(Connection):
-
     requester: Requester
 
     count: int

@@ -8,7 +8,6 @@ from lightspark.requests.requester import Requester
 
 @dataclass
 class SetInvoicePaymentHashOutput:
-
     requester: Requester
 
     invoice_id: str

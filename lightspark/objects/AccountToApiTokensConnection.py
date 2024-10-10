@@ -14,7 +14,6 @@ from .PageInfo import from_json as PageInfo_from_json
 
 @dataclass
 class AccountToApiTokensConnection(Connection):
-
     requester: Requester
 
     count: int

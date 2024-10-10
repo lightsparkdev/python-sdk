@@ -6,7 +6,6 @@ from typing import Any, Mapping
 
 @dataclass
 class UpdateNodeSharedSecretInput:
-
     node_id: str
 
     shared_secret: str

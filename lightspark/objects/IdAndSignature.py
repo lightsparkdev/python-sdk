@@ -6,7 +6,6 @@ from typing import Any, Mapping
 
 @dataclass
 class IdAndSignature:
-
     id: str
     """The id of the message."""
 

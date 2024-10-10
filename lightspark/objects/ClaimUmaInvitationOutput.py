@@ -8,7 +8,6 @@ from lightspark.requests.requester import Requester
 
 @dataclass
 class ClaimUmaInvitationOutput:
-
     requester: Requester
 
     invitation_id: str

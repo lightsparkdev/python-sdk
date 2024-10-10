@@ -13,7 +13,6 @@ from .SignablePayloadStatus import SignablePayloadStatus
 
 @dataclass
 class SignablePayload(Entity):
-
     requester: Requester
 
     id: str
