@@ -39,6 +39,12 @@ class Invoice(PaymentRequest, Entity):
 
     amount_paid: Optional[CurrencyAmount]
     """The total amount that has been paid to this invoice."""
+
+    is_uma: Optional[bool]
+    """Whether this invoice is an UMA invoice or not. NOTE: this field is only set if the invoice was created using the recommended `create_uma_invoice` function."""
+
+    is_lnurl: Optional[bool]
+    """Whether this invoice is an LNURL invoice or not. NOTE: this field is only set if the invoice was created using the recommended `create_lnurl_invoice` function."""
     typename: str
 
     def to_json(self) -> Mapping[str, Any]:
@@ -52,6 +58,8 @@ class Invoice(PaymentRequest, Entity):
             "invoice_amount_paid": (
                 self.amount_paid.to_json() if self.amount_paid else None
             ),
+            "invoice_is_uma": self.is_uma,
+            "invoice_is_lnurl": self.is_lnurl,
         }
 
 
@@ -361,6 +369,8 @@ fragment InvoiceFragment on Invoice {
         currency_amount_preferred_currency_value_rounded: preferred_currency_value_rounded
         currency_amount_preferred_currency_value_approx: preferred_currency_value_approx
     }
+    invoice_is_uma: is_uma
+    invoice_is_lnurl: is_lnurl
 }
 """
 
@@ -379,4 +389,6 @@ def from_json(requester: Requester, obj: Mapping[str, Any]) -> Invoice:
             if obj["invoice_amount_paid"]
             else None
         ),
+        is_uma=obj["invoice_is_uma"],
+        is_lnurl=obj["invoice_is_lnurl"],
     )

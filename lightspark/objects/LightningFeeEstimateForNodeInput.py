@@ -6,6 +6,7 @@ from typing import Any, Mapping
 
 @dataclass
 class LightningFeeEstimateForNodeInput:
+
     node_id: str
     """The node from where you want to send the payment."""
 

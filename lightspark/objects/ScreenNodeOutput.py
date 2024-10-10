@@ -11,6 +11,7 @@ from .RiskRating import RiskRating
 
 @dataclass
 class ScreenNodeOutput:
+
     requester: Requester
 
     rating: RiskRating

@@ -356,6 +356,8 @@ fragment PaymentRequestFragment on PaymentRequest {
             currency_amount_preferred_currency_value_rounded: preferred_currency_value_rounded
             currency_amount_preferred_currency_value_approx: preferred_currency_value_approx
         }
+        invoice_is_uma: is_uma
+        invoice_is_lnurl: is_lnurl
     }
 }
 """
@@ -379,6 +381,8 @@ def from_json(requester: Requester, obj: Mapping[str, Any]) -> PaymentRequest:
                 if obj["invoice_amount_paid"]
                 else None
             ),
+            is_uma=obj["invoice_is_uma"],
+            is_lnurl=obj["invoice_is_lnurl"],
         )
     graphql_typename = obj["__typename"]
     raise LightsparkException(

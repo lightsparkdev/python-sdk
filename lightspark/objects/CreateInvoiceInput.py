@@ -10,6 +10,7 @@ from .InvoiceType import InvoiceType
 
 @dataclass
 class CreateInvoiceInput:
+
     node_id: str
     """The node from which to create the invoice."""
 
