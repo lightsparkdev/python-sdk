@@ -11,7 +11,6 @@ from .CurrencyAmount import from_json as CurrencyAmount_from_json
 
 @dataclass
 class FundNodeOutput:
-
     requester: Requester
 
     amount: CurrencyAmount

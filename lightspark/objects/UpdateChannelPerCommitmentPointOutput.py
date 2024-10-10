@@ -8,7 +8,6 @@ from lightspark.requests.requester import Requester
 
 @dataclass
 class UpdateChannelPerCommitmentPointOutput:
-
     requester: Requester
 
     channel_id: str

@@ -6,7 +6,6 @@ from typing import Any, Mapping
 
 @dataclass
 class OutgoingPaymentForIdempotencyKeyInput:
-
     idempotency_key: str
 
     def to_json(self) -> Mapping[str, Any]:

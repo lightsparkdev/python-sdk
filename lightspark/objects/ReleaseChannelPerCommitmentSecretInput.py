@@ -6,7 +6,6 @@ from typing import Any, Mapping
 
 @dataclass
 class ReleaseChannelPerCommitmentSecretInput:
-
     channel_id: str
     """The unique identifier of the channel."""
 
