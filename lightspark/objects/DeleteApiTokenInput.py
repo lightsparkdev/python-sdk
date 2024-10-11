@@ -6,6 +6,7 @@ from typing import Any, Mapping
 
 @dataclass
 class DeleteApiTokenInput:
+
     api_token_id: str
 
     def to_json(self) -> Mapping[str, Any]:
