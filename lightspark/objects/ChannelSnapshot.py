@@ -13,6 +13,7 @@ from .Entity import Entity
 
 @dataclass
 class ChannelSnapshot(Entity):
+
     requester: Requester
 
     id: str

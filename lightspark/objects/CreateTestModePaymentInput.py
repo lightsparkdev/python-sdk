@@ -6,6 +6,7 @@ from typing import Any, Mapping, Optional
 
 @dataclass
 class CreateTestModePaymentInput:
+
     local_node_id: str
     """The node to where you want to send the payment."""
 

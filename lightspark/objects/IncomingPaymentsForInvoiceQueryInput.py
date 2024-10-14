@@ -10,6 +10,7 @@ from .TransactionStatus import TransactionStatus
 
 @dataclass
 class IncomingPaymentsForInvoiceQueryInput:
+
     invoice_id: str
 
     statuses: Optional[List[TransactionStatus]]

@@ -8,6 +8,7 @@ from lightspark.requests.requester import Requester
 
 @dataclass
 class Secret:
+
     requester: Requester
 
     encrypted_value: str
