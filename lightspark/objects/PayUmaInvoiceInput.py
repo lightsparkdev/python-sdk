@@ -6,6 +6,7 @@ from typing import Any, Mapping, Optional
 
 @dataclass
 class PayUmaInvoiceInput:
+
     node_id: str
 
     encoded_invoice: str

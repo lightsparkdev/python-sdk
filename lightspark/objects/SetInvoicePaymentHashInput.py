@@ -6,6 +6,7 @@ from typing import Any, Mapping, Optional
 
 @dataclass
 class SetInvoicePaymentHashInput:
+
     invoice_id: str
     """The invoice that needs to be updated."""
 
