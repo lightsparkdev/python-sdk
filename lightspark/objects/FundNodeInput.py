@@ -6,6 +6,7 @@ from typing import Any, Mapping, Optional
 
 @dataclass
 class FundNodeInput:
+
     node_id: str
 
     amount_sats: Optional[int]

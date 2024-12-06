@@ -8,6 +8,7 @@ from lightspark.requests.requester import Requester
 
 @dataclass
 class OutgoingPaymentForIdempotencyKeyOutput:
+
     requester: Requester
 
     payment_id: Optional[str]

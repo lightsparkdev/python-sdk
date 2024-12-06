@@ -14,6 +14,7 @@ from .LightningPaymentDirection import LightningPaymentDirection
 
 @dataclass
 class DailyLiquidityForecast:
+
     requester: Requester
 
     date: datetime

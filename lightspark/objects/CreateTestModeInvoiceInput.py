@@ -10,13 +10,18 @@ from .InvoiceType import InvoiceType
 
 @dataclass
 class CreateTestModeInvoiceInput:
+
     local_node_id: str
+    """The local node from which to create the invoice."""
 
     amount_msats: int
+    """The amount for which the invoice should be created, in millisatoshis. Setting the amount to 0 will allow the payer to specify an amount."""
 
     memo: Optional[str]
+    """An optional memo to include in the invoice."""
 
     invoice_type: Optional[InvoiceType]
+    """The type of invoice to create."""
 
     def to_json(self) -> Mapping[str, Any]:
         return {
