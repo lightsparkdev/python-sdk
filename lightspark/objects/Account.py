@@ -37,6 +37,7 @@ from .BlockchainBalance import BlockchainBalance
 from .BlockchainBalance import from_json as BlockchainBalance_from_json
 from .CurrencyAmount import CurrencyAmount
 from .CurrencyAmount import from_json as CurrencyAmount_from_json
+from .CurrencyAmountInput import CurrencyAmountInput
 from .Entity import Entity
 from .LightsparkNodeOwner import LightsparkNodeOwner
 from .TransactionFailures import TransactionFailures
@@ -745,13 +746,15 @@ query FetchAccountToChannelsConnection($entity_id: ID!, $bitcoin_network: Bitcoi
         lightning_node_id: Optional[str] = None,
         statuses: Optional[List[TransactionStatus]] = None,
         exclude_failures: Optional[TransactionFailures] = None,
+        max_amount: Optional[CurrencyAmountInput] = None,
+        min_amount: Optional[CurrencyAmountInput] = None,
     ) -> AccountToTransactionsConnection:
         json = self.requester.execute_graphql(
             """
-query FetchAccountToTransactionsConnection($entity_id: ID!, $first: Int, $after: String, $types: [TransactionType!], $after_date: DateTime, $before_date: DateTime, $bitcoin_network: BitcoinNetwork, $lightning_node_id: ID, $statuses: [TransactionStatus!], $exclude_failures: TransactionFailures) {
+query FetchAccountToTransactionsConnection($entity_id: ID!, $first: Int, $after: String, $types: [TransactionType!], $after_date: DateTime, $before_date: DateTime, $bitcoin_network: BitcoinNetwork, $lightning_node_id: ID, $statuses: [TransactionStatus!], $exclude_failures: TransactionFailures, $max_amount: CurrencyAmountInput, $min_amount: CurrencyAmountInput) {
     entity(id: $entity_id) {
         ... on Account {
-            transactions(, first: $first, after: $after, types: $types, after_date: $after_date, before_date: $before_date, bitcoin_network: $bitcoin_network, lightning_node_id: $lightning_node_id, statuses: $statuses, exclude_failures: $exclude_failures) {
+            transactions(, first: $first, after: $after, types: $types, after_date: $after_date, before_date: $before_date, bitcoin_network: $bitcoin_network, lightning_node_id: $lightning_node_id, statuses: $statuses, exclude_failures: $exclude_failures, max_amount: $max_amount, min_amount: $min_amount) {
                 __typename
                 account_to_transactions_connection_count: count
                 account_to_transactions_connection_page_info: page_info {
@@ -1351,6 +1354,8 @@ query FetchAccountToTransactionsConnection($entity_id: ID!, $first: Int, $after:
                 "lightning_node_id": lightning_node_id,
                 "statuses": statuses,
                 "exclude_failures": exclude_failures,
+                "max_amount": max_amount,
+                "min_amount": min_amount,
             },
         )
         connection = json["entity"]["transactions"]
@@ -1364,13 +1369,15 @@ query FetchAccountToTransactionsConnection($entity_id: ID!, $first: Int, $after:
         before_date: Optional[datetime] = None,
         bitcoin_network: Optional[BitcoinNetwork] = None,
         lightning_node_id: Optional[str] = None,
+        max_amount: Optional[CurrencyAmountInput] = None,
+        min_amount: Optional[CurrencyAmountInput] = None,
     ) -> AccountToPaymentRequestsConnection:
         json = self.requester.execute_graphql(
             """
-query FetchAccountToPaymentRequestsConnection($entity_id: ID!, $first: Int, $after: String, $after_date: DateTime, $before_date: DateTime, $bitcoin_network: BitcoinNetwork, $lightning_node_id: ID) {
+query FetchAccountToPaymentRequestsConnection($entity_id: ID!, $first: Int, $after: String, $after_date: DateTime, $before_date: DateTime, $bitcoin_network: BitcoinNetwork, $lightning_node_id: ID, $max_amount: CurrencyAmountInput, $min_amount: CurrencyAmountInput) {
     entity(id: $entity_id) {
         ... on Account {
-            payment_requests(, first: $first, after: $after, after_date: $after_date, before_date: $before_date, bitcoin_network: $bitcoin_network, lightning_node_id: $lightning_node_id) {
+            payment_requests(, first: $first, after: $after, after_date: $after_date, before_date: $before_date, bitcoin_network: $bitcoin_network, lightning_node_id: $lightning_node_id, max_amount: $max_amount, min_amount: $min_amount) {
                 __typename
                 account_to_payment_requests_connection_count: count
                 account_to_payment_requests_connection_page_info: page_info {
@@ -1704,6 +1711,8 @@ query FetchAccountToPaymentRequestsConnection($entity_id: ID!, $first: Int, $aft
                 "before_date": before_date,
                 "bitcoin_network": bitcoin_network,
                 "lightning_node_id": lightning_node_id,
+                "max_amount": max_amount,
+                "min_amount": min_amount,
             },
         )
         connection = json["entity"]["payment_requests"]
@@ -1719,13 +1728,15 @@ query FetchAccountToPaymentRequestsConnection($entity_id: ID!, $first: Int, $aft
         idempotency_keys: Optional[List[str]] = None,
         after_date: Optional[datetime] = None,
         before_date: Optional[datetime] = None,
+        max_amount: Optional[CurrencyAmountInput] = None,
+        min_amount: Optional[CurrencyAmountInput] = None,
     ) -> AccountToWithdrawalRequestsConnection:
         json = self.requester.execute_graphql(
             """
-query FetchAccountToWithdrawalRequestsConnection($entity_id: ID!, $first: Int, $after: String, $bitcoin_networks: [BitcoinNetwork!], $statuses: [WithdrawalRequestStatus!], $node_ids: [ID!], $idempotency_keys: [String!], $after_date: DateTime, $before_date: DateTime) {
+query FetchAccountToWithdrawalRequestsConnection($entity_id: ID!, $first: Int, $after: String, $bitcoin_networks: [BitcoinNetwork!], $statuses: [WithdrawalRequestStatus!], $node_ids: [ID!], $idempotency_keys: [String!], $after_date: DateTime, $before_date: DateTime, $max_amount: CurrencyAmountInput, $min_amount: CurrencyAmountInput) {
     entity(id: $entity_id) {
         ... on Account {
-            withdrawal_requests(, first: $first, after: $after, bitcoin_networks: $bitcoin_networks, statuses: $statuses, node_ids: $node_ids, idempotency_keys: $idempotency_keys, after_date: $after_date, before_date: $before_date) {
+            withdrawal_requests(, first: $first, after: $after, bitcoin_networks: $bitcoin_networks, statuses: $statuses, node_ids: $node_ids, idempotency_keys: $idempotency_keys, after_date: $after_date, before_date: $before_date, max_amount: $max_amount, min_amount: $min_amount) {
                 __typename
                 account_to_withdrawal_requests_connection_count: count
                 account_to_withdrawal_requests_connection_page_info: page_info {
@@ -1805,6 +1816,8 @@ query FetchAccountToWithdrawalRequestsConnection($entity_id: ID!, $first: Int, $
                 "idempotency_keys": idempotency_keys,
                 "after_date": after_date,
                 "before_date": before_date,
+                "max_amount": max_amount,
+                "min_amount": min_amount,
             },
         )
         connection = json["entity"]["withdrawal_requests"]

@@ -8,6 +8,7 @@ from lightspark.requests.requester import Requester
 
 @dataclass
 class RequestWithdrawalOutput:
+
     requester: Requester
 
     request_id: str

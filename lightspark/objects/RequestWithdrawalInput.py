@@ -11,6 +11,7 @@ from .WithdrawalMode import WithdrawalMode
 
 @dataclass
 class RequestWithdrawalInput:
+
     node_id: str
     """The node from which you'd like to make the withdrawal."""
 

@@ -65,6 +65,7 @@ from lightspark.objects.CreateUmaInvitationInput import CreateUmaInvitationInput
 from lightspark.objects.CreateUmaInvitationOutput import CreateUmaInvitationOutput
 from lightspark.objects.CreateUmaInvoiceInput import CreateUmaInvoiceInput
 from lightspark.objects.CurrencyAmount import CurrencyAmount
+from lightspark.objects.CurrencyAmountInput import CurrencyAmountInput
 from lightspark.objects.CurrencyUnit import CurrencyUnit
 from lightspark.objects.DailyLiquidityForecast import DailyLiquidityForecast
 from lightspark.objects.DeclineToSignMessagesInput import DeclineToSignMessagesInput
@@ -175,6 +176,7 @@ from lightspark.objects.PaymentFailureReason import PaymentFailureReason
 from lightspark.objects.PaymentRequest import PaymentRequest
 from lightspark.objects.PaymentRequestData import PaymentRequestData
 from lightspark.objects.PaymentRequestStatus import PaymentRequestStatus
+from lightspark.objects.PayTestModeInvoiceInput import PayTestModeInvoiceInput
 from lightspark.objects.PayUmaInvoiceInput import PayUmaInvoiceInput
 from lightspark.objects.Permission import Permission
 from lightspark.objects.PostTransactionData import PostTransactionData

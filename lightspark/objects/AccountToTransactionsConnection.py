@@ -16,6 +16,7 @@ from .Transaction import from_json as Transaction_from_json
 
 @dataclass
 class AccountToTransactionsConnection(Connection):
+
     requester: Requester
 
     count: int

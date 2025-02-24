@@ -8,6 +8,7 @@ from lightspark.requests.requester import Requester
 
 @dataclass
 class ReleasePaymentPreimageOutput:
+
     requester: Requester
 
     invoice_id: str

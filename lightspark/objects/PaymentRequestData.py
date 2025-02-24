@@ -15,7 +15,7 @@ from .Node import from_json as Node_from_json
 
 @dataclass
 class PaymentRequestData:
-    """This object is an interface of a payment request on the Lightning Network (i.e., a Lightning Invoice). It contains data related to parsing the payment details of a Lightning Invoice."""
+    """This object is an interface of a payment request on the Lightning Network (i.e., Invoice or Bolt12Invoice). It contains data related to parsing the payment details of a Lightning Invoice."""
 
     requester: Requester
 

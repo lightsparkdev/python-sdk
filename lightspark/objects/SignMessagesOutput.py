@@ -11,6 +11,7 @@ from .SignablePayload import from_json as SignablePayload_from_json
 
 @dataclass
 class SignMessagesOutput:
+
     requester: Requester
 
     signed_payloads: List[SignablePayload]
