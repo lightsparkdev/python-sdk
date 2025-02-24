@@ -10,6 +10,7 @@ from .InvoiceType import InvoiceType
 
 @dataclass
 class CreateInvoiceInput:
+
     node_id: str
     """The node from which to create the invoice."""
 
@@ -21,7 +22,10 @@ class CreateInvoiceInput:
     invoice_type: Optional[InvoiceType]
 
     expiry_secs: Optional[int]
-    """The expiry of the invoice in seconds. Default value is 86400 (1 day)."""
+    """The expiry of the invoice in seconds. Default value is 86400 (1 day) for AMP invoice, or 3600 (1 hour) for STANDARD invoice."""
+
+    payment_hash: Optional[str]
+    """The payment hash of the invoice. It should only be set if your node is a remote signing node. If not set, it will be requested through REMOTE_SIGNING webhooks with sub event type REQUEST_INVOICE_PAYMENT_HASH."""
 
     def to_json(self) -> Mapping[str, Any]:
         return {
@@ -32,6 +36,7 @@ class CreateInvoiceInput:
                 self.invoice_type.value if self.invoice_type else None
             ),
             "create_invoice_input_expiry_secs": self.expiry_secs,
+            "create_invoice_input_payment_hash": self.payment_hash,
         }
 
 
@@ -44,4 +49,5 @@ def from_json(obj: Mapping[str, Any]) -> CreateInvoiceInput:
             InvoiceType, obj["create_invoice_input_invoice_type"]
         ),
         expiry_secs=obj["create_invoice_input_expiry_secs"],
+        payment_hash=obj["create_invoice_input_payment_hash"],
     )

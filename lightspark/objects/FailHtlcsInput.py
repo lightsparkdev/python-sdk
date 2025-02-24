@@ -6,6 +6,7 @@ from typing import Any, Mapping
 
 @dataclass
 class FailHtlcsInput:
+
     invoice_id: str
     """The id of invoice which the pending HTLCs that need to be failed are paying for."""
 

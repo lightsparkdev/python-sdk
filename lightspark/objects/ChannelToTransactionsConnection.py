@@ -11,6 +11,7 @@ from .CurrencyAmount import from_json as CurrencyAmount_from_json
 
 @dataclass
 class ChannelToTransactionsConnection:
+
     requester: Requester
 
     count: int
