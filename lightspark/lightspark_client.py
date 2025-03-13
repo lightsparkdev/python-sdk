@@ -1016,5 +1016,4 @@ class LightsparkSyncClient:
         return json["fail_htlcs"]["invoice"]["id"]
 
 
-# pylint: disable=anomalous-backslash-in-string
-E614_REGEX = re.compile("^\+?[1-9]\d{1,14}$")
+E614_REGEX = re.compile(r"^\+?[1-9]\d{1,14}$")
