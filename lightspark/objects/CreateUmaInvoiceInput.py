@@ -7,14 +7,19 @@ from typing import Any, Mapping, Optional
 @dataclass
 class CreateUmaInvoiceInput:
     node_id: str
+    """The node from which to create the invoice."""
 
     amount_msats: int
+    """The amount for which the invoice should be created, in millisatoshis."""
 
     metadata_hash: str
+    """The SHA256 hash of the UMA metadata payload. This will be present in the h-tag (SHA256 purpose of payment) of the resulting Bolt 11 invoice."""
 
     expiry_secs: Optional[int]
+    """The expiry of the invoice in seconds. Default value is 86400 (1 day)."""
 
     receiver_hash: Optional[str]
+    """An optional, monthly-rotated, unique hashed identifier corresponding to the receiver of the payment."""
 
     def to_json(self) -> Mapping[str, Any]:
         return {
