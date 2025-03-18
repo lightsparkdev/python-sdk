@@ -1,3 +1,4 @@
+
 # Copyright ©, 2022-present, Lightspark Group, Inc. - All Rights Reserved
 
 from enum import Enum
@@ -36,3 +37,4 @@ class HtlcAttemptFailureCode(Enum):
     INTERNAL_FAILURE = "INTERNAL_FAILURE"
     UNKNOWN_FAILURE = "UNKNOWN_FAILURE"
     UNREADABLE_FAILURE = "UNREADABLE_FAILURE"
+

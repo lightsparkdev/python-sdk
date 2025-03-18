@@ -1,3 +1,4 @@
+
 # Copyright ©, 2022-present, Lightspark Group, Inc. - All Rights Reserved
 
 from dataclasses import dataclass
@@ -7,15 +8,22 @@ from lightspark.requests.requester import Requester
 
 
 @dataclass
-class DeleteApiTokenOutput:
+class DeleteApiTokenOutput():
+    
     requester: Requester
 
     account_id: str
+    
+
+
 
     def to_json(self) -> Mapping[str, Any]:
         return {
-            "delete_api_token_output_account": {"id": self.account_id},
+            "delete_api_token_output_account": { "id": self.account_id },
+
         }
+
+
 
 
 FRAGMENT = """
@@ -28,8 +36,10 @@ fragment DeleteApiTokenOutputFragment on DeleteApiTokenOutput {
 """
 
 
+
 def from_json(requester: Requester, obj: Mapping[str, Any]) -> DeleteApiTokenOutput:
     return DeleteApiTokenOutput(
-        requester=requester,
-        account_id=obj["delete_api_token_output_account"]["id"],
-    )
+        requester=requester,        account_id=obj["delete_api_token_output_account"]["id"],
+
+        )
+

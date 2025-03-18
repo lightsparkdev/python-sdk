@@ -1,3 +1,4 @@
+
 # Copyright ©, 2022-present, Lightspark Group, Inc. - All Rights Reserved
 
 from enum import Enum
@@ -22,3 +23,4 @@ class ChannelStatus(Enum):
     """The channel has been closed. Information about the channel is still available for historical purposes but the channel cannot be used anymore."""
     ERROR = "ERROR"
     """Something unexpected happened and we cannot determine the status of this channel. Please try again later or contact the support."""
+

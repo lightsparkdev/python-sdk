@@ -1,3 +1,4 @@
+
 # Copyright ©, 2022-present, Lightspark Group, Inc. - All Rights Reserved
 
 from enum import Enum
@@ -16,3 +17,4 @@ class BitcoinNetwork(Enum):
     """A test version of the Bitcoin Blockchain, maintained by a centralized organization. Not in use at Lightspark."""
     TESTNET = "TESTNET"
     """A test version of the Bitcoin Blockchain, publicly available."""
+

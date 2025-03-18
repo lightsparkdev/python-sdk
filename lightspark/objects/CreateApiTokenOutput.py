@@ -1,3 +1,4 @@
+
 # Copyright ©, 2022-present, Lightspark Group, Inc. - All Rights Reserved
 
 from dataclasses import dataclass
@@ -10,7 +11,8 @@ from .ApiToken import from_json as ApiToken_from_json
 
 
 @dataclass
-class CreateApiTokenOutput:
+class CreateApiTokenOutput():
+    
     requester: Requester
 
     api_token: ApiToken
@@ -20,11 +22,16 @@ class CreateApiTokenOutput:
     """The secret that should be used to authenticate against our API.
 This secret is not stored and will never be available again after this. You must keep this secret secure as it grants access to your account."""
 
+
+
     def to_json(self) -> Mapping[str, Any]:
         return {
             "create_api_token_output_api_token": self.api_token.to_json(),
             "create_api_token_output_client_secret": self.client_secret,
+
         }
+
+
 
 
 FRAGMENT = """
@@ -45,11 +52,11 @@ fragment CreateApiTokenOutputFragment on CreateApiTokenOutput {
 """
 
 
+
 def from_json(requester: Requester, obj: Mapping[str, Any]) -> CreateApiTokenOutput:
     return CreateApiTokenOutput(
-        requester=requester,
-        api_token=ApiToken_from_json(
-            requester, obj["create_api_token_output_api_token"]
-        ),
+        requester=requester,        api_token=ApiToken_from_json(requester, obj["create_api_token_output_api_token"]),
         client_secret=obj["create_api_token_output_client_secret"],
-    )
+
+        )
+

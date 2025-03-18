@@ -1,3 +1,4 @@
+
 # Copyright ©, 2022-present, Lightspark Group, Inc. - All Rights Reserved
 
 from dataclasses import dataclass
@@ -10,7 +11,7 @@ from .CurrencyAmount import from_json as CurrencyAmount_from_json
 
 
 @dataclass
-class Balances:
+class Balances():
     """This is an object representing the balance associated with your Lightspark account. You can retrieve this object to see your balance, which can be broken down into several different categorizations."""
 
     requester: Requester
@@ -30,12 +31,17 @@ It represents the amount currently available to be sent on the Lightning network
 
 It represents the amount currently available to withdraw and is usually equal to the `owned_balance` but it does not include in-flight operations (which would likely succeed and therefore likely make your withdrawal fail)."""
 
+
+
     def to_json(self) -> Mapping[str, Any]:
         return {
             "balances_owned_balance": self.owned_balance.to_json(),
             "balances_available_to_send_balance": self.available_to_send_balance.to_json(),
             "balances_available_to_withdraw_balance": self.available_to_withdraw_balance.to_json(),
+
         }
+
+
 
 
 FRAGMENT = """
@@ -69,16 +75,12 @@ fragment BalancesFragment on Balances {
 """
 
 
+
 def from_json(requester: Requester, obj: Mapping[str, Any]) -> Balances:
     return Balances(
-        requester=requester,
-        owned_balance=CurrencyAmount_from_json(
-            requester, obj["balances_owned_balance"]
-        ),
-        available_to_send_balance=CurrencyAmount_from_json(
-            requester, obj["balances_available_to_send_balance"]
-        ),
-        available_to_withdraw_balance=CurrencyAmount_from_json(
-            requester, obj["balances_available_to_withdraw_balance"]
-        ),
-    )
+        requester=requester,        owned_balance=CurrencyAmount_from_json(requester, obj["balances_owned_balance"]),
+        available_to_send_balance=CurrencyAmount_from_json(requester, obj["balances_available_to_send_balance"]),
+        available_to_withdraw_balance=CurrencyAmount_from_json(requester, obj["balances_available_to_withdraw_balance"]),
+
+        )
+

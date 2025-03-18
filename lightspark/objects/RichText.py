@@ -1,3 +1,4 @@
+
 # Copyright ©, 2022-present, Lightspark Group, Inc. - All Rights Reserved
 
 from dataclasses import dataclass
@@ -7,15 +8,22 @@ from lightspark.requests.requester import Requester
 
 
 @dataclass
-class RichText:
+class RichText():
+    
     requester: Requester
 
     text: str
+    
+
+
 
     def to_json(self) -> Mapping[str, Any]:
         return {
             "rich_text_text": self.text,
+
         }
+
+
 
 
 FRAGMENT = """
@@ -26,8 +34,10 @@ fragment RichTextFragment on RichText {
 """
 
 
+
 def from_json(requester: Requester, obj: Mapping[str, Any]) -> RichText:
     return RichText(
-        requester=requester,
-        text=obj["rich_text_text"],
-    )
+        requester=requester,        text=obj["rich_text_text"],
+
+        )
+

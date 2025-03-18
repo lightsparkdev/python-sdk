@@ -1,3 +1,4 @@
+
 # Copyright ©, 2022-present, Lightspark Group, Inc. - All Rights Reserved
 
 from dataclasses import dataclass
@@ -17,13 +18,15 @@ from .PaymentRequestData import PaymentRequestData
 
 @dataclass
 class InvoiceData(PaymentRequestData):
-    """This object represents the data associated with a BOLT #11 invoice. You can retrieve this object to receive the relevant data associated with a specific invoice."""
+    """This object represents the data associated with a Bolt #11 or Bolt #12 invoice. You can retrieve this object to receive the relevant data associated with a specific invoice."""
 
     requester: Requester
 
     encoded_payment_request: str
+    
 
     bitcoin_network: BitcoinNetwork
+    
 
     payment_hash: str
     """The payment hash of this invoice."""
@@ -44,6 +47,7 @@ class InvoiceData(PaymentRequestData):
     """The lightning node that will be paid when fulfilling this invoice."""
     typename: str
 
+
     def to_json(self) -> Mapping[str, Any]:
         return {
             "__typename": "InvoiceData",
@@ -55,7 +59,10 @@ class InvoiceData(PaymentRequestData):
             "invoice_data_expires_at": self.expires_at.isoformat(),
             "invoice_data_memo": self.memo,
             "invoice_data_destination": self.destination.to_json(),
+
         }
+
+
 
 
 FRAGMENT = """
@@ -353,16 +360,18 @@ fragment InvoiceDataFragment on InvoiceData {
 """
 
 
+
 def from_json(requester: Requester, obj: Mapping[str, Any]) -> InvoiceData:
     return InvoiceData(
-        requester=requester,
-        typename="InvoiceData",
-        encoded_payment_request=obj["invoice_data_encoded_payment_request"],
-        bitcoin_network=parse_enum(BitcoinNetwork, obj["invoice_data_bitcoin_network"]),
+        requester=requester,        typename="InvoiceData",        encoded_payment_request=obj["invoice_data_encoded_payment_request"],
+
+        bitcoin_network=parse_enum(BitcoinNetwork, obj['invoice_data_bitcoin_network']),
         payment_hash=obj["invoice_data_payment_hash"],
         amount=CurrencyAmount_from_json(requester, obj["invoice_data_amount"]),
         created_at=datetime.fromisoformat(obj["invoice_data_created_at"]),
         expires_at=datetime.fromisoformat(obj["invoice_data_expires_at"]),
         memo=obj["invoice_data_memo"],
         destination=Node_from_json(requester, obj["invoice_data_destination"]),
-    )
+
+        )
+

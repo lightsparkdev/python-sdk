@@ -1,10 +1,11 @@
+
 # Copyright ©, 2022-present, Lightspark Group, Inc. - All Rights Reserved
 
 from enum import Enum
 
 
 class WalletStatus(Enum):
-    """This is an enum of the potential statuses that your Lightspark wallet can take."""
+    """This is an enum of the potential statuses that your Lightspark wallet can take. """
 
     ___FUTURE_VALUE___ = "___FUTURE_VALUE___"
     """This is an enum value that represents future values that could be added in the future. Clients should support unknown values as more of them could be added without notice."""
@@ -26,3 +27,4 @@ class WalletStatus(Enum):
     """The wallet is being terminated."""
     TERMINATED = "TERMINATED"
     """The wallet has been terminated and is not available in the Lightspark infrastructure anymore. It is not connected to the Lightning network and its funds can only be accessed using the Funds Recovery flow."""
+

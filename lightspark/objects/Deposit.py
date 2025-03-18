@@ -1,3 +1,4 @@
+
 # Copyright ©, 2022-present, Lightspark Group, Inc. - All Rights Reserved
 
 from dataclasses import dataclass
@@ -61,6 +62,7 @@ class Deposit(OnChainTransaction, Transaction, Entity):
     """The recipient Lightspark node this deposit was sent to."""
     typename: str
 
+
     def to_json(self) -> Mapping[str, Any]:
         return {
             "__typename": "Deposit",
@@ -68,9 +70,7 @@ class Deposit(OnChainTransaction, Transaction, Entity):
             "deposit_created_at": self.created_at.isoformat(),
             "deposit_updated_at": self.updated_at.isoformat(),
             "deposit_status": self.status.value,
-            "deposit_resolved_at": (
-                self.resolved_at.isoformat() if self.resolved_at else None
-            ),
+            "deposit_resolved_at": self.resolved_at.isoformat() if self.resolved_at else None,
             "deposit_amount": self.amount.to_json(),
             "deposit_transaction_hash": self.transaction_hash,
             "deposit_fees": self.fees.to_json() if self.fees else None,
@@ -78,8 +78,11 @@ class Deposit(OnChainTransaction, Transaction, Entity):
             "deposit_block_height": self.block_height,
             "deposit_destination_addresses": self.destination_addresses,
             "deposit_num_confirmations": self.num_confirmations,
-            "deposit_destination": {"id": self.destination_id},
+            "deposit_destination": { "id": self.destination_id },
+
         }
+
+
 
 
 FRAGMENT = """
@@ -118,29 +121,23 @@ fragment DepositFragment on Deposit {
 """
 
 
+
 def from_json(requester: Requester, obj: Mapping[str, Any]) -> Deposit:
     return Deposit(
-        requester=requester,
-        typename="Deposit",
-        id=obj["deposit_id"],
+        requester=requester,        typename="Deposit",        id=obj["deposit_id"],
         created_at=datetime.fromisoformat(obj["deposit_created_at"]),
         updated_at=datetime.fromisoformat(obj["deposit_updated_at"]),
-        status=parse_enum(TransactionStatus, obj["deposit_status"]),
-        resolved_at=(
-            datetime.fromisoformat(obj["deposit_resolved_at"])
-            if obj["deposit_resolved_at"]
-            else None
-        ),
+
+        status=parse_enum(TransactionStatus, obj['deposit_status']),
+        resolved_at=datetime.fromisoformat(obj["deposit_resolved_at"]) if obj["deposit_resolved_at"] else None,
         amount=CurrencyAmount_from_json(requester, obj["deposit_amount"]),
         transaction_hash=obj["deposit_transaction_hash"],
-        fees=(
-            CurrencyAmount_from_json(requester, obj["deposit_fees"])
-            if obj["deposit_fees"]
-            else None
-        ),
+        fees=CurrencyAmount_from_json(requester, obj["deposit_fees"]) if obj["deposit_fees"] else None,
         block_hash=obj["deposit_block_hash"],
         block_height=obj["deposit_block_height"],
         destination_addresses=obj["deposit_destination_addresses"],
         num_confirmations=obj["deposit_num_confirmations"],
         destination_id=obj["deposit_destination"]["id"],
-    )
+
+        )
+

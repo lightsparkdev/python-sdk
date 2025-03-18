@@ -1,3 +1,4 @@
+
 # Copyright ©, 2022-present, Lightspark Group, Inc. - All Rights Reserved
 
 from dataclasses import dataclass
@@ -28,15 +29,17 @@ class AccountToWithdrawalRequestsConnection(Connection):
     """The withdrawal requests for the current page of this connection."""
     typename: str
 
+
     def to_json(self) -> Mapping[str, Any]:
         return {
             "__typename": "AccountToWithdrawalRequestsConnection",
             "account_to_withdrawal_requests_connection_count": self.count,
             "account_to_withdrawal_requests_connection_page_info": self.page_info.to_json(),
-            "account_to_withdrawal_requests_connection_entities": [
-                e.to_json() for e in self.entities
-            ],
+            "account_to_withdrawal_requests_connection_entities": [e.to_json() for e in self.entities],
+
         }
+
+
 
 
 FRAGMENT = """
@@ -57,21 +60,14 @@ fragment AccountToWithdrawalRequestsConnectionFragment on AccountToWithdrawalReq
 """
 
 
-def from_json(
-    requester: Requester, obj: Mapping[str, Any]
-) -> AccountToWithdrawalRequestsConnection:
+
+def from_json(requester: Requester, obj: Mapping[str, Any]) -> AccountToWithdrawalRequestsConnection:
     return AccountToWithdrawalRequestsConnection(
-        requester=requester,
-        typename="AccountToWithdrawalRequestsConnection",
-        count=obj["account_to_withdrawal_requests_connection_count"],
-        page_info=PageInfo_from_json(
-            requester, obj["account_to_withdrawal_requests_connection_page_info"]
-        ),
-        entities=list(
-            map(
-                # pylint: disable=unnecessary-lambda
-                lambda e: WithdrawalRequest_from_json(requester, e),
-                obj["account_to_withdrawal_requests_connection_entities"],
-            )
-        ),
-    )
+        requester=requester,        typename="AccountToWithdrawalRequestsConnection",        count=obj["account_to_withdrawal_requests_connection_count"],
+        page_info=PageInfo_from_json(requester, obj["account_to_withdrawal_requests_connection_page_info"]),
+        entities=list(map(
+ # pylint: disable=unnecessary-lambda 
+ lambda e: WithdrawalRequest_from_json(requester, e), obj["account_to_withdrawal_requests_connection_entities"])),
+
+        )
+

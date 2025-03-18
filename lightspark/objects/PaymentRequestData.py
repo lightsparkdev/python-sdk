@@ -1,3 +1,4 @@
+
 # Copyright ©, 2022-present, Lightspark Group, Inc. - All Rights Reserved
 
 from dataclasses import dataclass
@@ -14,23 +15,28 @@ from .Node import from_json as Node_from_json
 
 
 @dataclass
-class PaymentRequestData:
-    """This object is an interface of a payment request on the Lightning Network (i.e., a Lightning Invoice). It contains data related to parsing the payment details of a Lightning Invoice."""
+class PaymentRequestData():
+    """This object is an interface of a payment request on the Lightning Network (i.e., Invoice or Bolt12Invoice). It contains data related to parsing the payment details of a Lightning Invoice."""
 
     requester: Requester
 
     encoded_payment_request: str
+    
 
     bitcoin_network: BitcoinNetwork
-
+    
     typename: str
+
 
     def to_json(self) -> Mapping[str, Any]:
         return {
             "__typename": self.typename,
             "payment_request_data_encoded_payment_request": self.encoded_payment_request,
             "payment_request_data_bitcoin_network": self.bitcoin_network.value,
+
         }
+
+
 
 
 FRAGMENT = """
@@ -331,27 +337,22 @@ fragment PaymentRequestDataFragment on PaymentRequestData {
 """
 
 
+
 def from_json(requester: Requester, obj: Mapping[str, Any]) -> PaymentRequestData:
     if obj["__typename"] == "InvoiceData":
-        # pylint: disable=import-outside-toplevel
+         # pylint: disable=import-outside-toplevel
         from lightspark.objects.InvoiceData import InvoiceData
-
         return InvoiceData(
-            requester=requester,
-            typename="InvoiceData",
-            encoded_payment_request=obj["invoice_data_encoded_payment_request"],
-            bitcoin_network=parse_enum(
-                BitcoinNetwork, obj["invoice_data_bitcoin_network"]
-            ),
+            requester=requester,            typename="InvoiceData",            encoded_payment_request=obj["invoice_data_encoded_payment_request"],
+
+            bitcoin_network=parse_enum(BitcoinNetwork, obj['invoice_data_bitcoin_network']),
             payment_hash=obj["invoice_data_payment_hash"],
             amount=CurrencyAmount_from_json(requester, obj["invoice_data_amount"]),
             created_at=datetime.fromisoformat(obj["invoice_data_created_at"]),
             expires_at=datetime.fromisoformat(obj["invoice_data_expires_at"]),
             memo=obj["invoice_data_memo"],
             destination=Node_from_json(requester, obj["invoice_data_destination"]),
+
         )
     graphql_typename = obj["__typename"]
-    raise LightsparkException(
-        "UNKNOWN_INTERFACE",
-        f"Couldn't find a concrete type for interface PaymentRequestData corresponding to the typename={graphql_typename}",
-    )
+    raise LightsparkException("UNKNOWN_INTERFACE", f"Couldn't find a concrete type for interface PaymentRequestData corresponding to the typename={graphql_typename}")

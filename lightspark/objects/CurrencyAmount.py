@@ -1,3 +1,4 @@
+
 # Copyright ©, 2022-present, Lightspark Group, Inc. - All Rights Reserved
 
 from dataclasses import dataclass
@@ -11,7 +12,7 @@ from .CurrencyUnit import CurrencyUnit
 
 
 @dataclass
-class CurrencyAmount:
+class CurrencyAmount():
     """This object represents the value and unit for an amount of currency."""
 
     requester: Requester
@@ -31,6 +32,8 @@ class CurrencyAmount:
     preferred_currency_value_approx: float
     """The approximate float value for this CurrencyAmount in the very base level of user's preferred currency. For example, for USD, the value will be in cents."""
 
+
+
     def to_json(self) -> Mapping[str, Any]:
         return {
             "currency_amount_original_value": self.original_value,
@@ -38,7 +41,9 @@ class CurrencyAmount:
             "currency_amount_preferred_currency_unit": self.preferred_currency_unit.value,
             "currency_amount_preferred_currency_value_rounded": self.preferred_currency_value_rounded,
             "currency_amount_preferred_currency_value_approx": self.preferred_currency_value_approx,
+
         }
+
 
     _CONVERSION_MAP = {
         CurrencyUnit.BITCOIN: {
@@ -91,14 +96,12 @@ class CurrencyAmount:
         },
     }
 
+
     def convert_to(self, unit: CurrencyUnit) -> "CurrencyAmount":
         try:
             conversion_fn = self._CONVERSION_MAP[self.original_unit][unit]
         except KeyError as e:
-            raise LightsparkException(
-                "CONVERSION_ERROR",
-                f"Cannot convert from {self.original_unit} to {unit}",
-            ) from e
+            raise LightsparkException("CONVERSION_ERROR", f"Cannot convert from {self.original_unit} to {unit}") from e
         return CurrencyAmount(
             requester=self.requester,
             original_unit=self.original_unit,
@@ -106,7 +109,8 @@ class CurrencyAmount:
             preferred_currency_value_rounded=conversion_fn(self.original_value),
             preferred_currency_value_approx=conversion_fn(self.original_value),
             preferred_currency_unit=unit,
-        )
+        )  
+
 
 
 FRAGMENT = """
@@ -121,18 +125,16 @@ fragment CurrencyAmountFragment on CurrencyAmount {
 """
 
 
+
 def from_json(requester: Requester, obj: Mapping[str, Any]) -> CurrencyAmount:
     return CurrencyAmount(
-        requester=requester,
-        original_value=obj["currency_amount_original_value"],
-        original_unit=parse_enum(CurrencyUnit, obj["currency_amount_original_unit"]),
-        preferred_currency_unit=parse_enum(
-            CurrencyUnit, obj["currency_amount_preferred_currency_unit"]
-        ),
-        preferred_currency_value_rounded=obj[
-            "currency_amount_preferred_currency_value_rounded"
-        ],
-        preferred_currency_value_approx=obj[
-            "currency_amount_preferred_currency_value_approx"
-        ],
-    )
+        requester=requester,        original_value=obj["currency_amount_original_value"],
+
+        original_unit=parse_enum(CurrencyUnit, obj['currency_amount_original_unit']),
+
+        preferred_currency_unit=parse_enum(CurrencyUnit, obj['currency_amount_preferred_currency_unit']),
+        preferred_currency_value_rounded=obj["currency_amount_preferred_currency_value_rounded"],
+        preferred_currency_value_approx=obj["currency_amount_preferred_currency_value_approx"],
+
+        )
+

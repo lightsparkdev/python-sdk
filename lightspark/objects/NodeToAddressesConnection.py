@@ -1,3 +1,4 @@
+
 # Copyright ©, 2022-present, Lightspark Group, Inc. - All Rights Reserved
 
 from dataclasses import dataclass
@@ -10,7 +11,7 @@ from .NodeAddress import from_json as NodeAddress_from_json
 
 
 @dataclass
-class NodeToAddressesConnection:
+class NodeToAddressesConnection():
     """A connection between a node and the addresses it has announced for itself on Lightning Network."""
 
     requester: Requester
@@ -21,13 +22,16 @@ class NodeToAddressesConnection:
     entities: List[NodeAddress]
     """The addresses for the current page of this connection."""
 
+
+
     def to_json(self) -> Mapping[str, Any]:
         return {
             "node_to_addresses_connection_count": self.count,
-            "node_to_addresses_connection_entities": [
-                e.to_json() for e in self.entities
-            ],
+            "node_to_addresses_connection_entities": [e.to_json() for e in self.entities],
+
         }
+
+
 
 
 FRAGMENT = """
@@ -43,17 +47,13 @@ fragment NodeToAddressesConnectionFragment on NodeToAddressesConnection {
 """
 
 
-def from_json(
-    requester: Requester, obj: Mapping[str, Any]
-) -> NodeToAddressesConnection:
+
+def from_json(requester: Requester, obj: Mapping[str, Any]) -> NodeToAddressesConnection:
     return NodeToAddressesConnection(
-        requester=requester,
-        count=obj["node_to_addresses_connection_count"],
-        entities=list(
-            map(
-                # pylint: disable=unnecessary-lambda
-                lambda e: NodeAddress_from_json(requester, e),
-                obj["node_to_addresses_connection_entities"],
-            )
-        ),
-    )
+        requester=requester,        count=obj["node_to_addresses_connection_count"],
+        entities=list(map(
+ # pylint: disable=unnecessary-lambda 
+ lambda e: NodeAddress_from_json(requester, e), obj["node_to_addresses_connection_entities"])),
+
+        )
+

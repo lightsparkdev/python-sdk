@@ -1,3 +1,4 @@
+
 # Copyright ©, 2022-present, Lightspark Group, Inc. - All Rights Reserved
 
 from dataclasses import dataclass
@@ -29,13 +30,17 @@ class LightsparkNodeOwner(Entity):
     """The date and time when the entity was last updated."""
     typename: str
 
+
     def to_json(self) -> Mapping[str, Any]:
         return {
             "__typename": self.typename,
             "lightspark_node_owner_id": self.id,
             "lightspark_node_owner_created_at": self.created_at.isoformat(),
             "lightspark_node_owner_updated_at": self.updated_at.isoformat(),
+
         }
+
+
 
 
 FRAGMENT = """
@@ -91,45 +96,32 @@ fragment LightsparkNodeOwnerFragment on LightsparkNodeOwner {
 """
 
 
+
 def from_json(requester: Requester, obj: Mapping[str, Any]) -> LightsparkNodeOwner:
     if obj["__typename"] == "Account":
-        # pylint: disable=import-outside-toplevel
+         # pylint: disable=import-outside-toplevel
         from lightspark.objects.Account import Account
-
         return Account(
-            requester=requester,
-            typename="Account",
-            id=obj["account_id"],
+            requester=requester,            typename="Account",            id=obj["account_id"],
             created_at=datetime.fromisoformat(obj["account_created_at"]),
             updated_at=datetime.fromisoformat(obj["account_updated_at"]),
             name=obj["account_name"],
+
         )
     if obj["__typename"] == "Wallet":
-        # pylint: disable=import-outside-toplevel
+         # pylint: disable=import-outside-toplevel
         from lightspark.objects.Wallet import Wallet
-
         return Wallet(
-            requester=requester,
-            typename="Wallet",
-            id=obj["wallet_id"],
+            requester=requester,            typename="Wallet",            id=obj["wallet_id"],
             created_at=datetime.fromisoformat(obj["wallet_created_at"]),
             updated_at=datetime.fromisoformat(obj["wallet_updated_at"]),
-            last_login_at=(
-                datetime.fromisoformat(obj["wallet_last_login_at"])
-                if obj["wallet_last_login_at"]
-                else None
-            ),
-            balances=(
-                Balances_from_json(requester, obj["wallet_balances"])
-                if obj["wallet_balances"]
-                else None
-            ),
+            last_login_at=datetime.fromisoformat(obj["wallet_last_login_at"]) if obj["wallet_last_login_at"] else None,
+            balances=Balances_from_json(requester, obj["wallet_balances"]) if obj["wallet_balances"] else None,
             third_party_identifier=obj["wallet_third_party_identifier"],
             account_id=obj["wallet_account"]["id"] if obj["wallet_account"] else None,
-            status=parse_enum(WalletStatus, obj["wallet_status"]),
+
+            status=parse_enum(WalletStatus, obj['wallet_status']),
+
         )
     graphql_typename = obj["__typename"]
-    raise LightsparkException(
-        "UNKNOWN_INTERFACE",
-        f"Couldn't find a concrete type for interface LightsparkNodeOwner corresponding to the typename={graphql_typename}",
-    )
+    raise LightsparkException("UNKNOWN_INTERFACE", f"Couldn't find a concrete type for interface LightsparkNodeOwner corresponding to the typename={graphql_typename}")

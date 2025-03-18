@@ -1,3 +1,4 @@
+
 # Copyright ©, 2022-present, Lightspark Group, Inc. - All Rights Reserved
 
 from dataclasses import dataclass
@@ -10,7 +11,7 @@ from .CurrencyAmount import from_json as CurrencyAmount_from_json
 
 
 @dataclass
-class BlockchainBalance:
+class BlockchainBalance():
     """This is an object representing a detailed breakdown of the balance for a Lightspark Node."""
 
     requester: Requester
@@ -33,27 +34,20 @@ class BlockchainBalance:
     available_balance: Optional[CurrencyAmount]
     """Funds available for creating channels or withdrawing."""
 
+
+
     def to_json(self) -> Mapping[str, Any]:
         return {
-            "blockchain_balance_total_balance": (
-                self.total_balance.to_json() if self.total_balance else None
-            ),
-            "blockchain_balance_confirmed_balance": (
-                self.confirmed_balance.to_json() if self.confirmed_balance else None
-            ),
-            "blockchain_balance_unconfirmed_balance": (
-                self.unconfirmed_balance.to_json() if self.unconfirmed_balance else None
-            ),
-            "blockchain_balance_locked_balance": (
-                self.locked_balance.to_json() if self.locked_balance else None
-            ),
-            "blockchain_balance_required_reserve": (
-                self.required_reserve.to_json() if self.required_reserve else None
-            ),
-            "blockchain_balance_available_balance": (
-                self.available_balance.to_json() if self.available_balance else None
-            ),
+            "blockchain_balance_total_balance": self.total_balance.to_json() if self.total_balance else None,
+            "blockchain_balance_confirmed_balance": self.confirmed_balance.to_json() if self.confirmed_balance else None,
+            "blockchain_balance_unconfirmed_balance": self.unconfirmed_balance.to_json() if self.unconfirmed_balance else None,
+            "blockchain_balance_locked_balance": self.locked_balance.to_json() if self.locked_balance else None,
+            "blockchain_balance_required_reserve": self.required_reserve.to_json() if self.required_reserve else None,
+            "blockchain_balance_available_balance": self.available_balance.to_json() if self.available_balance else None,
+
         }
+
+
 
 
 FRAGMENT = """
@@ -111,47 +105,15 @@ fragment BlockchainBalanceFragment on BlockchainBalance {
 """
 
 
+
 def from_json(requester: Requester, obj: Mapping[str, Any]) -> BlockchainBalance:
     return BlockchainBalance(
-        requester=requester,
-        total_balance=(
-            CurrencyAmount_from_json(requester, obj["blockchain_balance_total_balance"])
-            if obj["blockchain_balance_total_balance"]
-            else None
-        ),
-        confirmed_balance=(
-            CurrencyAmount_from_json(
-                requester, obj["blockchain_balance_confirmed_balance"]
-            )
-            if obj["blockchain_balance_confirmed_balance"]
-            else None
-        ),
-        unconfirmed_balance=(
-            CurrencyAmount_from_json(
-                requester, obj["blockchain_balance_unconfirmed_balance"]
-            )
-            if obj["blockchain_balance_unconfirmed_balance"]
-            else None
-        ),
-        locked_balance=(
-            CurrencyAmount_from_json(
-                requester, obj["blockchain_balance_locked_balance"]
-            )
-            if obj["blockchain_balance_locked_balance"]
-            else None
-        ),
-        required_reserve=(
-            CurrencyAmount_from_json(
-                requester, obj["blockchain_balance_required_reserve"]
-            )
-            if obj["blockchain_balance_required_reserve"]
-            else None
-        ),
-        available_balance=(
-            CurrencyAmount_from_json(
-                requester, obj["blockchain_balance_available_balance"]
-            )
-            if obj["blockchain_balance_available_balance"]
-            else None
-        ),
-    )
+        requester=requester,        total_balance=CurrencyAmount_from_json(requester, obj["blockchain_balance_total_balance"]) if obj["blockchain_balance_total_balance"] else None,
+        confirmed_balance=CurrencyAmount_from_json(requester, obj["blockchain_balance_confirmed_balance"]) if obj["blockchain_balance_confirmed_balance"] else None,
+        unconfirmed_balance=CurrencyAmount_from_json(requester, obj["blockchain_balance_unconfirmed_balance"]) if obj["blockchain_balance_unconfirmed_balance"] else None,
+        locked_balance=CurrencyAmount_from_json(requester, obj["blockchain_balance_locked_balance"]) if obj["blockchain_balance_locked_balance"] else None,
+        required_reserve=CurrencyAmount_from_json(requester, obj["blockchain_balance_required_reserve"]) if obj["blockchain_balance_required_reserve"] else None,
+        available_balance=CurrencyAmount_from_json(requester, obj["blockchain_balance_available_balance"]) if obj["blockchain_balance_available_balance"] else None,
+
+        )
+

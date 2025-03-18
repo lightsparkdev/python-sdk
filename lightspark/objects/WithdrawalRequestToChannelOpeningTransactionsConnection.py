@@ -1,3 +1,4 @@
+
 # Copyright ©, 2022-present, Lightspark Group, Inc. - All Rights Reserved
 
 from dataclasses import dataclass
@@ -6,7 +7,8 @@ from typing import Any, List, Mapping
 from lightspark.requests.requester import Requester
 
 from .ChannelOpeningTransaction import ChannelOpeningTransaction
-from .ChannelOpeningTransaction import from_json as ChannelOpeningTransaction_from_json
+from .ChannelOpeningTransaction import \
+    from_json as ChannelOpeningTransaction_from_json
 from .Connection import Connection
 from .PageInfo import PageInfo
 from .PageInfo import from_json as PageInfo_from_json
@@ -14,6 +16,7 @@ from .PageInfo import from_json as PageInfo_from_json
 
 @dataclass
 class WithdrawalRequestToChannelOpeningTransactionsConnection(Connection):
+    
     requester: Requester
 
     count: int
@@ -26,15 +29,17 @@ class WithdrawalRequestToChannelOpeningTransactionsConnection(Connection):
     """The channel opening transactions for the current page of this connection."""
     typename: str
 
+
     def to_json(self) -> Mapping[str, Any]:
         return {
             "__typename": "WithdrawalRequestToChannelOpeningTransactionsConnection",
             "withdrawal_request_to_channel_opening_transactions_connection_count": self.count,
             "withdrawal_request_to_channel_opening_transactions_connection_page_info": self.page_info.to_json(),
-            "withdrawal_request_to_channel_opening_transactions_connection_entities": [
-                e.to_json() for e in self.entities
-            ],
+            "withdrawal_request_to_channel_opening_transactions_connection_entities": [e.to_json() for e in self.entities],
+
         }
+
+
 
 
 FRAGMENT = """
@@ -55,28 +60,14 @@ fragment WithdrawalRequestToChannelOpeningTransactionsConnectionFragment on With
 """
 
 
-def from_json(
-    requester: Requester, obj: Mapping[str, Any]
-) -> WithdrawalRequestToChannelOpeningTransactionsConnection:
+
+def from_json(requester: Requester, obj: Mapping[str, Any]) -> WithdrawalRequestToChannelOpeningTransactionsConnection:
     return WithdrawalRequestToChannelOpeningTransactionsConnection(
-        requester=requester,
-        typename="WithdrawalRequestToChannelOpeningTransactionsConnection",
-        count=obj[
-            "withdrawal_request_to_channel_opening_transactions_connection_count"
-        ],
-        page_info=PageInfo_from_json(
-            requester,
-            obj[
-                "withdrawal_request_to_channel_opening_transactions_connection_page_info"
-            ],
-        ),
-        entities=list(
-            map(
-                # pylint: disable=unnecessary-lambda
-                lambda e: ChannelOpeningTransaction_from_json(requester, e),
-                obj[
-                    "withdrawal_request_to_channel_opening_transactions_connection_entities"
-                ],
-            )
-        ),
-    )
+        requester=requester,        typename="WithdrawalRequestToChannelOpeningTransactionsConnection",        count=obj["withdrawal_request_to_channel_opening_transactions_connection_count"],
+        page_info=PageInfo_from_json(requester, obj["withdrawal_request_to_channel_opening_transactions_connection_page_info"]),
+        entities=list(map(
+ # pylint: disable=unnecessary-lambda 
+ lambda e: ChannelOpeningTransaction_from_json(requester, e), obj["withdrawal_request_to_channel_opening_transactions_connection_entities"])),
+
+        )
+

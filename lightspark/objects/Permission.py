@@ -1,3 +1,4 @@
+
 # Copyright ©, 2022-present, Lightspark Group, Inc. - All Rights Reserved
 
 from enum import Enum
@@ -22,3 +23,4 @@ class Permission(Enum):
     USER_MANAGE = "USER_MANAGE"
     ACCOUNT_VIEW = "ACCOUNT_VIEW"
     ACCOUNT_MANAGE = "ACCOUNT_MANAGE"
+

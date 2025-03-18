@@ -1,3 +1,4 @@
+
 # Copyright ©, 2022-present, Lightspark Group, Inc. - All Rights Reserved
 
 from dataclasses import dataclass
@@ -13,6 +14,7 @@ from .SignablePayloadStatus import SignablePayloadStatus
 
 @dataclass
 class SignablePayload(Entity):
+    
     requester: Requester
 
     id: str
@@ -43,6 +45,7 @@ class SignablePayload(Entity):
     """The signable this payload belongs to."""
     typename: str
 
+
     def to_json(self) -> Mapping[str, Any]:
         return {
             "__typename": "SignablePayload",
@@ -54,8 +57,11 @@ class SignablePayload(Entity):
             "signable_payload_status": self.status.value,
             "signable_payload_add_tweak": self.add_tweak,
             "signable_payload_mul_tweak": self.mul_tweak,
-            "signable_payload_signable": {"id": self.signable_id},
+            "signable_payload_signable": { "id": self.signable_id },
+
         }
+
+
 
 
 FRAGMENT = """
@@ -76,17 +82,19 @@ fragment SignablePayloadFragment on SignablePayload {
 """
 
 
+
 def from_json(requester: Requester, obj: Mapping[str, Any]) -> SignablePayload:
     return SignablePayload(
-        requester=requester,
-        typename="SignablePayload",
-        id=obj["signable_payload_id"],
+        requester=requester,        typename="SignablePayload",        id=obj["signable_payload_id"],
         created_at=datetime.fromisoformat(obj["signable_payload_created_at"]),
         updated_at=datetime.fromisoformat(obj["signable_payload_updated_at"]),
         payload=obj["signable_payload_payload"],
         derivation_path=obj["signable_payload_derivation_path"],
-        status=parse_enum(SignablePayloadStatus, obj["signable_payload_status"]),
+
+        status=parse_enum(SignablePayloadStatus, obj['signable_payload_status']),
         add_tweak=obj["signable_payload_add_tweak"],
         mul_tweak=obj["signable_payload_mul_tweak"],
         signable_id=obj["signable_payload_signable"]["id"],
-    )
+
+        )
+

@@ -1,3 +1,4 @@
+
 # Copyright ©, 2022-present, Lightspark Group, Inc. - All Rights Reserved
 
 from dataclasses import dataclass
@@ -10,7 +11,9 @@ from .WithdrawalMode import WithdrawalMode
 
 
 @dataclass
-class RequestWithdrawalInput:
+class RequestWithdrawalInput():
+    
+
     node_id: str
     """The node from which you'd like to make the withdrawal."""
 
@@ -32,6 +35,8 @@ class RequestWithdrawalInput:
     sats_per_vbyte: Optional[int]
     """A manual fee rate set in sat/vbyte that should be used when crafting the L1 transaction. You should only set `fee_target` or `sats_per_vbyte`"""
 
+
+
     def to_json(self) -> Mapping[str, Any]:
         return {
             "request_withdrawal_input_node_id": self.node_id,
@@ -39,11 +44,14 @@ class RequestWithdrawalInput:
             "request_withdrawal_input_amount_sats": self.amount_sats,
             "request_withdrawal_input_withdrawal_mode": self.withdrawal_mode.value,
             "request_withdrawal_input_idempotency_key": self.idempotency_key,
-            "request_withdrawal_input_fee_target": (
-                self.fee_target.value if self.fee_target else None
-            ),
+            "request_withdrawal_input_fee_target": self.fee_target.value if self.fee_target else None,
             "request_withdrawal_input_sats_per_vbyte": self.sats_per_vbyte,
+
         }
+
+
+
+
 
 
 def from_json(obj: Mapping[str, Any]) -> RequestWithdrawalInput:
@@ -51,12 +59,12 @@ def from_json(obj: Mapping[str, Any]) -> RequestWithdrawalInput:
         node_id=obj["request_withdrawal_input_node_id"],
         bitcoin_address=obj["request_withdrawal_input_bitcoin_address"],
         amount_sats=obj["request_withdrawal_input_amount_sats"],
-        withdrawal_mode=parse_enum(
-            WithdrawalMode, obj["request_withdrawal_input_withdrawal_mode"]
-        ),
+
+        withdrawal_mode=parse_enum(WithdrawalMode, obj['request_withdrawal_input_withdrawal_mode']),
         idempotency_key=obj["request_withdrawal_input_idempotency_key"],
-        fee_target=parse_enum_optional(
-            OnChainFeeTarget, obj["request_withdrawal_input_fee_target"]
-        ),
+
+        fee_target=parse_enum_optional(OnChainFeeTarget, obj['request_withdrawal_input_fee_target']),
         sats_per_vbyte=obj["request_withdrawal_input_sats_per_vbyte"],
-    )
+
+        )
+

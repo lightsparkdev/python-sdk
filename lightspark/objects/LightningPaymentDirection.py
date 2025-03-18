@@ -1,3 +1,4 @@
+
 # Copyright ©, 2022-present, Lightspark Group, Inc. - All Rights Reserved
 
 from enum import Enum
@@ -12,3 +13,4 @@ class LightningPaymentDirection(Enum):
     """A payment that is received by the node."""
     OUTGOING = "OUTGOING"
     """A payment that is sent by the node."""
+

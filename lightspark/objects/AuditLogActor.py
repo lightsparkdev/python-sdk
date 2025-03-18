@@ -1,3 +1,4 @@
+
 # Copyright ©, 2022-present, Lightspark Group, Inc. - All Rights Reserved
 
 from dataclasses import dataclass
@@ -28,13 +29,17 @@ class AuditLogActor(Entity):
     """The date and time when the entity was last updated."""
     typename: str
 
+
     def to_json(self) -> Mapping[str, Any]:
         return {
             "__typename": self.typename,
             "audit_log_actor_id": self.id,
             "audit_log_actor_created_at": self.created_at.isoformat(),
             "audit_log_actor_updated_at": self.updated_at.isoformat(),
+
         }
+
+
 
 
 FRAGMENT = """
@@ -54,24 +59,20 @@ fragment AuditLogActorFragment on AuditLogActor {
 """
 
 
+
 def from_json(requester: Requester, obj: Mapping[str, Any]) -> AuditLogActor:
     if obj["__typename"] == "ApiToken":
-        # pylint: disable=import-outside-toplevel
+         # pylint: disable=import-outside-toplevel
         from lightspark.objects.ApiToken import ApiToken
-
         return ApiToken(
-            requester=requester,
-            typename="ApiToken",
-            id=obj["api_token_id"],
+            requester=requester,            typename="ApiToken",            id=obj["api_token_id"],
             created_at=datetime.fromisoformat(obj["api_token_created_at"]),
             updated_at=datetime.fromisoformat(obj["api_token_updated_at"]),
             client_id=obj["api_token_client_id"],
             name=obj["api_token_name"],
             permissions=parse_enum_list(Permission, obj["api_token_permissions"]),
             is_deleted=obj["api_token_is_deleted"],
+
         )
     graphql_typename = obj["__typename"]
-    raise LightsparkException(
-        "UNKNOWN_INTERFACE",
-        f"Couldn't find a concrete type for interface AuditLogActor corresponding to the typename={graphql_typename}",
-    )
+    raise LightsparkException("UNKNOWN_INTERFACE", f"Couldn't find a concrete type for interface AuditLogActor corresponding to the typename={graphql_typename}")

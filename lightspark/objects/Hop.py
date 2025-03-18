@@ -1,3 +1,4 @@
+
 # Copyright ©, 2022-present, Lightspark Group, Inc. - All Rights Reserved
 
 from dataclasses import dataclass
@@ -45,23 +46,23 @@ class Hop(Entity):
     """The block height at which an unsettled HTLC is considered expired."""
     typename: str
 
+
     def to_json(self) -> Mapping[str, Any]:
         return {
             "__typename": "Hop",
             "hop_id": self.id,
             "hop_created_at": self.created_at.isoformat(),
             "hop_updated_at": self.updated_at.isoformat(),
-            "hop_destination": (
-                {"id": self.destination_id} if self.destination_id else None
-            ),
+            "hop_destination": { "id": self.destination_id } if self.destination_id else None,
             "hop_index": self.index,
             "hop_public_key": self.public_key,
-            "hop_amount_to_forward": (
-                self.amount_to_forward.to_json() if self.amount_to_forward else None
-            ),
+            "hop_amount_to_forward": self.amount_to_forward.to_json() if self.amount_to_forward else None,
             "hop_fee": self.fee.to_json() if self.fee else None,
             "hop_expiry_block_height": self.expiry_block_height,
+
         }
+
+
 
 
 FRAGMENT = """
@@ -96,25 +97,18 @@ fragment HopFragment on Hop {
 """
 
 
+
 def from_json(requester: Requester, obj: Mapping[str, Any]) -> Hop:
     return Hop(
-        requester=requester,
-        typename="Hop",
-        id=obj["hop_id"],
+        requester=requester,        typename="Hop",        id=obj["hop_id"],
         created_at=datetime.fromisoformat(obj["hop_created_at"]),
         updated_at=datetime.fromisoformat(obj["hop_updated_at"]),
         destination_id=obj["hop_destination"]["id"] if obj["hop_destination"] else None,
         index=obj["hop_index"],
         public_key=obj["hop_public_key"],
-        amount_to_forward=(
-            CurrencyAmount_from_json(requester, obj["hop_amount_to_forward"])
-            if obj["hop_amount_to_forward"]
-            else None
-        ),
-        fee=(
-            CurrencyAmount_from_json(requester, obj["hop_fee"])
-            if obj["hop_fee"]
-            else None
-        ),
+        amount_to_forward=CurrencyAmount_from_json(requester, obj["hop_amount_to_forward"]) if obj["hop_amount_to_forward"] else None,
+        fee=CurrencyAmount_from_json(requester, obj["hop_fee"]) if obj["hop_fee"] else None,
         expiry_block_height=obj["hop_expiry_block_height"],
-    )
+
+        )
+

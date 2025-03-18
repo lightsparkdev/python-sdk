@@ -1,3 +1,4 @@
+
 # Copyright ©, 2022-present, Lightspark Group, Inc. - All Rights Reserved
 
 from dataclasses import dataclass
@@ -10,15 +11,22 @@ from .CurrencyAmount import from_json as CurrencyAmount_from_json
 
 
 @dataclass
-class FundNodeOutput:
+class FundNodeOutput():
+    
     requester: Requester
 
     amount: CurrencyAmount
+    
+
+
 
     def to_json(self) -> Mapping[str, Any]:
         return {
             "fund_node_output_amount": self.amount.to_json(),
+
         }
+
+
 
 
 FRAGMENT = """
@@ -36,8 +44,10 @@ fragment FundNodeOutputFragment on FundNodeOutput {
 """
 
 
+
 def from_json(requester: Requester, obj: Mapping[str, Any]) -> FundNodeOutput:
     return FundNodeOutput(
-        requester=requester,
-        amount=CurrencyAmount_from_json(requester, obj["fund_node_output_amount"]),
-    )
+        requester=requester,        amount=CurrencyAmount_from_json(requester, obj["fund_node_output_amount"]),
+
+        )
+

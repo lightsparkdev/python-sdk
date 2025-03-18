@@ -1,3 +1,4 @@
+
 # Copyright ©, 2022-present, Lightspark Group, Inc. - All Rights Reserved
 
 from dataclasses import dataclass
@@ -16,6 +17,7 @@ from .Transaction import from_json as Transaction_from_json
 
 @dataclass
 class AccountToTransactionsConnection(Connection):
+    
     requester: Requester
 
     count: int
@@ -37,26 +39,20 @@ class AccountToTransactionsConnection(Connection):
     """The transactions for the current page of this connection."""
     typename: str
 
+
     def to_json(self) -> Mapping[str, Any]:
         return {
             "__typename": "AccountToTransactionsConnection",
             "account_to_transactions_connection_count": self.count,
             "account_to_transactions_connection_page_info": self.page_info.to_json(),
-            "account_to_transactions_connection_profit_loss": (
-                self.profit_loss.to_json() if self.profit_loss else None
-            ),
-            "account_to_transactions_connection_average_fee_earned": (
-                self.average_fee_earned.to_json() if self.average_fee_earned else None
-            ),
-            "account_to_transactions_connection_total_amount_transacted": (
-                self.total_amount_transacted.to_json()
-                if self.total_amount_transacted
-                else None
-            ),
-            "account_to_transactions_connection_entities": [
-                e.to_json() for e in self.entities
-            ],
+            "account_to_transactions_connection_profit_loss": self.profit_loss.to_json() if self.profit_loss else None,
+            "account_to_transactions_connection_average_fee_earned": self.average_fee_earned.to_json() if self.average_fee_earned else None,
+            "account_to_transactions_connection_total_amount_transacted": self.total_amount_transacted.to_json() if self.total_amount_transacted else None,
+            "account_to_transactions_connection_entities": [e.to_json() for e in self.entities],
+
         }
+
+
 
 
 FRAGMENT = """
@@ -101,43 +97,17 @@ fragment AccountToTransactionsConnectionFragment on AccountToTransactionsConnect
 """
 
 
-def from_json(
-    requester: Requester, obj: Mapping[str, Any]
-) -> AccountToTransactionsConnection:
+
+def from_json(requester: Requester, obj: Mapping[str, Any]) -> AccountToTransactionsConnection:
     return AccountToTransactionsConnection(
-        requester=requester,
-        typename="AccountToTransactionsConnection",
-        count=obj["account_to_transactions_connection_count"],
-        page_info=PageInfo_from_json(
-            requester, obj["account_to_transactions_connection_page_info"]
-        ),
-        profit_loss=(
-            CurrencyAmount_from_json(
-                requester, obj["account_to_transactions_connection_profit_loss"]
-            )
-            if obj["account_to_transactions_connection_profit_loss"]
-            else None
-        ),
-        average_fee_earned=(
-            CurrencyAmount_from_json(
-                requester, obj["account_to_transactions_connection_average_fee_earned"]
-            )
-            if obj["account_to_transactions_connection_average_fee_earned"]
-            else None
-        ),
-        total_amount_transacted=(
-            CurrencyAmount_from_json(
-                requester,
-                obj["account_to_transactions_connection_total_amount_transacted"],
-            )
-            if obj["account_to_transactions_connection_total_amount_transacted"]
-            else None
-        ),
-        entities=list(
-            map(
-                # pylint: disable=unnecessary-lambda
-                lambda e: Transaction_from_json(requester, e),
-                obj["account_to_transactions_connection_entities"],
-            )
-        ),
-    )
+        requester=requester,        typename="AccountToTransactionsConnection",        count=obj["account_to_transactions_connection_count"],
+        page_info=PageInfo_from_json(requester, obj["account_to_transactions_connection_page_info"]),
+        profit_loss=CurrencyAmount_from_json(requester, obj["account_to_transactions_connection_profit_loss"]) if obj["account_to_transactions_connection_profit_loss"] else None,
+        average_fee_earned=CurrencyAmount_from_json(requester, obj["account_to_transactions_connection_average_fee_earned"]) if obj["account_to_transactions_connection_average_fee_earned"] else None,
+        total_amount_transacted=CurrencyAmount_from_json(requester, obj["account_to_transactions_connection_total_amount_transacted"]) if obj["account_to_transactions_connection_total_amount_transacted"] else None,
+        entities=list(map(
+ # pylint: disable=unnecessary-lambda 
+ lambda e: Transaction_from_json(requester, e), obj["account_to_transactions_connection_entities"])),
+
+        )
+

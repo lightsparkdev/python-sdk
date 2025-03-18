@@ -1,3 +1,4 @@
+
 # Copyright ©, 2022-present, Lightspark Group, Inc. - All Rights Reserved
 
 from dataclasses import dataclass
@@ -8,32 +9,40 @@ from lightspark.requests.requester import Requester
 from lightspark.utils.enums import parse_enum
 
 from .DailyLiquidityForecast import DailyLiquidityForecast
-from .DailyLiquidityForecast import from_json as DailyLiquidityForecast_from_json
+from .DailyLiquidityForecast import \
+    from_json as DailyLiquidityForecast_from_json
 from .LightningPaymentDirection import LightningPaymentDirection
 
 
 @dataclass
-class LightsparkNodeToDailyLiquidityForecastsConnection:
+class LightsparkNodeToDailyLiquidityForecastsConnection():
+    
     requester: Requester
 
     from_date: datetime
+    
 
     to_date: datetime
+    
 
     direction: LightningPaymentDirection
+    
 
     entities: List[DailyLiquidityForecast]
     """The daily liquidity forecasts for the current page of this connection."""
+
+
 
     def to_json(self) -> Mapping[str, Any]:
         return {
             "lightspark_node_to_daily_liquidity_forecasts_connection_from_date": self.from_date,
             "lightspark_node_to_daily_liquidity_forecasts_connection_to_date": self.to_date,
             "lightspark_node_to_daily_liquidity_forecasts_connection_direction": self.direction.value,
-            "lightspark_node_to_daily_liquidity_forecasts_connection_entities": [
-                e.to_json() for e in self.entities
-            ],
+            "lightspark_node_to_daily_liquidity_forecasts_connection_entities": [e.to_json() for e in self.entities],
+
         }
+
+
 
 
 FRAGMENT = """
@@ -59,24 +68,16 @@ fragment LightsparkNodeToDailyLiquidityForecastsConnectionFragment on Lightspark
 """
 
 
-def from_json(
-    requester: Requester, obj: Mapping[str, Any]
-) -> LightsparkNodeToDailyLiquidityForecastsConnection:
+
+def from_json(requester: Requester, obj: Mapping[str, Any]) -> LightsparkNodeToDailyLiquidityForecastsConnection:
     return LightsparkNodeToDailyLiquidityForecastsConnection(
-        requester=requester,
-        from_date=obj[
-            "lightspark_node_to_daily_liquidity_forecasts_connection_from_date"
-        ],
+        requester=requester,        from_date=obj["lightspark_node_to_daily_liquidity_forecasts_connection_from_date"],
         to_date=obj["lightspark_node_to_daily_liquidity_forecasts_connection_to_date"],
-        direction=parse_enum(
-            LightningPaymentDirection,
-            obj["lightspark_node_to_daily_liquidity_forecasts_connection_direction"],
-        ),
-        entities=list(
-            map(
-                # pylint: disable=unnecessary-lambda
-                lambda e: DailyLiquidityForecast_from_json(requester, e),
-                obj["lightspark_node_to_daily_liquidity_forecasts_connection_entities"],
-            )
-        ),
-    )
+
+        direction=parse_enum(LightningPaymentDirection, obj['lightspark_node_to_daily_liquidity_forecasts_connection_direction']),
+        entities=list(map(
+ # pylint: disable=unnecessary-lambda 
+ lambda e: DailyLiquidityForecast_from_json(requester, e), obj["lightspark_node_to_daily_liquidity_forecasts_connection_entities"])),
+
+        )
+

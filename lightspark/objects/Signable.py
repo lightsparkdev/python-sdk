@@ -1,3 +1,4 @@
+
 # Copyright ©, 2022-present, Lightspark Group, Inc. - All Rights Reserved
 
 from dataclasses import dataclass
@@ -11,6 +12,7 @@ from .Entity import Entity
 
 @dataclass
 class Signable(Entity):
+    
     requester: Requester
 
     id: str
@@ -23,13 +25,17 @@ class Signable(Entity):
     """The date and time when the entity was last updated."""
     typename: str
 
+
     def to_json(self) -> Mapping[str, Any]:
         return {
             "__typename": "Signable",
             "signable_id": self.id,
             "signable_created_at": self.created_at.isoformat(),
             "signable_updated_at": self.updated_at.isoformat(),
+
         }
+
+
 
 
 FRAGMENT = """
@@ -42,11 +48,12 @@ fragment SignableFragment on Signable {
 """
 
 
+
 def from_json(requester: Requester, obj: Mapping[str, Any]) -> Signable:
     return Signable(
-        requester=requester,
-        typename="Signable",
-        id=obj["signable_id"],
+        requester=requester,        typename="Signable",        id=obj["signable_id"],
         created_at=datetime.fromisoformat(obj["signable_created_at"]),
         updated_at=datetime.fromisoformat(obj["signable_updated_at"]),
-    )
+
+        )
+

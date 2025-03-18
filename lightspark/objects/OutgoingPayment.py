@@ -1,3 +1,4 @@
+
 # Copyright ©, 2022-present, Lightspark Group, Inc. - All Rights Reserved
 
 from dataclasses import dataclass
@@ -11,10 +12,10 @@ from .CurrencyAmount import CurrencyAmount
 from .CurrencyAmount import from_json as CurrencyAmount_from_json
 from .Entity import Entity
 from .LightningTransaction import LightningTransaction
-from .OutgoingPaymentToAttemptsConnection import OutgoingPaymentToAttemptsConnection
-from .OutgoingPaymentToAttemptsConnection import (
-    from_json as OutgoingPaymentToAttemptsConnection_from_json,
-)
+from .OutgoingPaymentToAttemptsConnection import \
+    OutgoingPaymentToAttemptsConnection
+from .OutgoingPaymentToAttemptsConnection import \
+    from_json as OutgoingPaymentToAttemptsConnection_from_json
 from .PaymentFailureReason import PaymentFailureReason
 from .PaymentRequestData import PaymentRequestData
 from .PaymentRequestData import from_json as PaymentRequestData_from_json
@@ -87,9 +88,7 @@ class OutgoingPayment(LightningTransaction, Transaction, Entity):
     """The idempotency key of the payment."""
     typename: str
 
-    def get_attempts(
-        self, first: Optional[int] = None, after: Optional[str] = None
-    ) -> OutgoingPaymentToAttemptsConnection:
+    def get_attempts(self, first: Optional[int]= None, after: Optional[str]= None) -> OutgoingPaymentToAttemptsConnection:
         json = self.requester.execute_graphql(
             """
 query FetchOutgoingPaymentToAttemptsConnection($entity_id: ID!, $first: Int, $after: String) {
@@ -143,10 +142,11 @@ query FetchOutgoingPaymentToAttemptsConnection($entity_id: ID!, $first: Int, $af
     }
 }
             """,
-            {"entity_id": self.id, "first": first, "after": after},
+            {"entity_id": self.id, "first": first, "after": after}
         )
         connection = json["entity"]["attempts"]
         return OutgoingPaymentToAttemptsConnection_from_json(self.requester, connection)
+
 
     def to_json(self) -> Mapping[str, Any]:
         return {
@@ -155,37 +155,24 @@ query FetchOutgoingPaymentToAttemptsConnection($entity_id: ID!, $first: Int, $af
             "outgoing_payment_created_at": self.created_at.isoformat(),
             "outgoing_payment_updated_at": self.updated_at.isoformat(),
             "outgoing_payment_status": self.status.value,
-            "outgoing_payment_resolved_at": (
-                self.resolved_at.isoformat() if self.resolved_at else None
-            ),
+            "outgoing_payment_resolved_at": self.resolved_at.isoformat() if self.resolved_at else None,
             "outgoing_payment_amount": self.amount.to_json(),
             "outgoing_payment_transaction_hash": self.transaction_hash,
             "outgoing_payment_is_uma": self.is_uma,
-            "outgoing_payment_origin": {"id": self.origin_id},
-            "outgoing_payment_destination": (
-                {"id": self.destination_id} if self.destination_id else None
-            ),
+            "outgoing_payment_origin": { "id": self.origin_id },
+            "outgoing_payment_destination": { "id": self.destination_id } if self.destination_id else None,
             "outgoing_payment_fees": self.fees.to_json() if self.fees else None,
-            "outgoing_payment_payment_request_data": (
-                self.payment_request_data.to_json()
-                if self.payment_request_data
-                else None
-            ),
-            "outgoing_payment_failure_reason": (
-                self.failure_reason.value if self.failure_reason else None
-            ),
-            "outgoing_payment_failure_message": (
-                self.failure_message.to_json() if self.failure_message else None
-            ),
-            "outgoing_payment_uma_post_transaction_data": (
-                [e.to_json() for e in self.uma_post_transaction_data]
-                if self.uma_post_transaction_data
-                else None
-            ),
+            "outgoing_payment_payment_request_data": self.payment_request_data.to_json() if self.payment_request_data else None,
+            "outgoing_payment_failure_reason": self.failure_reason.value if self.failure_reason else None,
+            "outgoing_payment_failure_message": self.failure_message.to_json() if self.failure_message else None,
+            "outgoing_payment_uma_post_transaction_data": [e.to_json() for e in self.uma_post_transaction_data] if self.uma_post_transaction_data else None,
             "outgoing_payment_payment_preimage": self.payment_preimage,
             "outgoing_payment_is_internal_payment": self.is_internal_payment,
             "outgoing_payment_idempotency_key": self.idempotency_key,
+
         }
+
+
 
 
 FRAGMENT = """
@@ -538,60 +525,31 @@ fragment OutgoingPaymentFragment on OutgoingPayment {
 """
 
 
+
 def from_json(requester: Requester, obj: Mapping[str, Any]) -> OutgoingPayment:
     return OutgoingPayment(
-        requester=requester,
-        typename="OutgoingPayment",
-        id=obj["outgoing_payment_id"],
+        requester=requester,        typename="OutgoingPayment",        id=obj["outgoing_payment_id"],
         created_at=datetime.fromisoformat(obj["outgoing_payment_created_at"]),
         updated_at=datetime.fromisoformat(obj["outgoing_payment_updated_at"]),
-        status=parse_enum(TransactionStatus, obj["outgoing_payment_status"]),
-        resolved_at=(
-            datetime.fromisoformat(obj["outgoing_payment_resolved_at"])
-            if obj["outgoing_payment_resolved_at"]
-            else None
-        ),
+
+        status=parse_enum(TransactionStatus, obj['outgoing_payment_status']),
+        resolved_at=datetime.fromisoformat(obj["outgoing_payment_resolved_at"]) if obj["outgoing_payment_resolved_at"] else None,
         amount=CurrencyAmount_from_json(requester, obj["outgoing_payment_amount"]),
         transaction_hash=obj["outgoing_payment_transaction_hash"],
         is_uma=obj["outgoing_payment_is_uma"],
         origin_id=obj["outgoing_payment_origin"]["id"],
-        destination_id=(
-            obj["outgoing_payment_destination"]["id"]
-            if obj["outgoing_payment_destination"]
-            else None
-        ),
-        fees=(
-            CurrencyAmount_from_json(requester, obj["outgoing_payment_fees"])
-            if obj["outgoing_payment_fees"]
-            else None
-        ),
-        payment_request_data=(
-            PaymentRequestData_from_json(
-                requester, obj["outgoing_payment_payment_request_data"]
-            )
-            if obj["outgoing_payment_payment_request_data"]
-            else None
-        ),
-        failure_reason=parse_enum_optional(
-            PaymentFailureReason, obj["outgoing_payment_failure_reason"]
-        ),
-        failure_message=(
-            RichText_from_json(requester, obj["outgoing_payment_failure_message"])
-            if obj["outgoing_payment_failure_message"]
-            else None
-        ),
-        uma_post_transaction_data=(
-            list(
-                map(
-                    # pylint: disable=unnecessary-lambda
-                    lambda e: PostTransactionData_from_json(requester, e),
-                    obj["outgoing_payment_uma_post_transaction_data"],
-                )
-            )
-            if obj["outgoing_payment_uma_post_transaction_data"]
-            else None
-        ),
+        destination_id=obj["outgoing_payment_destination"]["id"] if obj["outgoing_payment_destination"] else None,
+        fees=CurrencyAmount_from_json(requester, obj["outgoing_payment_fees"]) if obj["outgoing_payment_fees"] else None,
+        payment_request_data=PaymentRequestData_from_json(requester, obj["outgoing_payment_payment_request_data"]) if obj["outgoing_payment_payment_request_data"] else None,
+
+        failure_reason=parse_enum_optional(PaymentFailureReason, obj['outgoing_payment_failure_reason']),
+        failure_message=RichText_from_json(requester, obj["outgoing_payment_failure_message"]) if obj["outgoing_payment_failure_message"] else None,
+        uma_post_transaction_data=list(map(
+ # pylint: disable=unnecessary-lambda 
+ lambda e: PostTransactionData_from_json(requester, e), obj["outgoing_payment_uma_post_transaction_data"])) if obj["outgoing_payment_uma_post_transaction_data"] else None,
         payment_preimage=obj["outgoing_payment_payment_preimage"],
         is_internal_payment=obj["outgoing_payment_is_internal_payment"],
         idempotency_key=obj["outgoing_payment_idempotency_key"],
-    )
+
+        )
+

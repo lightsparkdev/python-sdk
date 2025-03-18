@@ -1,3 +1,4 @@
+
 # Copyright ©, 2022-present, Lightspark Group, Inc. - All Rights Reserved
 
 from dataclasses import dataclass
@@ -40,6 +41,7 @@ class ApiToken(AuditLogActor, Entity):
     """Whether the api token has been deleted."""
     typename: str
 
+
     def to_json(self) -> Mapping[str, Any]:
         return {
             "__typename": "ApiToken",
@@ -50,7 +52,10 @@ class ApiToken(AuditLogActor, Entity):
             "api_token_name": self.name,
             "api_token_permissions": [e.value for e in self.permissions],
             "api_token_is_deleted": self.is_deleted,
+
         }
+
+
 
 
 FRAGMENT = """
@@ -67,15 +72,16 @@ fragment ApiTokenFragment on ApiToken {
 """
 
 
+
 def from_json(requester: Requester, obj: Mapping[str, Any]) -> ApiToken:
     return ApiToken(
-        requester=requester,
-        typename="ApiToken",
-        id=obj["api_token_id"],
+        requester=requester,        typename="ApiToken",        id=obj["api_token_id"],
         created_at=datetime.fromisoformat(obj["api_token_created_at"]),
         updated_at=datetime.fromisoformat(obj["api_token_updated_at"]),
         client_id=obj["api_token_client_id"],
         name=obj["api_token_name"],
         permissions=parse_enum_list(Permission, obj["api_token_permissions"]),
         is_deleted=obj["api_token_is_deleted"],
-    )
+
+        )
+

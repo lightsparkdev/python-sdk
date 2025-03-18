@@ -1,3 +1,4 @@
+
 # Copyright ©, 2022-present, Lightspark Group, Inc. - All Rights Reserved
 
 from dataclasses import dataclass
@@ -10,7 +11,9 @@ from .PaymentDirection import PaymentDirection
 
 
 @dataclass
-class RegisterPaymentInput:
+class RegisterPaymentInput():
+    
+
     provider: ComplianceProvider
     """The compliance provider that is going to screen the node. You need to be a customer of the selected provider and store the API key on the Lightspark account setting page."""
 
@@ -23,19 +26,30 @@ class RegisterPaymentInput:
     direction: PaymentDirection
     """Indicates whether this payment is an OutgoingPayment or an IncomingPayment."""
 
+
+
     def to_json(self) -> Mapping[str, Any]:
         return {
             "register_payment_input_provider": self.provider.value,
             "register_payment_input_payment_id": self.payment_id,
             "register_payment_input_node_pubkey": self.node_pubkey,
             "register_payment_input_direction": self.direction.value,
+
         }
+
+
+
+
 
 
 def from_json(obj: Mapping[str, Any]) -> RegisterPaymentInput:
     return RegisterPaymentInput(
-        provider=parse_enum(ComplianceProvider, obj["register_payment_input_provider"]),
+
+        provider=parse_enum(ComplianceProvider, obj['register_payment_input_provider']),
         payment_id=obj["register_payment_input_payment_id"],
         node_pubkey=obj["register_payment_input_node_pubkey"],
-        direction=parse_enum(PaymentDirection, obj["register_payment_input_direction"]),
-    )
+
+        direction=parse_enum(PaymentDirection, obj['register_payment_input_direction']),
+
+        )
+

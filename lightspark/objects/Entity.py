@@ -1,3 +1,4 @@
+
 # Copyright ©, 2022-present, Lightspark Group, Inc. - All Rights Reserved
 
 from dataclasses import dataclass
@@ -7,7 +8,7 @@ from lightspark.requests.requester import Requester
 
 
 @dataclass
-class Entity:
+class Entity():
     """This interface is used by all the entities in the Lightspark system. It defines a few core fields that are available everywhere. Any object that implements this interface can be queried using the `entity` query and its ID."""
 
     requester: Requester
@@ -21,6 +22,9 @@ class Entity:
     updated_at: datetime
     """The date and time when the entity was last updated."""
     typename: str
+
+
+
 
 
 FRAGMENT = """
@@ -947,6 +951,42 @@ fragment EntityFragment on Entity {
             }
         }
     }
+    ... on Offer {
+        __typename
+        offer_id: id
+        offer_created_at: created_at
+        offer_updated_at: updated_at
+        offer_data: data {
+            id
+        }
+        offer_encoded_offer: encoded_offer
+        offer_amount: amount {
+            __typename
+            currency_amount_original_value: original_value
+            currency_amount_original_unit: original_unit
+            currency_amount_preferred_currency_unit: preferred_currency_unit
+            currency_amount_preferred_currency_value_rounded: preferred_currency_value_rounded
+            currency_amount_preferred_currency_value_approx: preferred_currency_value_approx
+        }
+        offer_description: description
+    }
+    ... on OfferData {
+        __typename
+        offer_data_id: id
+        offer_data_created_at: created_at
+        offer_data_updated_at: updated_at
+        offer_data_amount: amount {
+            __typename
+            currency_amount_original_value: original_value
+            currency_amount_original_unit: original_unit
+            currency_amount_preferred_currency_unit: preferred_currency_unit
+            currency_amount_preferred_currency_value_rounded: preferred_currency_value_rounded
+            currency_amount_preferred_currency_value_approx: preferred_currency_value_approx
+        }
+        offer_data_encoded_offer: encoded_offer
+        offer_data_bitcoin_networks: bitcoin_networks
+        offer_data_expires_at: expires_at
+    }
     ... on OutgoingPayment {
         __typename
         outgoing_payment_id: id
@@ -1522,3 +1562,6 @@ fragment EntityFragment on Entity {
     }
 }
 """
+
+
+

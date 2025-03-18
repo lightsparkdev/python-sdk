@@ -1,3 +1,4 @@
+
 # Copyright ©, 2022-present, Lightspark Group, Inc. - All Rights Reserved
 
 from dataclasses import dataclass
@@ -10,16 +11,22 @@ from .CurrencyAmount import from_json as CurrencyAmount_from_json
 
 
 @dataclass
-class LightningFeeEstimateOutput:
+class LightningFeeEstimateOutput():
+    
     requester: Requester
 
     fee_estimate: CurrencyAmount
     """The estimated fees for the payment."""
 
+
+
     def to_json(self) -> Mapping[str, Any]:
         return {
             "lightning_fee_estimate_output_fee_estimate": self.fee_estimate.to_json(),
+
         }
+
+
 
 
 FRAGMENT = """
@@ -37,12 +44,10 @@ fragment LightningFeeEstimateOutputFragment on LightningFeeEstimateOutput {
 """
 
 
-def from_json(
-    requester: Requester, obj: Mapping[str, Any]
-) -> LightningFeeEstimateOutput:
+
+def from_json(requester: Requester, obj: Mapping[str, Any]) -> LightningFeeEstimateOutput:
     return LightningFeeEstimateOutput(
-        requester=requester,
-        fee_estimate=CurrencyAmount_from_json(
-            requester, obj["lightning_fee_estimate_output_fee_estimate"]
-        ),
-    )
+        requester=requester,        fee_estimate=CurrencyAmount_from_json(requester, obj["lightning_fee_estimate_output_fee_estimate"]),
+
+        )
+

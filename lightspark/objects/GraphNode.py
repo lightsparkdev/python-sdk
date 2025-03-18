@@ -1,3 +1,4 @@
+
 # Copyright ©, 2022-present, Lightspark Group, Inc. - All Rights Reserved
 
 from dataclasses import dataclass
@@ -12,7 +13,8 @@ from .Entity import Entity
 from .Node import Node
 from .NodeAddressType import NodeAddressType
 from .NodeToAddressesConnection import NodeToAddressesConnection
-from .NodeToAddressesConnection import from_json as NodeToAddressesConnection_from_json
+from .NodeToAddressesConnection import \
+    from_json as NodeToAddressesConnection_from_json
 
 
 @dataclass
@@ -49,9 +51,7 @@ class GraphNode(Node, Entity):
     """The public key of this node. It acts as a unique identifier of this node in the Lightning Network."""
     typename: str
 
-    def get_addresses(
-        self, first: Optional[int] = None, types: Optional[List[NodeAddressType]] = None
-    ) -> NodeToAddressesConnection:
+    def get_addresses(self, first: Optional[int]= None, types: Optional[List[NodeAddressType]]= None) -> NodeToAddressesConnection:
         json = self.requester.execute_graphql(
             """
 query FetchNodeToAddressesConnection($entity_id: ID!, $first: Int, $types: [NodeAddressType!]) {
@@ -70,10 +70,11 @@ query FetchNodeToAddressesConnection($entity_id: ID!, $first: Int, $types: [Node
     }
 }
             """,
-            {"entity_id": self.id, "first": first, "types": types},
+            {"entity_id": self.id, "first": first, "types": types}
         )
         connection = json["entity"]["addresses"]
         return NodeToAddressesConnection_from_json(self.requester, connection)
+
 
     def to_json(self) -> Mapping[str, Any]:
         return {
@@ -87,7 +88,10 @@ query FetchNodeToAddressesConnection($entity_id: ID!, $first: Int, $types: [Node
             "graph_node_conductivity": self.conductivity,
             "graph_node_display_name": self.display_name,
             "graph_node_public_key": self.public_key,
+
         }
+
+
 
 
 FRAGMENT = """
@@ -106,17 +110,19 @@ fragment GraphNodeFragment on GraphNode {
 """
 
 
+
 def from_json(requester: Requester, obj: Mapping[str, Any]) -> GraphNode:
     return GraphNode(
-        requester=requester,
-        typename="GraphNode",
-        id=obj["graph_node_id"],
+        requester=requester,        typename="GraphNode",        id=obj["graph_node_id"],
         created_at=datetime.fromisoformat(obj["graph_node_created_at"]),
         updated_at=datetime.fromisoformat(obj["graph_node_updated_at"]),
         alias=obj["graph_node_alias"],
-        bitcoin_network=parse_enum(BitcoinNetwork, obj["graph_node_bitcoin_network"]),
+
+        bitcoin_network=parse_enum(BitcoinNetwork, obj['graph_node_bitcoin_network']),
         color=obj["graph_node_color"],
         conductivity=obj["graph_node_conductivity"],
         display_name=obj["graph_node_display_name"],
         public_key=obj["graph_node_public_key"],
-    )
+
+        )
+

@@ -1,3 +1,4 @@
+
 # Copyright ©, 2022-present, Lightspark Group, Inc. - All Rights Reserved
 
 from enum import Enum
@@ -20,3 +21,4 @@ class TransactionStatus(Enum):
     """For transaction type PAYMENT_REQUEST only. A payment request has expired."""
     CANCELLED = "CANCELLED"
     """For transaction type PAYMENT_REQUEST only."""
+

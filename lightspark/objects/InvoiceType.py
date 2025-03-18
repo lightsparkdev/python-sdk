@@ -1,3 +1,4 @@
+
 # Copyright ©, 2022-present, Lightspark Group, Inc. - All Rights Reserved
 
 from enum import Enum
@@ -12,3 +13,4 @@ class InvoiceType(Enum):
     """A standard Bolt 11 invoice."""
     AMP = "AMP"
     """An AMP (Atomic Multi-path Payment) invoice."""
+

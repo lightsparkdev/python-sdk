@@ -1,3 +1,4 @@
+
 # Copyright ©, 2022-present, Lightspark Group, Inc. - All Rights Reserved
 
 from dataclasses import dataclass
@@ -41,6 +42,7 @@ class IncomingPaymentAttempt(Entity):
     """The channel this attempt was made on."""
     typename: str
 
+
     def to_json(self) -> Mapping[str, Any]:
         return {
             "__typename": "IncomingPaymentAttempt",
@@ -48,12 +50,13 @@ class IncomingPaymentAttempt(Entity):
             "incoming_payment_attempt_created_at": self.created_at.isoformat(),
             "incoming_payment_attempt_updated_at": self.updated_at.isoformat(),
             "incoming_payment_attempt_status": self.status.value,
-            "incoming_payment_attempt_resolved_at": (
-                self.resolved_at.isoformat() if self.resolved_at else None
-            ),
+            "incoming_payment_attempt_resolved_at": self.resolved_at.isoformat() if self.resolved_at else None,
             "incoming_payment_attempt_amount": self.amount.to_json(),
-            "incoming_payment_attempt_channel": {"id": self.channel_id},
+            "incoming_payment_attempt_channel": { "id": self.channel_id },
+
         }
+
+
 
 
 FRAGMENT = """
@@ -79,23 +82,17 @@ fragment IncomingPaymentAttemptFragment on IncomingPaymentAttempt {
 """
 
 
+
 def from_json(requester: Requester, obj: Mapping[str, Any]) -> IncomingPaymentAttempt:
     return IncomingPaymentAttempt(
-        requester=requester,
-        typename="IncomingPaymentAttempt",
-        id=obj["incoming_payment_attempt_id"],
+        requester=requester,        typename="IncomingPaymentAttempt",        id=obj["incoming_payment_attempt_id"],
         created_at=datetime.fromisoformat(obj["incoming_payment_attempt_created_at"]),
         updated_at=datetime.fromisoformat(obj["incoming_payment_attempt_updated_at"]),
-        status=parse_enum(
-            IncomingPaymentAttemptStatus, obj["incoming_payment_attempt_status"]
-        ),
-        resolved_at=(
-            datetime.fromisoformat(obj["incoming_payment_attempt_resolved_at"])
-            if obj["incoming_payment_attempt_resolved_at"]
-            else None
-        ),
-        amount=CurrencyAmount_from_json(
-            requester, obj["incoming_payment_attempt_amount"]
-        ),
+
+        status=parse_enum(IncomingPaymentAttemptStatus, obj['incoming_payment_attempt_status']),
+        resolved_at=datetime.fromisoformat(obj["incoming_payment_attempt_resolved_at"]) if obj["incoming_payment_attempt_resolved_at"] else None,
+        amount=CurrencyAmount_from_json(requester, obj["incoming_payment_attempt_amount"]),
         channel_id=obj["incoming_payment_attempt_channel"]["id"],
-    )
+
+        )
+

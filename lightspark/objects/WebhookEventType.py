@@ -1,3 +1,4 @@
+
 # Copyright ©, 2022-present, Lightspark Group, Inc. - All Rights Reserved
 
 from enum import Enum
@@ -23,3 +24,4 @@ class WebhookEventType(Enum):
     LOW_BALANCE = "LOW_BALANCE"
     HIGH_BALANCE = "HIGH_BALANCE"
     CHANNEL_OPENING_FEES = "CHANNEL_OPENING_FEES"
+

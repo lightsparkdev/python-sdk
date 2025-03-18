@@ -1,3 +1,4 @@
+
 # Copyright ©, 2022-present, Lightspark Group, Inc. - All Rights Reserved
 
 from dataclasses import dataclass
@@ -14,6 +15,7 @@ from .PaymentRequest import from_json as PaymentRequest_from_json
 
 @dataclass
 class WalletToPaymentRequestsConnection(Connection):
+    
     requester: Requester
 
     count: int
@@ -26,15 +28,17 @@ class WalletToPaymentRequestsConnection(Connection):
     """The payment requests for the current page of this connection."""
     typename: str
 
+
     def to_json(self) -> Mapping[str, Any]:
         return {
             "__typename": "WalletToPaymentRequestsConnection",
             "wallet_to_payment_requests_connection_count": self.count,
             "wallet_to_payment_requests_connection_page_info": self.page_info.to_json(),
-            "wallet_to_payment_requests_connection_entities": [
-                e.to_json() for e in self.entities
-            ],
+            "wallet_to_payment_requests_connection_entities": [e.to_json() for e in self.entities],
+
         }
+
+
 
 
 FRAGMENT = """
@@ -55,21 +59,14 @@ fragment WalletToPaymentRequestsConnectionFragment on WalletToPaymentRequestsCon
 """
 
 
-def from_json(
-    requester: Requester, obj: Mapping[str, Any]
-) -> WalletToPaymentRequestsConnection:
+
+def from_json(requester: Requester, obj: Mapping[str, Any]) -> WalletToPaymentRequestsConnection:
     return WalletToPaymentRequestsConnection(
-        requester=requester,
-        typename="WalletToPaymentRequestsConnection",
-        count=obj["wallet_to_payment_requests_connection_count"],
-        page_info=PageInfo_from_json(
-            requester, obj["wallet_to_payment_requests_connection_page_info"]
-        ),
-        entities=list(
-            map(
-                # pylint: disable=unnecessary-lambda
-                lambda e: PaymentRequest_from_json(requester, e),
-                obj["wallet_to_payment_requests_connection_entities"],
-            )
-        ),
-    )
+        requester=requester,        typename="WalletToPaymentRequestsConnection",        count=obj["wallet_to_payment_requests_connection_count"],
+        page_info=PageInfo_from_json(requester, obj["wallet_to_payment_requests_connection_page_info"]),
+        entities=list(map(
+ # pylint: disable=unnecessary-lambda 
+ lambda e: PaymentRequest_from_json(requester, e), obj["wallet_to_payment_requests_connection_entities"])),
+
+        )
+

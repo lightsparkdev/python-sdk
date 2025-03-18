@@ -1,3 +1,4 @@
+
 # Copyright ©, 2022-present, Lightspark Group, Inc. - All Rights Reserved
 
 from dataclasses import dataclass
@@ -12,12 +13,10 @@ from .CurrencyAmount import from_json as CurrencyAmount_from_json
 from .Entity import Entity
 from .HtlcAttemptFailureCode import HtlcAttemptFailureCode
 from .OutgoingPaymentAttemptStatus import OutgoingPaymentAttemptStatus
-from .OutgoingPaymentAttemptToHopsConnection import (
-    OutgoingPaymentAttemptToHopsConnection,
-)
-from .OutgoingPaymentAttemptToHopsConnection import (
-    from_json as OutgoingPaymentAttemptToHopsConnection_from_json,
-)
+from .OutgoingPaymentAttemptToHopsConnection import \
+    OutgoingPaymentAttemptToHopsConnection
+from .OutgoingPaymentAttemptToHopsConnection import \
+    from_json as OutgoingPaymentAttemptToHopsConnection_from_json
 
 
 @dataclass
@@ -63,9 +62,7 @@ class OutgoingPaymentAttempt(Entity):
     """The channel snapshot at the time the outgoing payment attempt was made."""
     typename: str
 
-    def get_hops(
-        self, first: Optional[int] = None, after: Optional[str] = None
-    ) -> OutgoingPaymentAttemptToHopsConnection:
+    def get_hops(self, first: Optional[int]= None, after: Optional[str]= None) -> OutgoingPaymentAttemptToHopsConnection:
         json = self.requester.execute_graphql(
             """
 query FetchOutgoingPaymentAttemptToHopsConnection($entity_id: ID!, $first: Int, $after: String) {
@@ -114,12 +111,11 @@ query FetchOutgoingPaymentAttemptToHopsConnection($entity_id: ID!, $first: Int, 
     }
 }
             """,
-            {"entity_id": self.id, "first": first, "after": after},
+            {"entity_id": self.id, "first": first, "after": after}
         )
         connection = json["entity"]["hops"]
-        return OutgoingPaymentAttemptToHopsConnection_from_json(
-            self.requester, connection
-        )
+        return OutgoingPaymentAttemptToHopsConnection_from_json(self.requester, connection)
+
 
     def to_json(self) -> Mapping[str, Any]:
         return {
@@ -128,25 +124,18 @@ query FetchOutgoingPaymentAttemptToHopsConnection($entity_id: ID!, $first: Int, 
             "outgoing_payment_attempt_created_at": self.created_at.isoformat(),
             "outgoing_payment_attempt_updated_at": self.updated_at.isoformat(),
             "outgoing_payment_attempt_status": self.status.value,
-            "outgoing_payment_attempt_failure_code": (
-                self.failure_code.value if self.failure_code else None
-            ),
+            "outgoing_payment_attempt_failure_code": self.failure_code.value if self.failure_code else None,
             "outgoing_payment_attempt_failure_source_index": self.failure_source_index,
             "outgoing_payment_attempt_attempted_at": self.attempted_at.isoformat(),
-            "outgoing_payment_attempt_resolved_at": (
-                self.resolved_at.isoformat() if self.resolved_at else None
-            ),
-            "outgoing_payment_attempt_amount": (
-                self.amount.to_json() if self.amount else None
-            ),
+            "outgoing_payment_attempt_resolved_at": self.resolved_at.isoformat() if self.resolved_at else None,
+            "outgoing_payment_attempt_amount": self.amount.to_json() if self.amount else None,
             "outgoing_payment_attempt_fees": self.fees.to_json() if self.fees else None,
-            "outgoing_payment_attempt_outgoing_payment": {
-                "id": self.outgoing_payment_id
-            },
-            "outgoing_payment_attempt_channel_snapshot": (
-                {"id": self.channel_snapshot_id} if self.channel_snapshot_id else None
-            ),
+            "outgoing_payment_attempt_outgoing_payment": { "id": self.outgoing_payment_id },
+            "outgoing_payment_attempt_channel_snapshot": { "id": self.channel_snapshot_id } if self.channel_snapshot_id else None,
+
         }
+
+
 
 
 FRAGMENT = """
@@ -186,42 +175,23 @@ fragment OutgoingPaymentAttemptFragment on OutgoingPaymentAttempt {
 """
 
 
+
 def from_json(requester: Requester, obj: Mapping[str, Any]) -> OutgoingPaymentAttempt:
     return OutgoingPaymentAttempt(
-        requester=requester,
-        typename="OutgoingPaymentAttempt",
-        id=obj["outgoing_payment_attempt_id"],
+        requester=requester,        typename="OutgoingPaymentAttempt",        id=obj["outgoing_payment_attempt_id"],
         created_at=datetime.fromisoformat(obj["outgoing_payment_attempt_created_at"]),
         updated_at=datetime.fromisoformat(obj["outgoing_payment_attempt_updated_at"]),
-        status=parse_enum(
-            OutgoingPaymentAttemptStatus, obj["outgoing_payment_attempt_status"]
-        ),
-        failure_code=parse_enum_optional(
-            HtlcAttemptFailureCode, obj["outgoing_payment_attempt_failure_code"]
-        ),
+
+        status=parse_enum(OutgoingPaymentAttemptStatus, obj['outgoing_payment_attempt_status']),
+
+        failure_code=parse_enum_optional(HtlcAttemptFailureCode, obj['outgoing_payment_attempt_failure_code']),
         failure_source_index=obj["outgoing_payment_attempt_failure_source_index"],
-        attempted_at=datetime.fromisoformat(
-            obj["outgoing_payment_attempt_attempted_at"]
-        ),
-        resolved_at=(
-            datetime.fromisoformat(obj["outgoing_payment_attempt_resolved_at"])
-            if obj["outgoing_payment_attempt_resolved_at"]
-            else None
-        ),
-        amount=(
-            CurrencyAmount_from_json(requester, obj["outgoing_payment_attempt_amount"])
-            if obj["outgoing_payment_attempt_amount"]
-            else None
-        ),
-        fees=(
-            CurrencyAmount_from_json(requester, obj["outgoing_payment_attempt_fees"])
-            if obj["outgoing_payment_attempt_fees"]
-            else None
-        ),
+        attempted_at=datetime.fromisoformat(obj["outgoing_payment_attempt_attempted_at"]),
+        resolved_at=datetime.fromisoformat(obj["outgoing_payment_attempt_resolved_at"]) if obj["outgoing_payment_attempt_resolved_at"] else None,
+        amount=CurrencyAmount_from_json(requester, obj["outgoing_payment_attempt_amount"]) if obj["outgoing_payment_attempt_amount"] else None,
+        fees=CurrencyAmount_from_json(requester, obj["outgoing_payment_attempt_fees"]) if obj["outgoing_payment_attempt_fees"] else None,
         outgoing_payment_id=obj["outgoing_payment_attempt_outgoing_payment"]["id"],
-        channel_snapshot_id=(
-            obj["outgoing_payment_attempt_channel_snapshot"]["id"]
-            if obj["outgoing_payment_attempt_channel_snapshot"]
-            else None
-        ),
-    )
+        channel_snapshot_id=obj["outgoing_payment_attempt_channel_snapshot"]["id"] if obj["outgoing_payment_attempt_channel_snapshot"] else None,
+
+        )
+

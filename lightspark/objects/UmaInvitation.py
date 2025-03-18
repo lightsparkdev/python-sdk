@@ -1,3 +1,4 @@
+
 # Copyright ©, 2022-present, Lightspark Group, Inc. - All Rights Reserved
 
 from dataclasses import dataclass
@@ -46,6 +47,7 @@ class UmaInvitation(Entity):
     """The reason why the invitation is not eligible for incentives, if applicable."""
     typename: str
 
+
     def to_json(self) -> Mapping[str, Any]:
         return {
             "__typename": "UmaInvitation",
@@ -57,12 +59,11 @@ class UmaInvitation(Entity):
             "uma_invitation_inviter_uma": self.inviter_uma,
             "uma_invitation_invitee_uma": self.invitee_uma,
             "uma_invitation_incentives_status": self.incentives_status.value,
-            "uma_invitation_incentives_ineligibility_reason": (
-                self.incentives_ineligibility_reason.value
-                if self.incentives_ineligibility_reason
-                else None
-            ),
+            "uma_invitation_incentives_ineligibility_reason": self.incentives_ineligibility_reason.value if self.incentives_ineligibility_reason else None,
+
         }
+
+
 
 
 FRAGMENT = """
@@ -81,22 +82,20 @@ fragment UmaInvitationFragment on UmaInvitation {
 """
 
 
+
 def from_json(requester: Requester, obj: Mapping[str, Any]) -> UmaInvitation:
     return UmaInvitation(
-        requester=requester,
-        typename="UmaInvitation",
-        id=obj["uma_invitation_id"],
+        requester=requester,        typename="UmaInvitation",        id=obj["uma_invitation_id"],
         created_at=datetime.fromisoformat(obj["uma_invitation_created_at"]),
         updated_at=datetime.fromisoformat(obj["uma_invitation_updated_at"]),
         code=obj["uma_invitation_code"],
         url=obj["uma_invitation_url"],
         inviter_uma=obj["uma_invitation_inviter_uma"],
         invitee_uma=obj["uma_invitation_invitee_uma"],
-        incentives_status=parse_enum(
-            IncentivesStatus, obj["uma_invitation_incentives_status"]
-        ),
-        incentives_ineligibility_reason=parse_enum_optional(
-            IncentivesIneligibilityReason,
-            obj["uma_invitation_incentives_ineligibility_reason"],
-        ),
-    )
+
+        incentives_status=parse_enum(IncentivesStatus, obj['uma_invitation_incentives_status']),
+
+        incentives_ineligibility_reason=parse_enum_optional(IncentivesIneligibilityReason, obj['uma_invitation_incentives_ineligibility_reason']),
+
+        )
+

@@ -1,3 +1,4 @@
+
 # Copyright ©, 2022-present, Lightspark Group, Inc. - All Rights Reserved
 
 from dataclasses import dataclass
@@ -37,6 +38,7 @@ class PaymentRequest(Entity):
     """The status of the payment request."""
     typename: str
 
+
     def to_json(self) -> Mapping[str, Any]:
         return {
             "__typename": self.typename,
@@ -45,7 +47,10 @@ class PaymentRequest(Entity):
             "payment_request_updated_at": self.updated_at.isoformat(),
             "payment_request_data": self.data.to_json(),
             "payment_request_status": self.status.value,
+
         }
+
+
 
 
 FRAGMENT = """
@@ -363,29 +368,22 @@ fragment PaymentRequestFragment on PaymentRequest {
 """
 
 
+
 def from_json(requester: Requester, obj: Mapping[str, Any]) -> PaymentRequest:
     if obj["__typename"] == "Invoice":
-        # pylint: disable=import-outside-toplevel
+         # pylint: disable=import-outside-toplevel
         from lightspark.objects.Invoice import Invoice
-
         return Invoice(
-            requester=requester,
-            typename="Invoice",
-            id=obj["invoice_id"],
+            requester=requester,            typename="Invoice",            id=obj["invoice_id"],
             created_at=datetime.fromisoformat(obj["invoice_created_at"]),
             updated_at=datetime.fromisoformat(obj["invoice_updated_at"]),
             data=InvoiceData_from_json(requester, obj["invoice_data"]),
-            status=parse_enum(PaymentRequestStatus, obj["invoice_status"]),
-            amount_paid=(
-                CurrencyAmount_from_json(requester, obj["invoice_amount_paid"])
-                if obj["invoice_amount_paid"]
-                else None
-            ),
+
+            status=parse_enum(PaymentRequestStatus, obj['invoice_status']),
+            amount_paid=CurrencyAmount_from_json(requester, obj["invoice_amount_paid"]) if obj["invoice_amount_paid"] else None,
             is_uma=obj["invoice_is_uma"],
             is_lnurl=obj["invoice_is_lnurl"],
+
         )
     graphql_typename = obj["__typename"]
-    raise LightsparkException(
-        "UNKNOWN_INTERFACE",
-        f"Couldn't find a concrete type for interface PaymentRequest corresponding to the typename={graphql_typename}",
-    )
+    raise LightsparkException("UNKNOWN_INTERFACE", f"Couldn't find a concrete type for interface PaymentRequest corresponding to the typename={graphql_typename}")

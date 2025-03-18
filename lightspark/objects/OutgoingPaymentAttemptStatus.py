@@ -1,3 +1,4 @@
+
 # Copyright ©, 2022-present, Lightspark Group, Inc. - All Rights Reserved
 
 from enum import Enum
@@ -11,3 +12,4 @@ class OutgoingPaymentAttemptStatus(Enum):
     IN_FLIGHT = "IN_FLIGHT"
     SUCCEEDED = "SUCCEEDED"
     FAILED = "FAILED"
+

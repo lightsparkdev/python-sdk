@@ -1,3 +1,4 @@
+
 # Copyright ©, 2022-present, Lightspark Group, Inc. - All Rights Reserved
 
 from dataclasses import dataclass
@@ -9,28 +10,33 @@ from .TransactionStatus import TransactionStatus
 
 
 @dataclass
-class OutgoingPaymentsForInvoiceQueryInput:
+class OutgoingPaymentsForInvoiceQueryInput():
+    
+
     encoded_invoice: str
     """The encoded invoice that the outgoing payments paid to."""
 
     statuses: Optional[List[TransactionStatus]]
     """An optional filter to only query outgoing payments of given statuses."""
 
+
+
     def to_json(self) -> Mapping[str, Any]:
         return {
             "outgoing_payments_for_invoice_query_input_encoded_invoice": self.encoded_invoice,
-            "outgoing_payments_for_invoice_query_input_statuses": (
-                [e.value for e in self.statuses] if self.statuses else None
-            ),
+            "outgoing_payments_for_invoice_query_input_statuses": [e.value for e in self.statuses] if self.statuses else None,
+
         }
+
+
+
+
 
 
 def from_json(obj: Mapping[str, Any]) -> OutgoingPaymentsForInvoiceQueryInput:
     return OutgoingPaymentsForInvoiceQueryInput(
-        encoded_invoice=obj[
-            "outgoing_payments_for_invoice_query_input_encoded_invoice"
-        ],
-        statuses=parse_optional_list_of_enums(
-            TransactionStatus, obj["outgoing_payments_for_invoice_query_input_statuses"]
-        ),
-    )
+        encoded_invoice=obj["outgoing_payments_for_invoice_query_input_encoded_invoice"],
+        statuses=parse_optional_list_of_enums(TransactionStatus, obj["outgoing_payments_for_invoice_query_input_statuses"]),
+
+        )
+

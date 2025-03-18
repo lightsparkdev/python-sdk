@@ -1,3 +1,4 @@
+
 # Copyright ©, 2022-present, Lightspark Group, Inc. - All Rights Reserved
 
 from dataclasses import dataclass
@@ -47,6 +48,7 @@ class Transaction(Entity):
     """The hash of this transaction, so it can be uniquely identified on the Lightning Network."""
     typename: str
 
+
     def to_json(self) -> Mapping[str, Any]:
         return {
             "__typename": self.typename,
@@ -54,12 +56,13 @@ class Transaction(Entity):
             "transaction_created_at": self.created_at.isoformat(),
             "transaction_updated_at": self.updated_at.isoformat(),
             "transaction_status": self.status.value,
-            "transaction_resolved_at": (
-                self.resolved_at.isoformat() if self.resolved_at else None
-            ),
+            "transaction_resolved_at": self.resolved_at.isoformat() if self.resolved_at else None,
             "transaction_amount": self.amount.to_json(),
             "transaction_transaction_hash": self.transaction_hash,
+
         }
+
+
 
 
 FRAGMENT = """
@@ -616,307 +619,159 @@ fragment TransactionFragment on Transaction {
 """
 
 
+
 def from_json(requester: Requester, obj: Mapping[str, Any]) -> Transaction:
     # pylint: disable=too-many-return-statements
     if obj["__typename"] == "ChannelClosingTransaction":
-        # pylint: disable=import-outside-toplevel
-        from lightspark.objects.ChannelClosingTransaction import (
-            ChannelClosingTransaction,
-        )
-
+         # pylint: disable=import-outside-toplevel
+        from lightspark.objects.ChannelClosingTransaction import \
+            ChannelClosingTransaction
         return ChannelClosingTransaction(
-            requester=requester,
-            typename="ChannelClosingTransaction",
-            id=obj["channel_closing_transaction_id"],
-            created_at=datetime.fromisoformat(
-                obj["channel_closing_transaction_created_at"]
-            ),
-            updated_at=datetime.fromisoformat(
-                obj["channel_closing_transaction_updated_at"]
-            ),
-            status=parse_enum(
-                TransactionStatus, obj["channel_closing_transaction_status"]
-            ),
-            resolved_at=(
-                datetime.fromisoformat(obj["channel_closing_transaction_resolved_at"])
-                if obj["channel_closing_transaction_resolved_at"]
-                else None
-            ),
-            amount=CurrencyAmount_from_json(
-                requester, obj["channel_closing_transaction_amount"]
-            ),
+            requester=requester,            typename="ChannelClosingTransaction",            id=obj["channel_closing_transaction_id"],
+            created_at=datetime.fromisoformat(obj["channel_closing_transaction_created_at"]),
+            updated_at=datetime.fromisoformat(obj["channel_closing_transaction_updated_at"]),
+
+            status=parse_enum(TransactionStatus, obj['channel_closing_transaction_status']),
+            resolved_at=datetime.fromisoformat(obj["channel_closing_transaction_resolved_at"]) if obj["channel_closing_transaction_resolved_at"] else None,
+            amount=CurrencyAmount_from_json(requester, obj["channel_closing_transaction_amount"]),
             transaction_hash=obj["channel_closing_transaction_transaction_hash"],
-            fees=(
-                CurrencyAmount_from_json(
-                    requester, obj["channel_closing_transaction_fees"]
-                )
-                if obj["channel_closing_transaction_fees"]
-                else None
-            ),
+            fees=CurrencyAmount_from_json(requester, obj["channel_closing_transaction_fees"]) if obj["channel_closing_transaction_fees"] else None,
             block_hash=obj["channel_closing_transaction_block_hash"],
             block_height=obj["channel_closing_transaction_block_height"],
-            destination_addresses=obj[
-                "channel_closing_transaction_destination_addresses"
-            ],
+            destination_addresses=obj["channel_closing_transaction_destination_addresses"],
             num_confirmations=obj["channel_closing_transaction_num_confirmations"],
-            channel_id=(
-                obj["channel_closing_transaction_channel"]["id"]
-                if obj["channel_closing_transaction_channel"]
-                else None
-            ),
+            channel_id=obj["channel_closing_transaction_channel"]["id"] if obj["channel_closing_transaction_channel"] else None,
+
         )
     if obj["__typename"] == "ChannelOpeningTransaction":
-        # pylint: disable=import-outside-toplevel
-        from lightspark.objects.ChannelOpeningTransaction import (
-            ChannelOpeningTransaction,
-        )
-
+         # pylint: disable=import-outside-toplevel
+        from lightspark.objects.ChannelOpeningTransaction import \
+            ChannelOpeningTransaction
         return ChannelOpeningTransaction(
-            requester=requester,
-            typename="ChannelOpeningTransaction",
-            id=obj["channel_opening_transaction_id"],
-            created_at=datetime.fromisoformat(
-                obj["channel_opening_transaction_created_at"]
-            ),
-            updated_at=datetime.fromisoformat(
-                obj["channel_opening_transaction_updated_at"]
-            ),
-            status=parse_enum(
-                TransactionStatus, obj["channel_opening_transaction_status"]
-            ),
-            resolved_at=(
-                datetime.fromisoformat(obj["channel_opening_transaction_resolved_at"])
-                if obj["channel_opening_transaction_resolved_at"]
-                else None
-            ),
-            amount=CurrencyAmount_from_json(
-                requester, obj["channel_opening_transaction_amount"]
-            ),
+            requester=requester,            typename="ChannelOpeningTransaction",            id=obj["channel_opening_transaction_id"],
+            created_at=datetime.fromisoformat(obj["channel_opening_transaction_created_at"]),
+            updated_at=datetime.fromisoformat(obj["channel_opening_transaction_updated_at"]),
+
+            status=parse_enum(TransactionStatus, obj['channel_opening_transaction_status']),
+            resolved_at=datetime.fromisoformat(obj["channel_opening_transaction_resolved_at"]) if obj["channel_opening_transaction_resolved_at"] else None,
+            amount=CurrencyAmount_from_json(requester, obj["channel_opening_transaction_amount"]),
             transaction_hash=obj["channel_opening_transaction_transaction_hash"],
-            fees=(
-                CurrencyAmount_from_json(
-                    requester, obj["channel_opening_transaction_fees"]
-                )
-                if obj["channel_opening_transaction_fees"]
-                else None
-            ),
+            fees=CurrencyAmount_from_json(requester, obj["channel_opening_transaction_fees"]) if obj["channel_opening_transaction_fees"] else None,
             block_hash=obj["channel_opening_transaction_block_hash"],
             block_height=obj["channel_opening_transaction_block_height"],
-            destination_addresses=obj[
-                "channel_opening_transaction_destination_addresses"
-            ],
+            destination_addresses=obj["channel_opening_transaction_destination_addresses"],
             num_confirmations=obj["channel_opening_transaction_num_confirmations"],
-            channel_id=(
-                obj["channel_opening_transaction_channel"]["id"]
-                if obj["channel_opening_transaction_channel"]
-                else None
-            ),
+            channel_id=obj["channel_opening_transaction_channel"]["id"] if obj["channel_opening_transaction_channel"] else None,
+
         )
     if obj["__typename"] == "Deposit":
-        # pylint: disable=import-outside-toplevel
+         # pylint: disable=import-outside-toplevel
         from lightspark.objects.Deposit import Deposit
-
         return Deposit(
-            requester=requester,
-            typename="Deposit",
-            id=obj["deposit_id"],
+            requester=requester,            typename="Deposit",            id=obj["deposit_id"],
             created_at=datetime.fromisoformat(obj["deposit_created_at"]),
             updated_at=datetime.fromisoformat(obj["deposit_updated_at"]),
-            status=parse_enum(TransactionStatus, obj["deposit_status"]),
-            resolved_at=(
-                datetime.fromisoformat(obj["deposit_resolved_at"])
-                if obj["deposit_resolved_at"]
-                else None
-            ),
+
+            status=parse_enum(TransactionStatus, obj['deposit_status']),
+            resolved_at=datetime.fromisoformat(obj["deposit_resolved_at"]) if obj["deposit_resolved_at"] else None,
             amount=CurrencyAmount_from_json(requester, obj["deposit_amount"]),
             transaction_hash=obj["deposit_transaction_hash"],
-            fees=(
-                CurrencyAmount_from_json(requester, obj["deposit_fees"])
-                if obj["deposit_fees"]
-                else None
-            ),
+            fees=CurrencyAmount_from_json(requester, obj["deposit_fees"]) if obj["deposit_fees"] else None,
             block_hash=obj["deposit_block_hash"],
             block_height=obj["deposit_block_height"],
             destination_addresses=obj["deposit_destination_addresses"],
             num_confirmations=obj["deposit_num_confirmations"],
             destination_id=obj["deposit_destination"]["id"],
+
         )
     if obj["__typename"] == "IncomingPayment":
-        # pylint: disable=import-outside-toplevel
+         # pylint: disable=import-outside-toplevel
         from lightspark.objects.IncomingPayment import IncomingPayment
-
         return IncomingPayment(
-            requester=requester,
-            typename="IncomingPayment",
-            id=obj["incoming_payment_id"],
+            requester=requester,            typename="IncomingPayment",            id=obj["incoming_payment_id"],
             created_at=datetime.fromisoformat(obj["incoming_payment_created_at"]),
             updated_at=datetime.fromisoformat(obj["incoming_payment_updated_at"]),
-            status=parse_enum(TransactionStatus, obj["incoming_payment_status"]),
-            resolved_at=(
-                datetime.fromisoformat(obj["incoming_payment_resolved_at"])
-                if obj["incoming_payment_resolved_at"]
-                else None
-            ),
+
+            status=parse_enum(TransactionStatus, obj['incoming_payment_status']),
+            resolved_at=datetime.fromisoformat(obj["incoming_payment_resolved_at"]) if obj["incoming_payment_resolved_at"] else None,
             amount=CurrencyAmount_from_json(requester, obj["incoming_payment_amount"]),
             transaction_hash=obj["incoming_payment_transaction_hash"],
             is_uma=obj["incoming_payment_is_uma"],
             destination_id=obj["incoming_payment_destination"]["id"],
-            payment_request_id=(
-                obj["incoming_payment_payment_request"]["id"]
-                if obj["incoming_payment_payment_request"]
-                else None
-            ),
-            uma_post_transaction_data=(
-                list(
-                    map(
-                        # pylint: disable=unnecessary-lambda
-                        lambda e: PostTransactionData_from_json(requester, e),
-                        obj["incoming_payment_uma_post_transaction_data"],
-                    )
-                )
-                if obj["incoming_payment_uma_post_transaction_data"]
-                else None
-            ),
+            payment_request_id=obj["incoming_payment_payment_request"]["id"] if obj["incoming_payment_payment_request"] else None,
+            uma_post_transaction_data=list(map(
+ # pylint: disable=unnecessary-lambda 
+ lambda e: PostTransactionData_from_json(requester, e), obj["incoming_payment_uma_post_transaction_data"])) if obj["incoming_payment_uma_post_transaction_data"] else None,
             is_internal_payment=obj["incoming_payment_is_internal_payment"],
+
         )
     if obj["__typename"] == "OutgoingPayment":
-        # pylint: disable=import-outside-toplevel
+         # pylint: disable=import-outside-toplevel
         from lightspark.objects.OutgoingPayment import OutgoingPayment
-
         return OutgoingPayment(
-            requester=requester,
-            typename="OutgoingPayment",
-            id=obj["outgoing_payment_id"],
+            requester=requester,            typename="OutgoingPayment",            id=obj["outgoing_payment_id"],
             created_at=datetime.fromisoformat(obj["outgoing_payment_created_at"]),
             updated_at=datetime.fromisoformat(obj["outgoing_payment_updated_at"]),
-            status=parse_enum(TransactionStatus, obj["outgoing_payment_status"]),
-            resolved_at=(
-                datetime.fromisoformat(obj["outgoing_payment_resolved_at"])
-                if obj["outgoing_payment_resolved_at"]
-                else None
-            ),
+
+            status=parse_enum(TransactionStatus, obj['outgoing_payment_status']),
+            resolved_at=datetime.fromisoformat(obj["outgoing_payment_resolved_at"]) if obj["outgoing_payment_resolved_at"] else None,
             amount=CurrencyAmount_from_json(requester, obj["outgoing_payment_amount"]),
             transaction_hash=obj["outgoing_payment_transaction_hash"],
             is_uma=obj["outgoing_payment_is_uma"],
             origin_id=obj["outgoing_payment_origin"]["id"],
-            destination_id=(
-                obj["outgoing_payment_destination"]["id"]
-                if obj["outgoing_payment_destination"]
-                else None
-            ),
-            fees=(
-                CurrencyAmount_from_json(requester, obj["outgoing_payment_fees"])
-                if obj["outgoing_payment_fees"]
-                else None
-            ),
-            payment_request_data=(
-                PaymentRequestData_from_json(
-                    requester, obj["outgoing_payment_payment_request_data"]
-                )
-                if obj["outgoing_payment_payment_request_data"]
-                else None
-            ),
-            failure_reason=parse_enum_optional(
-                PaymentFailureReason, obj["outgoing_payment_failure_reason"]
-            ),
-            failure_message=(
-                RichText_from_json(requester, obj["outgoing_payment_failure_message"])
-                if obj["outgoing_payment_failure_message"]
-                else None
-            ),
-            uma_post_transaction_data=(
-                list(
-                    map(
-                        # pylint: disable=unnecessary-lambda
-                        lambda e: PostTransactionData_from_json(requester, e),
-                        obj["outgoing_payment_uma_post_transaction_data"],
-                    )
-                )
-                if obj["outgoing_payment_uma_post_transaction_data"]
-                else None
-            ),
+            destination_id=obj["outgoing_payment_destination"]["id"] if obj["outgoing_payment_destination"] else None,
+            fees=CurrencyAmount_from_json(requester, obj["outgoing_payment_fees"]) if obj["outgoing_payment_fees"] else None,
+            payment_request_data=PaymentRequestData_from_json(requester, obj["outgoing_payment_payment_request_data"]) if obj["outgoing_payment_payment_request_data"] else None,
+
+            failure_reason=parse_enum_optional(PaymentFailureReason, obj['outgoing_payment_failure_reason']),
+            failure_message=RichText_from_json(requester, obj["outgoing_payment_failure_message"]) if obj["outgoing_payment_failure_message"] else None,
+            uma_post_transaction_data=list(map(
+ # pylint: disable=unnecessary-lambda 
+ lambda e: PostTransactionData_from_json(requester, e), obj["outgoing_payment_uma_post_transaction_data"])) if obj["outgoing_payment_uma_post_transaction_data"] else None,
             payment_preimage=obj["outgoing_payment_payment_preimage"],
             is_internal_payment=obj["outgoing_payment_is_internal_payment"],
             idempotency_key=obj["outgoing_payment_idempotency_key"],
+
         )
     if obj["__typename"] == "RoutingTransaction":
-        # pylint: disable=import-outside-toplevel
+         # pylint: disable=import-outside-toplevel
         from lightspark.objects.RoutingTransaction import RoutingTransaction
-
         return RoutingTransaction(
-            requester=requester,
-            typename="RoutingTransaction",
-            id=obj["routing_transaction_id"],
+            requester=requester,            typename="RoutingTransaction",            id=obj["routing_transaction_id"],
             created_at=datetime.fromisoformat(obj["routing_transaction_created_at"]),
             updated_at=datetime.fromisoformat(obj["routing_transaction_updated_at"]),
-            status=parse_enum(TransactionStatus, obj["routing_transaction_status"]),
-            resolved_at=(
-                datetime.fromisoformat(obj["routing_transaction_resolved_at"])
-                if obj["routing_transaction_resolved_at"]
-                else None
-            ),
-            amount=CurrencyAmount_from_json(
-                requester, obj["routing_transaction_amount"]
-            ),
+
+            status=parse_enum(TransactionStatus, obj['routing_transaction_status']),
+            resolved_at=datetime.fromisoformat(obj["routing_transaction_resolved_at"]) if obj["routing_transaction_resolved_at"] else None,
+            amount=CurrencyAmount_from_json(requester, obj["routing_transaction_amount"]),
             transaction_hash=obj["routing_transaction_transaction_hash"],
-            incoming_channel_id=(
-                obj["routing_transaction_incoming_channel"]["id"]
-                if obj["routing_transaction_incoming_channel"]
-                else None
-            ),
-            outgoing_channel_id=(
-                obj["routing_transaction_outgoing_channel"]["id"]
-                if obj["routing_transaction_outgoing_channel"]
-                else None
-            ),
-            fees=(
-                CurrencyAmount_from_json(requester, obj["routing_transaction_fees"])
-                if obj["routing_transaction_fees"]
-                else None
-            ),
-            failure_message=(
-                RichText_from_json(
-                    requester, obj["routing_transaction_failure_message"]
-                )
-                if obj["routing_transaction_failure_message"]
-                else None
-            ),
-            failure_reason=parse_enum_optional(
-                RoutingTransactionFailureReason,
-                obj["routing_transaction_failure_reason"],
-            ),
+            incoming_channel_id=obj["routing_transaction_incoming_channel"]["id"] if obj["routing_transaction_incoming_channel"] else None,
+            outgoing_channel_id=obj["routing_transaction_outgoing_channel"]["id"] if obj["routing_transaction_outgoing_channel"] else None,
+            fees=CurrencyAmount_from_json(requester, obj["routing_transaction_fees"]) if obj["routing_transaction_fees"] else None,
+            failure_message=RichText_from_json(requester, obj["routing_transaction_failure_message"]) if obj["routing_transaction_failure_message"] else None,
+
+            failure_reason=parse_enum_optional(RoutingTransactionFailureReason, obj['routing_transaction_failure_reason']),
+
         )
     if obj["__typename"] == "Withdrawal":
-        # pylint: disable=import-outside-toplevel
+         # pylint: disable=import-outside-toplevel
         from lightspark.objects.Withdrawal import Withdrawal
-
         return Withdrawal(
-            requester=requester,
-            typename="Withdrawal",
-            id=obj["withdrawal_id"],
+            requester=requester,            typename="Withdrawal",            id=obj["withdrawal_id"],
             created_at=datetime.fromisoformat(obj["withdrawal_created_at"]),
             updated_at=datetime.fromisoformat(obj["withdrawal_updated_at"]),
-            status=parse_enum(TransactionStatus, obj["withdrawal_status"]),
-            resolved_at=(
-                datetime.fromisoformat(obj["withdrawal_resolved_at"])
-                if obj["withdrawal_resolved_at"]
-                else None
-            ),
+
+            status=parse_enum(TransactionStatus, obj['withdrawal_status']),
+            resolved_at=datetime.fromisoformat(obj["withdrawal_resolved_at"]) if obj["withdrawal_resolved_at"] else None,
             amount=CurrencyAmount_from_json(requester, obj["withdrawal_amount"]),
             transaction_hash=obj["withdrawal_transaction_hash"],
-            fees=(
-                CurrencyAmount_from_json(requester, obj["withdrawal_fees"])
-                if obj["withdrawal_fees"]
-                else None
-            ),
+            fees=CurrencyAmount_from_json(requester, obj["withdrawal_fees"]) if obj["withdrawal_fees"] else None,
             block_hash=obj["withdrawal_block_hash"],
             block_height=obj["withdrawal_block_height"],
             destination_addresses=obj["withdrawal_destination_addresses"],
             num_confirmations=obj["withdrawal_num_confirmations"],
             origin_id=obj["withdrawal_origin"]["id"],
+
         )
     graphql_typename = obj["__typename"]
-    raise LightsparkException(
-        "UNKNOWN_INTERFACE",
-        f"Couldn't find a concrete type for interface Transaction corresponding to the typename={graphql_typename}",
-    )
+    raise LightsparkException("UNKNOWN_INTERFACE", f"Couldn't find a concrete type for interface Transaction corresponding to the typename={graphql_typename}")

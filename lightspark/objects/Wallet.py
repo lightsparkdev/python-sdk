@@ -1,3 +1,4 @@
+
 # Copyright ©, 2022-present, Lightspark Group, Inc. - All Rights Reserved
 
 from dataclasses import dataclass
@@ -16,18 +17,17 @@ from .LightsparkNodeOwner import LightsparkNodeOwner
 from .TransactionStatus import TransactionStatus
 from .TransactionType import TransactionType
 from .WalletStatus import WalletStatus
-from .WalletToPaymentRequestsConnection import WalletToPaymentRequestsConnection
-from .WalletToPaymentRequestsConnection import (
-    from_json as WalletToPaymentRequestsConnection_from_json,
-)
+from .WalletToPaymentRequestsConnection import \
+    WalletToPaymentRequestsConnection
+from .WalletToPaymentRequestsConnection import \
+    from_json as WalletToPaymentRequestsConnection_from_json
 from .WalletToTransactionsConnection import WalletToTransactionsConnection
-from .WalletToTransactionsConnection import (
-    from_json as WalletToTransactionsConnection_from_json,
-)
-from .WalletToWithdrawalRequestsConnection import WalletToWithdrawalRequestsConnection
-from .WalletToWithdrawalRequestsConnection import (
-    from_json as WalletToWithdrawalRequestsConnection_from_json,
-)
+from .WalletToTransactionsConnection import \
+    from_json as WalletToTransactionsConnection_from_json
+from .WalletToWithdrawalRequestsConnection import \
+    WalletToWithdrawalRequestsConnection
+from .WalletToWithdrawalRequestsConnection import \
+    from_json as WalletToWithdrawalRequestsConnection_from_json
 from .WithdrawalRequestStatus import WithdrawalRequestStatus
 
 
@@ -62,15 +62,7 @@ class Wallet(LightsparkNodeOwner, Entity):
     """The status of this wallet."""
     typename: str
 
-    def get_transactions(
-        self,
-        first: Optional[int] = None,
-        after: Optional[str] = None,
-        created_after_date: Optional[datetime] = None,
-        created_before_date: Optional[datetime] = None,
-        statuses: Optional[List[TransactionStatus]] = None,
-        types: Optional[List[TransactionType]] = None,
-    ) -> WalletToTransactionsConnection:
+    def get_transactions(self, first: Optional[int]= None, after: Optional[str]= None, created_after_date: Optional[datetime]= None, created_before_date: Optional[datetime]= None, statuses: Optional[List[TransactionStatus]]= None, types: Optional[List[TransactionType]]= None) -> WalletToTransactionsConnection:
         json = self.requester.execute_graphql(
             """
 query FetchWalletToTransactionsConnection($entity_id: ID!, $first: Int, $after: ID, $created_after_date: DateTime, $created_before_date: DateTime, $statuses: [TransactionStatus!], $types: [TransactionType!]) {
@@ -641,26 +633,12 @@ query FetchWalletToTransactionsConnection($entity_id: ID!, $first: Int, $after: 
     }
 }
             """,
-            {
-                "entity_id": self.id,
-                "first": first,
-                "after": after,
-                "created_after_date": created_after_date,
-                "created_before_date": created_before_date,
-                "statuses": statuses,
-                "types": types,
-            },
+            {"entity_id": self.id, "first": first, "after": after, "created_after_date": created_after_date, "created_before_date": created_before_date, "statuses": statuses, "types": types}
         )
         connection = json["entity"]["transactions"]
         return WalletToTransactionsConnection_from_json(self.requester, connection)
 
-    def get_payment_requests(
-        self,
-        first: Optional[int] = None,
-        after: Optional[str] = None,
-        created_after_date: Optional[datetime] = None,
-        created_before_date: Optional[datetime] = None,
-    ) -> WalletToPaymentRequestsConnection:
+    def get_payment_requests(self, first: Optional[int]= None, after: Optional[str]= None, created_after_date: Optional[datetime]= None, created_before_date: Optional[datetime]= None) -> WalletToPaymentRequestsConnection:
         json = self.requester.execute_graphql(
             """
 query FetchWalletToPaymentRequestsConnection($entity_id: ID!, $first: Int, $after: ID, $created_after_date: DateTime, $created_before_date: DateTime) {
@@ -992,22 +970,12 @@ query FetchWalletToPaymentRequestsConnection($entity_id: ID!, $first: Int, $afte
     }
 }
             """,
-            {
-                "entity_id": self.id,
-                "first": first,
-                "after": after,
-                "created_after_date": created_after_date,
-                "created_before_date": created_before_date,
-            },
+            {"entity_id": self.id, "first": first, "after": after, "created_after_date": created_after_date, "created_before_date": created_before_date}
         )
         connection = json["entity"]["payment_requests"]
         return WalletToPaymentRequestsConnection_from_json(self.requester, connection)
 
-    def get_total_amount_received(
-        self,
-        created_after_date: Optional[datetime] = None,
-        created_before_date: Optional[datetime] = None,
-    ) -> CurrencyAmount:
+    def get_total_amount_received(self, created_after_date: Optional[datetime]= None, created_before_date: Optional[datetime]= None) -> CurrencyAmount:
         json = self.requester.execute_graphql(
             """
 query FetchWalletTotalAmountReceived($entity_id: ID!, $created_after_date: DateTime, $created_before_date: DateTime) {
@@ -1025,23 +993,12 @@ query FetchWalletTotalAmountReceived($entity_id: ID!, $created_after_date: DateT
     }
 }
             """,
-            {
-                "entity_id": self.id,
-                "created_after_date": created_after_date,
-                "created_before_date": created_before_date,
-            },
+            {"entity_id": self.id, "created_after_date": created_after_date, "created_before_date": created_before_date}
         )
         connection = json["entity"]["total_amount_received"]
         return CurrencyAmount_from_json(self.requester, connection)
 
-    def get_withdrawal_requests(
-        self,
-        first: Optional[int] = None,
-        after: Optional[str] = None,
-        statuses: Optional[List[WithdrawalRequestStatus]] = None,
-        created_after_date: Optional[datetime] = None,
-        created_before_date: Optional[datetime] = None,
-    ) -> WalletToWithdrawalRequestsConnection:
+    def get_withdrawal_requests(self, first: Optional[int]= None, after: Optional[str]= None, statuses: Optional[List[WithdrawalRequestStatus]]= None, created_after_date: Optional[datetime]= None, created_before_date: Optional[datetime]= None) -> WalletToWithdrawalRequestsConnection:
         json = self.requester.execute_graphql(
             """
 query FetchWalletToWithdrawalRequestsConnection($entity_id: ID!, $first: Int, $after: ID, $statuses: [WithdrawalRequestStatus!], $created_after_date: DateTime, $created_before_date: DateTime) {
@@ -1117,25 +1074,12 @@ query FetchWalletToWithdrawalRequestsConnection($entity_id: ID!, $first: Int, $a
     }
 }
             """,
-            {
-                "entity_id": self.id,
-                "first": first,
-                "after": after,
-                "statuses": statuses,
-                "created_after_date": created_after_date,
-                "created_before_date": created_before_date,
-            },
+            {"entity_id": self.id, "first": first, "after": after, "statuses": statuses, "created_after_date": created_after_date, "created_before_date": created_before_date}
         )
         connection = json["entity"]["withdrawal_requests"]
-        return WalletToWithdrawalRequestsConnection_from_json(
-            self.requester, connection
-        )
+        return WalletToWithdrawalRequestsConnection_from_json(self.requester, connection)
 
-    def get_total_amount_sent(
-        self,
-        created_after_date: Optional[datetime] = None,
-        created_before_date: Optional[datetime] = None,
-    ) -> CurrencyAmount:
+    def get_total_amount_sent(self, created_after_date: Optional[datetime]= None, created_before_date: Optional[datetime]= None) -> CurrencyAmount:
         json = self.requester.execute_graphql(
             """
 query FetchWalletTotalAmountSent($entity_id: ID!, $created_after_date: DateTime, $created_before_date: DateTime) {
@@ -1153,14 +1097,11 @@ query FetchWalletTotalAmountSent($entity_id: ID!, $created_after_date: DateTime,
     }
 }
             """,
-            {
-                "entity_id": self.id,
-                "created_after_date": created_after_date,
-                "created_before_date": created_before_date,
-            },
+            {"entity_id": self.id, "created_after_date": created_after_date, "created_before_date": created_before_date}
         )
         connection = json["entity"]["total_amount_sent"]
         return CurrencyAmount_from_json(self.requester, connection)
+
 
     def to_json(self) -> Mapping[str, Any]:
         return {
@@ -1168,14 +1109,15 @@ query FetchWalletTotalAmountSent($entity_id: ID!, $created_after_date: DateTime,
             "wallet_id": self.id,
             "wallet_created_at": self.created_at.isoformat(),
             "wallet_updated_at": self.updated_at.isoformat(),
-            "wallet_last_login_at": (
-                self.last_login_at.isoformat() if self.last_login_at else None
-            ),
+            "wallet_last_login_at": self.last_login_at.isoformat() if self.last_login_at else None,
             "wallet_balances": self.balances.to_json() if self.balances else None,
             "wallet_third_party_identifier": self.third_party_identifier,
-            "wallet_account": {"id": self.account_id} if self.account_id else None,
+            "wallet_account": { "id": self.account_id } if self.account_id else None,
             "wallet_status": self.status.value,
+
         }
+
+
 
 
 FRAGMENT = """
@@ -1221,24 +1163,18 @@ fragment WalletFragment on Wallet {
 """
 
 
+
 def from_json(requester: Requester, obj: Mapping[str, Any]) -> Wallet:
     return Wallet(
-        requester=requester,
-        typename="Wallet",
-        id=obj["wallet_id"],
+        requester=requester,        typename="Wallet",        id=obj["wallet_id"],
         created_at=datetime.fromisoformat(obj["wallet_created_at"]),
         updated_at=datetime.fromisoformat(obj["wallet_updated_at"]),
-        last_login_at=(
-            datetime.fromisoformat(obj["wallet_last_login_at"])
-            if obj["wallet_last_login_at"]
-            else None
-        ),
-        balances=(
-            Balances_from_json(requester, obj["wallet_balances"])
-            if obj["wallet_balances"]
-            else None
-        ),
+        last_login_at=datetime.fromisoformat(obj["wallet_last_login_at"]) if obj["wallet_last_login_at"] else None,
+        balances=Balances_from_json(requester, obj["wallet_balances"]) if obj["wallet_balances"] else None,
         third_party_identifier=obj["wallet_third_party_identifier"],
         account_id=obj["wallet_account"]["id"] if obj["wallet_account"] else None,
-        status=parse_enum(WalletStatus, obj["wallet_status"]),
-    )
+
+        status=parse_enum(WalletStatus, obj['wallet_status']),
+
+        )
+

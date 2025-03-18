@@ -1,3 +1,4 @@
+
 # Copyright ©, 2022-present, Lightspark Group, Inc. - All Rights Reserved
 
 from enum import Enum
@@ -14,3 +15,4 @@ class WithdrawalRequestStatus(Enum):
     IN_PROGRESS = "IN_PROGRESS"
     SUCCESSFUL = "SUCCESSFUL"
     PARTIALLY_SUCCESSFUL = "PARTIALLY_SUCCESSFUL"
+

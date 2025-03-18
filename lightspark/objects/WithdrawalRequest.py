@@ -1,3 +1,4 @@
+
 # Copyright ©, 2022-present, Lightspark Group, Inc. - All Rights Reserved
 
 from dataclasses import dataclass
@@ -13,24 +14,20 @@ from .Entity import Entity
 from .RequestInitiator import RequestInitiator
 from .WithdrawalMode import WithdrawalMode
 from .WithdrawalRequestStatus import WithdrawalRequestStatus
-from .WithdrawalRequestToChannelClosingTransactionsConnection import (
-    WithdrawalRequestToChannelClosingTransactionsConnection,
-)
-from .WithdrawalRequestToChannelClosingTransactionsConnection import (
-    from_json as WithdrawalRequestToChannelClosingTransactionsConnection_from_json,
-)
-from .WithdrawalRequestToChannelOpeningTransactionsConnection import (
-    WithdrawalRequestToChannelOpeningTransactionsConnection,
-)
-from .WithdrawalRequestToChannelOpeningTransactionsConnection import (
-    from_json as WithdrawalRequestToChannelOpeningTransactionsConnection_from_json,
-)
-from .WithdrawalRequestToWithdrawalsConnection import (
-    WithdrawalRequestToWithdrawalsConnection,
-)
-from .WithdrawalRequestToWithdrawalsConnection import (
-    from_json as WithdrawalRequestToWithdrawalsConnection_from_json,
-)
+from .WithdrawalRequestToChannelClosingTransactionsConnection import \
+    WithdrawalRequestToChannelClosingTransactionsConnection
+from .WithdrawalRequestToChannelClosingTransactionsConnection import \
+    from_json as \
+    WithdrawalRequestToChannelClosingTransactionsConnection_from_json
+from .WithdrawalRequestToChannelOpeningTransactionsConnection import \
+    WithdrawalRequestToChannelOpeningTransactionsConnection
+from .WithdrawalRequestToChannelOpeningTransactionsConnection import \
+    from_json as \
+    WithdrawalRequestToChannelOpeningTransactionsConnection_from_json
+from .WithdrawalRequestToWithdrawalsConnection import \
+    WithdrawalRequestToWithdrawalsConnection
+from .WithdrawalRequestToWithdrawalsConnection import \
+    from_json as WithdrawalRequestToWithdrawalsConnection_from_json
 
 
 @dataclass
@@ -85,9 +82,7 @@ class WithdrawalRequest(Entity):
     """The initiator of the withdrawal."""
     typename: str
 
-    def get_channel_closing_transactions(
-        self, first: Optional[int] = None, after: Optional[str] = None
-    ) -> WithdrawalRequestToChannelClosingTransactionsConnection:
+    def get_channel_closing_transactions(self, first: Optional[int]= None, after: Optional[str]= None) -> WithdrawalRequestToChannelClosingTransactionsConnection:
         json = self.requester.execute_graphql(
             """
 query FetchWithdrawalRequestToChannelClosingTransactionsConnection($entity_id: ID!, $first: Int, $after: String) {
@@ -140,16 +135,12 @@ query FetchWithdrawalRequestToChannelClosingTransactionsConnection($entity_id: I
     }
 }
             """,
-            {"entity_id": self.id, "first": first, "after": after},
+            {"entity_id": self.id, "first": first, "after": after}
         )
         connection = json["entity"]["channel_closing_transactions"]
-        return WithdrawalRequestToChannelClosingTransactionsConnection_from_json(
-            self.requester, connection
-        )
+        return WithdrawalRequestToChannelClosingTransactionsConnection_from_json(self.requester, connection)
 
-    def get_channel_opening_transactions(
-        self, first: Optional[int] = None, after: Optional[str] = None
-    ) -> WithdrawalRequestToChannelOpeningTransactionsConnection:
+    def get_channel_opening_transactions(self, first: Optional[int]= None, after: Optional[str]= None) -> WithdrawalRequestToChannelOpeningTransactionsConnection:
         json = self.requester.execute_graphql(
             """
 query FetchWithdrawalRequestToChannelOpeningTransactionsConnection($entity_id: ID!, $first: Int, $after: String) {
@@ -202,16 +193,12 @@ query FetchWithdrawalRequestToChannelOpeningTransactionsConnection($entity_id: I
     }
 }
             """,
-            {"entity_id": self.id, "first": first, "after": after},
+            {"entity_id": self.id, "first": first, "after": after}
         )
         connection = json["entity"]["channel_opening_transactions"]
-        return WithdrawalRequestToChannelOpeningTransactionsConnection_from_json(
-            self.requester, connection
-        )
+        return WithdrawalRequestToChannelOpeningTransactionsConnection_from_json(self.requester, connection)
 
-    def get_withdrawals(
-        self, first: Optional[int] = None
-    ) -> WithdrawalRequestToWithdrawalsConnection:
+    def get_withdrawals(self, first: Optional[int]= None) -> WithdrawalRequestToWithdrawalsConnection:
         json = self.requester.execute_graphql(
             """
 query FetchWithdrawalRequestToWithdrawalsConnection($entity_id: ID!, $first: Int) {
@@ -257,12 +244,11 @@ query FetchWithdrawalRequestToWithdrawalsConnection($entity_id: ID!, $first: Int
     }
 }
             """,
-            {"entity_id": self.id, "first": first},
+            {"entity_id": self.id, "first": first}
         )
         connection = json["entity"]["withdrawals"]
-        return WithdrawalRequestToWithdrawalsConnection_from_json(
-            self.requester, connection
-        )
+        return WithdrawalRequestToWithdrawalsConnection_from_json(self.requester, connection)
+
 
     def to_json(self) -> Mapping[str, Any]:
         return {
@@ -272,27 +258,20 @@ query FetchWithdrawalRequestToWithdrawalsConnection($entity_id: ID!, $first: Int
             "withdrawal_request_updated_at": self.updated_at.isoformat(),
             "withdrawal_request_requested_amount": self.requested_amount.to_json(),
             "withdrawal_request_amount": self.amount.to_json(),
-            "withdrawal_request_estimated_amount": (
-                self.estimated_amount.to_json() if self.estimated_amount else None
-            ),
-            "withdrawal_request_amount_withdrawn": (
-                self.amount_withdrawn.to_json() if self.amount_withdrawn else None
-            ),
-            "withdrawal_request_total_fees": (
-                self.total_fees.to_json() if self.total_fees else None
-            ),
+            "withdrawal_request_estimated_amount": self.estimated_amount.to_json() if self.estimated_amount else None,
+            "withdrawal_request_amount_withdrawn": self.amount_withdrawn.to_json() if self.amount_withdrawn else None,
+            "withdrawal_request_total_fees": self.total_fees.to_json() if self.total_fees else None,
             "withdrawal_request_bitcoin_address": self.bitcoin_address,
             "withdrawal_request_withdrawal_mode": self.withdrawal_mode.value,
             "withdrawal_request_status": self.status.value,
-            "withdrawal_request_completed_at": (
-                self.completed_at.isoformat() if self.completed_at else None
-            ),
-            "withdrawal_request_withdrawal": (
-                {"id": self.withdrawal_id} if self.withdrawal_id else None
-            ),
+            "withdrawal_request_completed_at": self.completed_at.isoformat() if self.completed_at else None,
+            "withdrawal_request_withdrawal": { "id": self.withdrawal_id } if self.withdrawal_id else None,
             "withdrawal_request_idempotency_key": self.idempotency_key,
             "withdrawal_request_initiator": self.initiator.value,
+
         }
+
+
 
 
 FRAGMENT = """
@@ -354,51 +333,27 @@ fragment WithdrawalRequestFragment on WithdrawalRequest {
 """
 
 
+
 def from_json(requester: Requester, obj: Mapping[str, Any]) -> WithdrawalRequest:
     return WithdrawalRequest(
-        requester=requester,
-        typename="WithdrawalRequest",
-        id=obj["withdrawal_request_id"],
+        requester=requester,        typename="WithdrawalRequest",        id=obj["withdrawal_request_id"],
         created_at=datetime.fromisoformat(obj["withdrawal_request_created_at"]),
         updated_at=datetime.fromisoformat(obj["withdrawal_request_updated_at"]),
-        requested_amount=CurrencyAmount_from_json(
-            requester, obj["withdrawal_request_requested_amount"]
-        ),
+        requested_amount=CurrencyAmount_from_json(requester, obj["withdrawal_request_requested_amount"]),
         amount=CurrencyAmount_from_json(requester, obj["withdrawal_request_amount"]),
-        estimated_amount=(
-            CurrencyAmount_from_json(
-                requester, obj["withdrawal_request_estimated_amount"]
-            )
-            if obj["withdrawal_request_estimated_amount"]
-            else None
-        ),
-        amount_withdrawn=(
-            CurrencyAmount_from_json(
-                requester, obj["withdrawal_request_amount_withdrawn"]
-            )
-            if obj["withdrawal_request_amount_withdrawn"]
-            else None
-        ),
-        total_fees=(
-            CurrencyAmount_from_json(requester, obj["withdrawal_request_total_fees"])
-            if obj["withdrawal_request_total_fees"]
-            else None
-        ),
+        estimated_amount=CurrencyAmount_from_json(requester, obj["withdrawal_request_estimated_amount"]) if obj["withdrawal_request_estimated_amount"] else None,
+        amount_withdrawn=CurrencyAmount_from_json(requester, obj["withdrawal_request_amount_withdrawn"]) if obj["withdrawal_request_amount_withdrawn"] else None,
+        total_fees=CurrencyAmount_from_json(requester, obj["withdrawal_request_total_fees"]) if obj["withdrawal_request_total_fees"] else None,
         bitcoin_address=obj["withdrawal_request_bitcoin_address"],
-        withdrawal_mode=parse_enum(
-            WithdrawalMode, obj["withdrawal_request_withdrawal_mode"]
-        ),
-        status=parse_enum(WithdrawalRequestStatus, obj["withdrawal_request_status"]),
-        completed_at=(
-            datetime.fromisoformat(obj["withdrawal_request_completed_at"])
-            if obj["withdrawal_request_completed_at"]
-            else None
-        ),
-        withdrawal_id=(
-            obj["withdrawal_request_withdrawal"]["id"]
-            if obj["withdrawal_request_withdrawal"]
-            else None
-        ),
+
+        withdrawal_mode=parse_enum(WithdrawalMode, obj['withdrawal_request_withdrawal_mode']),
+
+        status=parse_enum(WithdrawalRequestStatus, obj['withdrawal_request_status']),
+        completed_at=datetime.fromisoformat(obj["withdrawal_request_completed_at"]) if obj["withdrawal_request_completed_at"] else None,
+        withdrawal_id=obj["withdrawal_request_withdrawal"]["id"] if obj["withdrawal_request_withdrawal"] else None,
         idempotency_key=obj["withdrawal_request_idempotency_key"],
-        initiator=parse_enum(RequestInitiator, obj["withdrawal_request_initiator"]),
-    )
+
+        initiator=parse_enum(RequestInitiator, obj['withdrawal_request_initiator']),
+
+        )
+

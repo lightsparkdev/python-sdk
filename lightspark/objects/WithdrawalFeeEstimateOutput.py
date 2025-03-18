@@ -1,3 +1,4 @@
+
 # Copyright ©, 2022-present, Lightspark Group, Inc. - All Rights Reserved
 
 from dataclasses import dataclass
@@ -10,16 +11,22 @@ from .CurrencyAmount import from_json as CurrencyAmount_from_json
 
 
 @dataclass
-class WithdrawalFeeEstimateOutput:
+class WithdrawalFeeEstimateOutput():
+    
     requester: Requester
 
     fee_estimate: CurrencyAmount
     """The estimated fee for the withdrawal."""
 
+
+
     def to_json(self) -> Mapping[str, Any]:
         return {
             "withdrawal_fee_estimate_output_fee_estimate": self.fee_estimate.to_json(),
+
         }
+
+
 
 
 FRAGMENT = """
@@ -37,12 +44,10 @@ fragment WithdrawalFeeEstimateOutputFragment on WithdrawalFeeEstimateOutput {
 """
 
 
-def from_json(
-    requester: Requester, obj: Mapping[str, Any]
-) -> WithdrawalFeeEstimateOutput:
+
+def from_json(requester: Requester, obj: Mapping[str, Any]) -> WithdrawalFeeEstimateOutput:
     return WithdrawalFeeEstimateOutput(
-        requester=requester,
-        fee_estimate=CurrencyAmount_from_json(
-            requester, obj["withdrawal_fee_estimate_output_fee_estimate"]
-        ),
-    )
+        requester=requester,        fee_estimate=CurrencyAmount_from_json(requester, obj["withdrawal_fee_estimate_output_fee_estimate"]),
+
+        )
+

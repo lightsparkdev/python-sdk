@@ -1,3 +1,4 @@
+
 # Copyright ©, 2022-present, Lightspark Group, Inc. - All Rights Reserved
 
 from dataclasses import dataclass
@@ -14,6 +15,7 @@ from .Wallet import from_json as Wallet_from_json
 
 @dataclass
 class AccountToWalletsConnection(Connection):
+    
     requester: Requester
 
     count: int
@@ -26,15 +28,17 @@ class AccountToWalletsConnection(Connection):
     """The wallets for the current page of this connection."""
     typename: str
 
+
     def to_json(self) -> Mapping[str, Any]:
         return {
             "__typename": "AccountToWalletsConnection",
             "account_to_wallets_connection_count": self.count,
             "account_to_wallets_connection_page_info": self.page_info.to_json(),
-            "account_to_wallets_connection_entities": [
-                e.to_json() for e in self.entities
-            ],
+            "account_to_wallets_connection_entities": [e.to_json() for e in self.entities],
+
         }
+
+
 
 
 FRAGMENT = """
@@ -55,21 +59,14 @@ fragment AccountToWalletsConnectionFragment on AccountToWalletsConnection {
 """
 
 
-def from_json(
-    requester: Requester, obj: Mapping[str, Any]
-) -> AccountToWalletsConnection:
+
+def from_json(requester: Requester, obj: Mapping[str, Any]) -> AccountToWalletsConnection:
     return AccountToWalletsConnection(
-        requester=requester,
-        typename="AccountToWalletsConnection",
-        count=obj["account_to_wallets_connection_count"],
-        page_info=PageInfo_from_json(
-            requester, obj["account_to_wallets_connection_page_info"]
-        ),
-        entities=list(
-            map(
-                # pylint: disable=unnecessary-lambda
-                lambda e: Wallet_from_json(requester, e),
-                obj["account_to_wallets_connection_entities"],
-            )
-        ),
-    )
+        requester=requester,        typename="AccountToWalletsConnection",        count=obj["account_to_wallets_connection_count"],
+        page_info=PageInfo_from_json(requester, obj["account_to_wallets_connection_page_info"]),
+        entities=list(map(
+ # pylint: disable=unnecessary-lambda 
+ lambda e: Wallet_from_json(requester, e), obj["account_to_wallets_connection_entities"])),
+
+        )
+

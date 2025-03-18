@@ -1,3 +1,4 @@
+
 # Copyright ©, 2022-present, Lightspark Group, Inc. - All Rights Reserved
 
 from dataclasses import dataclass
@@ -7,36 +8,34 @@ from typing import Any, List, Mapping, Optional
 from lightspark.requests.requester import Requester
 
 from .AccountToApiTokensConnection import AccountToApiTokensConnection
-from .AccountToApiTokensConnection import (
-    from_json as AccountToApiTokensConnection_from_json,
-)
+from .AccountToApiTokensConnection import \
+    from_json as AccountToApiTokensConnection_from_json
 from .AccountToChannelsConnection import AccountToChannelsConnection
-from .AccountToChannelsConnection import (
-    from_json as AccountToChannelsConnection_from_json,
-)
+from .AccountToChannelsConnection import \
+    from_json as AccountToChannelsConnection_from_json
 from .AccountToNodesConnection import AccountToNodesConnection
-from .AccountToNodesConnection import from_json as AccountToNodesConnection_from_json
-from .AccountToPaymentRequestsConnection import AccountToPaymentRequestsConnection
-from .AccountToPaymentRequestsConnection import (
-    from_json as AccountToPaymentRequestsConnection_from_json,
-)
+from .AccountToNodesConnection import \
+    from_json as AccountToNodesConnection_from_json
+from .AccountToPaymentRequestsConnection import \
+    AccountToPaymentRequestsConnection
+from .AccountToPaymentRequestsConnection import \
+    from_json as AccountToPaymentRequestsConnection_from_json
 from .AccountToTransactionsConnection import AccountToTransactionsConnection
-from .AccountToTransactionsConnection import (
-    from_json as AccountToTransactionsConnection_from_json,
-)
+from .AccountToTransactionsConnection import \
+    from_json as AccountToTransactionsConnection_from_json
 from .AccountToWalletsConnection import AccountToWalletsConnection
-from .AccountToWalletsConnection import (
-    from_json as AccountToWalletsConnection_from_json,
-)
-from .AccountToWithdrawalRequestsConnection import AccountToWithdrawalRequestsConnection
-from .AccountToWithdrawalRequestsConnection import (
-    from_json as AccountToWithdrawalRequestsConnection_from_json,
-)
+from .AccountToWalletsConnection import \
+    from_json as AccountToWalletsConnection_from_json
+from .AccountToWithdrawalRequestsConnection import \
+    AccountToWithdrawalRequestsConnection
+from .AccountToWithdrawalRequestsConnection import \
+    from_json as AccountToWithdrawalRequestsConnection_from_json
 from .BitcoinNetwork import BitcoinNetwork
 from .BlockchainBalance import BlockchainBalance
 from .BlockchainBalance import from_json as BlockchainBalance_from_json
 from .CurrencyAmount import CurrencyAmount
 from .CurrencyAmount import from_json as CurrencyAmount_from_json
+from .CurrencyAmountInput import CurrencyAmountInput
 from .Entity import Entity
 from .LightsparkNodeOwner import LightsparkNodeOwner
 from .TransactionFailures import TransactionFailures
@@ -64,9 +63,7 @@ class Account(LightsparkNodeOwner, Entity):
     """The name of this account."""
     typename: str
 
-    def get_api_tokens(
-        self, first: Optional[int] = None, after: Optional[str] = None
-    ) -> AccountToApiTokensConnection:
+    def get_api_tokens(self, first: Optional[int]= None, after: Optional[str]= None) -> AccountToApiTokensConnection:
         json = self.requester.execute_graphql(
             """
 query FetchAccountToApiTokensConnection($entity_id: ID!, $first: Int, $after: String) {
@@ -97,16 +94,12 @@ query FetchAccountToApiTokensConnection($entity_id: ID!, $first: Int, $after: St
     }
 }
             """,
-            {"entity_id": self.id, "first": first, "after": after},
+            {"entity_id": self.id, "first": first, "after": after}
         )
         connection = json["entity"]["api_tokens"]
         return AccountToApiTokensConnection_from_json(self.requester, connection)
 
-    def get_blockchain_balance(
-        self,
-        bitcoin_networks: Optional[List[BitcoinNetwork]] = None,
-        node_ids: Optional[List[str]] = None,
-    ) -> Optional[BlockchainBalance]:
+    def get_blockchain_balance(self, bitcoin_networks: Optional[List[BitcoinNetwork]]= None, node_ids: Optional[List[str]]= None) -> Optional[BlockchainBalance]:
         json = self.requester.execute_graphql(
             """
 query FetchAccountBlockchainBalance($entity_id: ID!, $bitcoin_networks: [BitcoinNetwork!], $node_ids: [ID!]) {
@@ -167,24 +160,12 @@ query FetchAccountBlockchainBalance($entity_id: ID!, $bitcoin_networks: [Bitcoin
     }
 }
             """,
-            {
-                "entity_id": self.id,
-                "bitcoin_networks": bitcoin_networks,
-                "node_ids": node_ids,
-            },
+            {"entity_id": self.id, "bitcoin_networks": bitcoin_networks, "node_ids": node_ids}
         )
         connection = json["entity"]["blockchain_balance"]
-        return (
-            BlockchainBalance_from_json(self.requester, connection)
-            if connection
-            else None
-        )
+        return BlockchainBalance_from_json(self.requester, connection) if connection else None
 
-    def get_conductivity(
-        self,
-        bitcoin_networks: Optional[List[BitcoinNetwork]] = None,
-        node_ids: Optional[List[str]] = None,
-    ) -> Optional[int]:
+    def get_conductivity(self, bitcoin_networks: Optional[List[BitcoinNetwork]]= None, node_ids: Optional[List[str]]= None) -> Optional[int]:
         json = self.requester.execute_graphql(
             """
 query FetchAccountConductivity($entity_id: ID!, $bitcoin_networks: [BitcoinNetwork!], $node_ids: [ID!]) {
@@ -195,20 +176,12 @@ query FetchAccountConductivity($entity_id: ID!, $bitcoin_networks: [BitcoinNetwo
     }
 }
             """,
-            {
-                "entity_id": self.id,
-                "bitcoin_networks": bitcoin_networks,
-                "node_ids": node_ids,
-            },
+            {"entity_id": self.id, "bitcoin_networks": bitcoin_networks, "node_ids": node_ids}
         )
         connection = json["entity"]["conductivity"]
         return connection
 
-    def get_local_balance(
-        self,
-        bitcoin_networks: Optional[List[BitcoinNetwork]] = None,
-        node_ids: Optional[List[str]] = None,
-    ) -> Optional[CurrencyAmount]:
+    def get_local_balance(self, bitcoin_networks: Optional[List[BitcoinNetwork]]= None, node_ids: Optional[List[str]]= None) -> Optional[CurrencyAmount]:
         json = self.requester.execute_graphql(
             """
 query FetchAccountLocalBalance($entity_id: ID!, $bitcoin_networks: [BitcoinNetwork!], $node_ids: [ID!]) {
@@ -226,24 +199,12 @@ query FetchAccountLocalBalance($entity_id: ID!, $bitcoin_networks: [BitcoinNetwo
     }
 }
             """,
-            {
-                "entity_id": self.id,
-                "bitcoin_networks": bitcoin_networks,
-                "node_ids": node_ids,
-            },
+            {"entity_id": self.id, "bitcoin_networks": bitcoin_networks, "node_ids": node_ids}
         )
         connection = json["entity"]["local_balance"]
-        return (
-            CurrencyAmount_from_json(self.requester, connection) if connection else None
-        )
+        return CurrencyAmount_from_json(self.requester, connection) if connection else None
 
-    def get_nodes(
-        self,
-        first: Optional[int] = None,
-        bitcoin_networks: Optional[List[BitcoinNetwork]] = None,
-        node_ids: Optional[List[str]] = None,
-        after: Optional[str] = None,
-    ) -> AccountToNodesConnection:
+    def get_nodes(self, first: Optional[int]= None, bitcoin_networks: Optional[List[BitcoinNetwork]]= None, node_ids: Optional[List[str]]= None, after: Optional[str]= None) -> AccountToNodesConnection:
         json = self.requester.execute_graphql(
             """
 query FetchAccountToNodesConnection($entity_id: ID!, $first: Int, $bitcoin_networks: [BitcoinNetwork!], $node_ids: [ID!], $after: String) {
@@ -526,22 +487,12 @@ query FetchAccountToNodesConnection($entity_id: ID!, $first: Int, $bitcoin_netwo
     }
 }
             """,
-            {
-                "entity_id": self.id,
-                "first": first,
-                "bitcoin_networks": bitcoin_networks,
-                "node_ids": node_ids,
-                "after": after,
-            },
+            {"entity_id": self.id, "first": first, "bitcoin_networks": bitcoin_networks, "node_ids": node_ids, "after": after}
         )
         connection = json["entity"]["nodes"]
         return AccountToNodesConnection_from_json(self.requester, connection)
 
-    def get_remote_balance(
-        self,
-        bitcoin_networks: Optional[List[BitcoinNetwork]] = None,
-        node_ids: Optional[List[str]] = None,
-    ) -> Optional[CurrencyAmount]:
+    def get_remote_balance(self, bitcoin_networks: Optional[List[BitcoinNetwork]]= None, node_ids: Optional[List[str]]= None) -> Optional[CurrencyAmount]:
         json = self.requester.execute_graphql(
             """
 query FetchAccountRemoteBalance($entity_id: ID!, $bitcoin_networks: [BitcoinNetwork!], $node_ids: [ID!]) {
@@ -559,24 +510,12 @@ query FetchAccountRemoteBalance($entity_id: ID!, $bitcoin_networks: [BitcoinNetw
     }
 }
             """,
-            {
-                "entity_id": self.id,
-                "bitcoin_networks": bitcoin_networks,
-                "node_ids": node_ids,
-            },
+            {"entity_id": self.id, "bitcoin_networks": bitcoin_networks, "node_ids": node_ids}
         )
         connection = json["entity"]["remote_balance"]
-        return (
-            CurrencyAmount_from_json(self.requester, connection) if connection else None
-        )
+        return CurrencyAmount_from_json(self.requester, connection) if connection else None
 
-    def get_uptime_percentage(
-        self,
-        after_date: Optional[datetime] = None,
-        before_date: Optional[datetime] = None,
-        bitcoin_networks: Optional[List[BitcoinNetwork]] = None,
-        node_ids: Optional[List[str]] = None,
-    ) -> Optional[int]:
+    def get_uptime_percentage(self, after_date: Optional[datetime]= None, before_date: Optional[datetime]= None, bitcoin_networks: Optional[List[BitcoinNetwork]]= None, node_ids: Optional[List[str]]= None) -> Optional[int]:
         json = self.requester.execute_graphql(
             """
 query FetchAccountUptimePercentage($entity_id: ID!, $after_date: DateTime, $before_date: DateTime, $bitcoin_networks: [BitcoinNetwork!], $node_ids: [ID!]) {
@@ -587,26 +526,12 @@ query FetchAccountUptimePercentage($entity_id: ID!, $after_date: DateTime, $befo
     }
 }
             """,
-            {
-                "entity_id": self.id,
-                "after_date": after_date,
-                "before_date": before_date,
-                "bitcoin_networks": bitcoin_networks,
-                "node_ids": node_ids,
-            },
+            {"entity_id": self.id, "after_date": after_date, "before_date": before_date, "bitcoin_networks": bitcoin_networks, "node_ids": node_ids}
         )
         connection = json["entity"]["uptime_percentage"]
         return connection
 
-    def get_channels(
-        self,
-        bitcoin_network: BitcoinNetwork,
-        lightning_node_id: Optional[str] = None,
-        after_date: Optional[datetime] = None,
-        before_date: Optional[datetime] = None,
-        first: Optional[int] = None,
-        after: Optional[str] = None,
-    ) -> AccountToChannelsConnection:
+    def get_channels(self, bitcoin_network: BitcoinNetwork, lightning_node_id: Optional[str]= None, after_date: Optional[datetime]= None, before_date: Optional[datetime]= None, first: Optional[int]= None, after: Optional[str]= None) -> AccountToChannelsConnection:
         json = self.requester.execute_graphql(
             """
 query FetchAccountToChannelsConnection($entity_id: ID!, $bitcoin_network: BitcoinNetwork!, $lightning_node_id: ID, $after_date: DateTime, $before_date: DateTime, $first: Int, $after: String) {
@@ -721,37 +646,18 @@ query FetchAccountToChannelsConnection($entity_id: ID!, $bitcoin_network: Bitcoi
     }
 }
             """,
-            {
-                "entity_id": self.id,
-                "bitcoin_network": bitcoin_network,
-                "lightning_node_id": lightning_node_id,
-                "after_date": after_date,
-                "before_date": before_date,
-                "first": first,
-                "after": after,
-            },
+            {"entity_id": self.id, "bitcoin_network": bitcoin_network, "lightning_node_id": lightning_node_id, "after_date": after_date, "before_date": before_date, "first": first, "after": after}
         )
         connection = json["entity"]["channels"]
         return AccountToChannelsConnection_from_json(self.requester, connection)
 
-    def get_transactions(
-        self,
-        first: Optional[int] = None,
-        after: Optional[str] = None,
-        types: Optional[List[TransactionType]] = None,
-        after_date: Optional[datetime] = None,
-        before_date: Optional[datetime] = None,
-        bitcoin_network: Optional[BitcoinNetwork] = None,
-        lightning_node_id: Optional[str] = None,
-        statuses: Optional[List[TransactionStatus]] = None,
-        exclude_failures: Optional[TransactionFailures] = None,
-    ) -> AccountToTransactionsConnection:
+    def get_transactions(self, first: Optional[int]= None, after: Optional[str]= None, types: Optional[List[TransactionType]]= None, after_date: Optional[datetime]= None, before_date: Optional[datetime]= None, bitcoin_network: Optional[BitcoinNetwork]= None, lightning_node_id: Optional[str]= None, statuses: Optional[List[TransactionStatus]]= None, exclude_failures: Optional[TransactionFailures]= None, max_amount: Optional[CurrencyAmountInput]= None, min_amount: Optional[CurrencyAmountInput]= None) -> AccountToTransactionsConnection:
         json = self.requester.execute_graphql(
             """
-query FetchAccountToTransactionsConnection($entity_id: ID!, $first: Int, $after: String, $types: [TransactionType!], $after_date: DateTime, $before_date: DateTime, $bitcoin_network: BitcoinNetwork, $lightning_node_id: ID, $statuses: [TransactionStatus!], $exclude_failures: TransactionFailures) {
+query FetchAccountToTransactionsConnection($entity_id: ID!, $first: Int, $after: String, $types: [TransactionType!], $after_date: DateTime, $before_date: DateTime, $bitcoin_network: BitcoinNetwork, $lightning_node_id: ID, $statuses: [TransactionStatus!], $exclude_failures: TransactionFailures, $max_amount: CurrencyAmountInput, $min_amount: CurrencyAmountInput) {
     entity(id: $entity_id) {
         ... on Account {
-            transactions(, first: $first, after: $after, types: $types, after_date: $after_date, before_date: $before_date, bitcoin_network: $bitcoin_network, lightning_node_id: $lightning_node_id, statuses: $statuses, exclude_failures: $exclude_failures) {
+            transactions(, first: $first, after: $after, types: $types, after_date: $after_date, before_date: $before_date, bitcoin_network: $bitcoin_network, lightning_node_id: $lightning_node_id, statuses: $statuses, exclude_failures: $exclude_failures, max_amount: $max_amount, min_amount: $min_amount) {
                 __typename
                 account_to_transactions_connection_count: count
                 account_to_transactions_connection_page_info: page_info {
@@ -1340,37 +1246,18 @@ query FetchAccountToTransactionsConnection($entity_id: ID!, $first: Int, $after:
     }
 }
             """,
-            {
-                "entity_id": self.id,
-                "first": first,
-                "after": after,
-                "types": types,
-                "after_date": after_date,
-                "before_date": before_date,
-                "bitcoin_network": bitcoin_network,
-                "lightning_node_id": lightning_node_id,
-                "statuses": statuses,
-                "exclude_failures": exclude_failures,
-            },
+            {"entity_id": self.id, "first": first, "after": after, "types": types, "after_date": after_date, "before_date": before_date, "bitcoin_network": bitcoin_network, "lightning_node_id": lightning_node_id, "statuses": statuses, "exclude_failures": exclude_failures, "max_amount": max_amount, "min_amount": min_amount}
         )
         connection = json["entity"]["transactions"]
         return AccountToTransactionsConnection_from_json(self.requester, connection)
 
-    def get_payment_requests(
-        self,
-        first: Optional[int] = None,
-        after: Optional[str] = None,
-        after_date: Optional[datetime] = None,
-        before_date: Optional[datetime] = None,
-        bitcoin_network: Optional[BitcoinNetwork] = None,
-        lightning_node_id: Optional[str] = None,
-    ) -> AccountToPaymentRequestsConnection:
+    def get_payment_requests(self, first: Optional[int]= None, after: Optional[str]= None, after_date: Optional[datetime]= None, before_date: Optional[datetime]= None, bitcoin_network: Optional[BitcoinNetwork]= None, lightning_node_id: Optional[str]= None, max_amount: Optional[CurrencyAmountInput]= None, min_amount: Optional[CurrencyAmountInput]= None) -> AccountToPaymentRequestsConnection:
         json = self.requester.execute_graphql(
             """
-query FetchAccountToPaymentRequestsConnection($entity_id: ID!, $first: Int, $after: String, $after_date: DateTime, $before_date: DateTime, $bitcoin_network: BitcoinNetwork, $lightning_node_id: ID) {
+query FetchAccountToPaymentRequestsConnection($entity_id: ID!, $first: Int, $after: String, $after_date: DateTime, $before_date: DateTime, $bitcoin_network: BitcoinNetwork, $lightning_node_id: ID, $max_amount: CurrencyAmountInput, $min_amount: CurrencyAmountInput) {
     entity(id: $entity_id) {
         ... on Account {
-            payment_requests(, first: $first, after: $after, after_date: $after_date, before_date: $before_date, bitcoin_network: $bitcoin_network, lightning_node_id: $lightning_node_id) {
+            payment_requests(, first: $first, after: $after, after_date: $after_date, before_date: $before_date, bitcoin_network: $bitcoin_network, lightning_node_id: $lightning_node_id, max_amount: $max_amount, min_amount: $min_amount) {
                 __typename
                 account_to_payment_requests_connection_count: count
                 account_to_payment_requests_connection_page_info: page_info {
@@ -1696,36 +1583,18 @@ query FetchAccountToPaymentRequestsConnection($entity_id: ID!, $first: Int, $aft
     }
 }
             """,
-            {
-                "entity_id": self.id,
-                "first": first,
-                "after": after,
-                "after_date": after_date,
-                "before_date": before_date,
-                "bitcoin_network": bitcoin_network,
-                "lightning_node_id": lightning_node_id,
-            },
+            {"entity_id": self.id, "first": first, "after": after, "after_date": after_date, "before_date": before_date, "bitcoin_network": bitcoin_network, "lightning_node_id": lightning_node_id, "max_amount": max_amount, "min_amount": min_amount}
         )
         connection = json["entity"]["payment_requests"]
         return AccountToPaymentRequestsConnection_from_json(self.requester, connection)
 
-    def get_withdrawal_requests(
-        self,
-        first: Optional[int] = None,
-        after: Optional[str] = None,
-        bitcoin_networks: Optional[List[BitcoinNetwork]] = None,
-        statuses: Optional[List[WithdrawalRequestStatus]] = None,
-        node_ids: Optional[List[str]] = None,
-        idempotency_keys: Optional[List[str]] = None,
-        after_date: Optional[datetime] = None,
-        before_date: Optional[datetime] = None,
-    ) -> AccountToWithdrawalRequestsConnection:
+    def get_withdrawal_requests(self, first: Optional[int]= None, after: Optional[str]= None, bitcoin_networks: Optional[List[BitcoinNetwork]]= None, statuses: Optional[List[WithdrawalRequestStatus]]= None, node_ids: Optional[List[str]]= None, idempotency_keys: Optional[List[str]]= None, after_date: Optional[datetime]= None, before_date: Optional[datetime]= None, max_amount: Optional[CurrencyAmountInput]= None, min_amount: Optional[CurrencyAmountInput]= None) -> AccountToWithdrawalRequestsConnection:
         json = self.requester.execute_graphql(
             """
-query FetchAccountToWithdrawalRequestsConnection($entity_id: ID!, $first: Int, $after: String, $bitcoin_networks: [BitcoinNetwork!], $statuses: [WithdrawalRequestStatus!], $node_ids: [ID!], $idempotency_keys: [String!], $after_date: DateTime, $before_date: DateTime) {
+query FetchAccountToWithdrawalRequestsConnection($entity_id: ID!, $first: Int, $after: String, $bitcoin_networks: [BitcoinNetwork!], $statuses: [WithdrawalRequestStatus!], $node_ids: [ID!], $idempotency_keys: [String!], $after_date: DateTime, $before_date: DateTime, $max_amount: CurrencyAmountInput, $min_amount: CurrencyAmountInput) {
     entity(id: $entity_id) {
         ... on Account {
-            withdrawal_requests(, first: $first, after: $after, bitcoin_networks: $bitcoin_networks, statuses: $statuses, node_ids: $node_ids, idempotency_keys: $idempotency_keys, after_date: $after_date, before_date: $before_date) {
+            withdrawal_requests(, first: $first, after: $after, bitcoin_networks: $bitcoin_networks, statuses: $statuses, node_ids: $node_ids, idempotency_keys: $idempotency_keys, after_date: $after_date, before_date: $before_date, max_amount: $max_amount, min_amount: $min_amount) {
                 __typename
                 account_to_withdrawal_requests_connection_count: count
                 account_to_withdrawal_requests_connection_page_info: page_info {
@@ -1795,29 +1664,12 @@ query FetchAccountToWithdrawalRequestsConnection($entity_id: ID!, $first: Int, $
     }
 }
             """,
-            {
-                "entity_id": self.id,
-                "first": first,
-                "after": after,
-                "bitcoin_networks": bitcoin_networks,
-                "statuses": statuses,
-                "node_ids": node_ids,
-                "idempotency_keys": idempotency_keys,
-                "after_date": after_date,
-                "before_date": before_date,
-            },
+            {"entity_id": self.id, "first": first, "after": after, "bitcoin_networks": bitcoin_networks, "statuses": statuses, "node_ids": node_ids, "idempotency_keys": idempotency_keys, "after_date": after_date, "before_date": before_date, "max_amount": max_amount, "min_amount": min_amount}
         )
         connection = json["entity"]["withdrawal_requests"]
-        return AccountToWithdrawalRequestsConnection_from_json(
-            self.requester, connection
-        )
+        return AccountToWithdrawalRequestsConnection_from_json(self.requester, connection)
 
-    def get_wallets(
-        self,
-        first: Optional[int] = None,
-        after: Optional[str] = None,
-        third_party_ids: Optional[List[str]] = None,
-    ) -> AccountToWalletsConnection:
+    def get_wallets(self, first: Optional[int]= None, after: Optional[str]= None, third_party_ids: Optional[List[str]]= None) -> AccountToWalletsConnection:
         json = self.requester.execute_graphql(
             """
 query FetchAccountToWalletsConnection($entity_id: ID!, $first: Int, $after: String, $third_party_ids: [String!]) {
@@ -1877,15 +1729,11 @@ query FetchAccountToWalletsConnection($entity_id: ID!, $first: Int, $after: Stri
     }
 }
             """,
-            {
-                "entity_id": self.id,
-                "first": first,
-                "after": after,
-                "third_party_ids": third_party_ids,
-            },
+            {"entity_id": self.id, "first": first, "after": after, "third_party_ids": third_party_ids}
         )
         connection = json["entity"]["wallets"]
         return AccountToWalletsConnection_from_json(self.requester, connection)
+
 
     def to_json(self) -> Mapping[str, Any]:
         return {
@@ -1894,7 +1742,10 @@ query FetchAccountToWalletsConnection($entity_id: ID!, $first: Int, $after: Stri
             "account_created_at": self.created_at.isoformat(),
             "account_updated_at": self.updated_at.isoformat(),
             "account_name": self.name,
+
         }
+
+
 
 
 FRAGMENT = """
@@ -1908,12 +1759,13 @@ fragment AccountFragment on Account {
 """
 
 
+
 def from_json(requester: Requester, obj: Mapping[str, Any]) -> Account:
     return Account(
-        requester=requester,
-        typename="Account",
-        id=obj["account_id"],
+        requester=requester,        typename="Account",        id=obj["account_id"],
         created_at=datetime.fromisoformat(obj["account_created_at"]),
         updated_at=datetime.fromisoformat(obj["account_updated_at"]),
         name=obj["account_name"],
-    )
+
+        )
+

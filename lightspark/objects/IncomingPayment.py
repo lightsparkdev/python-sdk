@@ -1,3 +1,4 @@
+
 # Copyright ©, 2022-present, Lightspark Group, Inc. - All Rights Reserved
 
 from dataclasses import dataclass
@@ -11,10 +12,10 @@ from .CurrencyAmount import CurrencyAmount
 from .CurrencyAmount import from_json as CurrencyAmount_from_json
 from .Entity import Entity
 from .IncomingPaymentAttemptStatus import IncomingPaymentAttemptStatus
-from .IncomingPaymentToAttemptsConnection import IncomingPaymentToAttemptsConnection
-from .IncomingPaymentToAttemptsConnection import (
-    from_json as IncomingPaymentToAttemptsConnection_from_json,
-)
+from .IncomingPaymentToAttemptsConnection import \
+    IncomingPaymentToAttemptsConnection
+from .IncomingPaymentToAttemptsConnection import \
+    from_json as IncomingPaymentToAttemptsConnection_from_json
 from .LightningTransaction import LightningTransaction
 from .PostTransactionData import PostTransactionData
 from .PostTransactionData import from_json as PostTransactionData_from_json
@@ -65,12 +66,7 @@ class IncomingPayment(LightningTransaction, Transaction, Entity):
     """Whether the payment is made from the same node."""
     typename: str
 
-    def get_attempts(
-        self,
-        first: Optional[int] = None,
-        statuses: Optional[List[IncomingPaymentAttemptStatus]] = None,
-        after: Optional[str] = None,
-    ) -> IncomingPaymentToAttemptsConnection:
+    def get_attempts(self, first: Optional[int]= None, statuses: Optional[List[IncomingPaymentAttemptStatus]]= None, after: Optional[str]= None) -> IncomingPaymentToAttemptsConnection:
         json = self.requester.execute_graphql(
             """
 query FetchIncomingPaymentToAttemptsConnection($entity_id: ID!, $first: Int, $statuses: [IncomingPaymentAttemptStatus!], $after: String) {
@@ -110,15 +106,11 @@ query FetchIncomingPaymentToAttemptsConnection($entity_id: ID!, $first: Int, $st
     }
 }
             """,
-            {
-                "entity_id": self.id,
-                "first": first,
-                "statuses": statuses,
-                "after": after,
-            },
+            {"entity_id": self.id, "first": first, "statuses": statuses, "after": after}
         )
         connection = json["entity"]["attempts"]
         return IncomingPaymentToAttemptsConnection_from_json(self.requester, connection)
+
 
     def to_json(self) -> Mapping[str, Any]:
         return {
@@ -127,23 +119,18 @@ query FetchIncomingPaymentToAttemptsConnection($entity_id: ID!, $first: Int, $st
             "incoming_payment_created_at": self.created_at.isoformat(),
             "incoming_payment_updated_at": self.updated_at.isoformat(),
             "incoming_payment_status": self.status.value,
-            "incoming_payment_resolved_at": (
-                self.resolved_at.isoformat() if self.resolved_at else None
-            ),
+            "incoming_payment_resolved_at": self.resolved_at.isoformat() if self.resolved_at else None,
             "incoming_payment_amount": self.amount.to_json(),
             "incoming_payment_transaction_hash": self.transaction_hash,
             "incoming_payment_is_uma": self.is_uma,
-            "incoming_payment_destination": {"id": self.destination_id},
-            "incoming_payment_payment_request": (
-                {"id": self.payment_request_id} if self.payment_request_id else None
-            ),
-            "incoming_payment_uma_post_transaction_data": (
-                [e.to_json() for e in self.uma_post_transaction_data]
-                if self.uma_post_transaction_data
-                else None
-            ),
+            "incoming_payment_destination": { "id": self.destination_id },
+            "incoming_payment_payment_request": { "id": self.payment_request_id } if self.payment_request_id else None,
+            "incoming_payment_uma_post_transaction_data": [e.to_json() for e in self.uma_post_transaction_data] if self.uma_post_transaction_data else None,
             "incoming_payment_is_internal_payment": self.is_internal_payment,
+
         }
+
+
 
 
 FRAGMENT = """
@@ -187,38 +174,24 @@ fragment IncomingPaymentFragment on IncomingPayment {
 """
 
 
+
 def from_json(requester: Requester, obj: Mapping[str, Any]) -> IncomingPayment:
     return IncomingPayment(
-        requester=requester,
-        typename="IncomingPayment",
-        id=obj["incoming_payment_id"],
+        requester=requester,        typename="IncomingPayment",        id=obj["incoming_payment_id"],
         created_at=datetime.fromisoformat(obj["incoming_payment_created_at"]),
         updated_at=datetime.fromisoformat(obj["incoming_payment_updated_at"]),
-        status=parse_enum(TransactionStatus, obj["incoming_payment_status"]),
-        resolved_at=(
-            datetime.fromisoformat(obj["incoming_payment_resolved_at"])
-            if obj["incoming_payment_resolved_at"]
-            else None
-        ),
+
+        status=parse_enum(TransactionStatus, obj['incoming_payment_status']),
+        resolved_at=datetime.fromisoformat(obj["incoming_payment_resolved_at"]) if obj["incoming_payment_resolved_at"] else None,
         amount=CurrencyAmount_from_json(requester, obj["incoming_payment_amount"]),
         transaction_hash=obj["incoming_payment_transaction_hash"],
         is_uma=obj["incoming_payment_is_uma"],
         destination_id=obj["incoming_payment_destination"]["id"],
-        payment_request_id=(
-            obj["incoming_payment_payment_request"]["id"]
-            if obj["incoming_payment_payment_request"]
-            else None
-        ),
-        uma_post_transaction_data=(
-            list(
-                map(
-                    # pylint: disable=unnecessary-lambda
-                    lambda e: PostTransactionData_from_json(requester, e),
-                    obj["incoming_payment_uma_post_transaction_data"],
-                )
-            )
-            if obj["incoming_payment_uma_post_transaction_data"]
-            else None
-        ),
+        payment_request_id=obj["incoming_payment_payment_request"]["id"] if obj["incoming_payment_payment_request"] else None,
+        uma_post_transaction_data=list(map(
+ # pylint: disable=unnecessary-lambda 
+ lambda e: PostTransactionData_from_json(requester, e), obj["incoming_payment_uma_post_transaction_data"])) if obj["incoming_payment_uma_post_transaction_data"] else None,
         is_internal_payment=obj["incoming_payment_is_internal_payment"],
-    )
+
+        )
+

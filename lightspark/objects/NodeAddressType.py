@@ -1,3 +1,4 @@
+
 # Copyright ©, 2022-present, Lightspark Group, Inc. - All Rights Reserved
 
 from enum import Enum
@@ -11,3 +12,4 @@ class NodeAddressType(Enum):
     IPV4 = "IPV4"
     IPV6 = "IPV6"
     TOR = "TOR"
+

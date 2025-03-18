@@ -1,3 +1,4 @@
+
 # Copyright ©, 2022-present, Lightspark Group, Inc. - All Rights Reserved
 
 from enum import Enum
@@ -28,3 +29,4 @@ class TransactionType(Enum):
     """Payment requests from a Lightspark node on Lightning Network"""
     ROUTE = "ROUTE"
     """Transactions that forwarded payments through Lightspark nodes on Lightning Network."""
+

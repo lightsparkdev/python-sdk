@@ -1,3 +1,4 @@
+
 # Copyright ©, 2022-present, Lightspark Group, Inc. - All Rights Reserved
 
 from dataclasses import dataclass
@@ -10,7 +11,8 @@ from .CurrencyAmount import from_json as CurrencyAmount_from_json
 
 
 @dataclass
-class ChannelToTransactionsConnection:
+class ChannelToTransactionsConnection():
+    
     requester: Requester
 
     count: int
@@ -25,21 +27,18 @@ class ChannelToTransactionsConnection:
     total_fees: Optional[CurrencyAmount]
     """The total amount of fees for the transactions that transited through this channel, according to the filters and constraints of the connection."""
 
+
+
     def to_json(self) -> Mapping[str, Any]:
         return {
             "channel_to_transactions_connection_count": self.count,
-            "channel_to_transactions_connection_average_fee": (
-                self.average_fee.to_json() if self.average_fee else None
-            ),
-            "channel_to_transactions_connection_total_amount_transacted": (
-                self.total_amount_transacted.to_json()
-                if self.total_amount_transacted
-                else None
-            ),
-            "channel_to_transactions_connection_total_fees": (
-                self.total_fees.to_json() if self.total_fees else None
-            ),
+            "channel_to_transactions_connection_average_fee": self.average_fee.to_json() if self.average_fee else None,
+            "channel_to_transactions_connection_total_amount_transacted": self.total_amount_transacted.to_json() if self.total_amount_transacted else None,
+            "channel_to_transactions_connection_total_fees": self.total_fees.to_json() if self.total_fees else None,
+
         }
+
+
 
 
 FRAGMENT = """
@@ -74,32 +73,13 @@ fragment ChannelToTransactionsConnectionFragment on ChannelToTransactionsConnect
 """
 
 
-def from_json(
-    requester: Requester, obj: Mapping[str, Any]
-) -> ChannelToTransactionsConnection:
+
+def from_json(requester: Requester, obj: Mapping[str, Any]) -> ChannelToTransactionsConnection:
     return ChannelToTransactionsConnection(
-        requester=requester,
-        count=obj["channel_to_transactions_connection_count"],
-        average_fee=(
-            CurrencyAmount_from_json(
-                requester, obj["channel_to_transactions_connection_average_fee"]
-            )
-            if obj["channel_to_transactions_connection_average_fee"]
-            else None
-        ),
-        total_amount_transacted=(
-            CurrencyAmount_from_json(
-                requester,
-                obj["channel_to_transactions_connection_total_amount_transacted"],
-            )
-            if obj["channel_to_transactions_connection_total_amount_transacted"]
-            else None
-        ),
-        total_fees=(
-            CurrencyAmount_from_json(
-                requester, obj["channel_to_transactions_connection_total_fees"]
-            )
-            if obj["channel_to_transactions_connection_total_fees"]
-            else None
-        ),
-    )
+        requester=requester,        count=obj["channel_to_transactions_connection_count"],
+        average_fee=CurrencyAmount_from_json(requester, obj["channel_to_transactions_connection_average_fee"]) if obj["channel_to_transactions_connection_average_fee"] else None,
+        total_amount_transacted=CurrencyAmount_from_json(requester, obj["channel_to_transactions_connection_total_amount_transacted"]) if obj["channel_to_transactions_connection_total_amount_transacted"] else None,
+        total_fees=CurrencyAmount_from_json(requester, obj["channel_to_transactions_connection_total_fees"]) if obj["channel_to_transactions_connection_total_fees"] else None,
+
+        )
+

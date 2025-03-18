@@ -1,3 +1,4 @@
+
 # Copyright ©, 2022-present, Lightspark Group, Inc. - All Rights Reserved
 
 from dataclasses import dataclass
@@ -10,7 +11,7 @@ from .NodeAddressType import NodeAddressType
 
 
 @dataclass
-class NodeAddress:
+class NodeAddress():
     """This object represents the address of a node on the Lightning Network."""
 
     requester: Requester
@@ -21,11 +22,16 @@ class NodeAddress:
     type: NodeAddressType
     """The type, or protocol, of this address."""
 
+
+
     def to_json(self) -> Mapping[str, Any]:
         return {
             "node_address_address": self.address,
             "node_address_type": self.type.value,
+
         }
+
+
 
 
 FRAGMENT = """
@@ -37,9 +43,12 @@ fragment NodeAddressFragment on NodeAddress {
 """
 
 
+
 def from_json(requester: Requester, obj: Mapping[str, Any]) -> NodeAddress:
     return NodeAddress(
-        requester=requester,
-        address=obj["node_address_address"],
-        type=parse_enum(NodeAddressType, obj["node_address_type"]),
-    )
+        requester=requester,        address=obj["node_address_address"],
+
+        type=parse_enum(NodeAddressType, obj['node_address_type']),
+
+        )
+

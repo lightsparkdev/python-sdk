@@ -1,3 +1,4 @@
+
 # Copyright ©, 2022-present, Lightspark Group, Inc. - All Rights Reserved
 
 from dataclasses import dataclass
@@ -7,15 +8,22 @@ from lightspark.requests.requester import Requester
 
 
 @dataclass
-class RegisterPaymentOutput:
+class RegisterPaymentOutput():
+    
     requester: Requester
 
     payment_id: str
+    
+
+
 
     def to_json(self) -> Mapping[str, Any]:
         return {
-            "register_payment_output_payment": {"id": self.payment_id},
+            "register_payment_output_payment": { "id": self.payment_id },
+
         }
+
+
 
 
 FRAGMENT = """
@@ -28,8 +36,10 @@ fragment RegisterPaymentOutputFragment on RegisterPaymentOutput {
 """
 
 
+
 def from_json(requester: Requester, obj: Mapping[str, Any]) -> RegisterPaymentOutput:
     return RegisterPaymentOutput(
-        requester=requester,
-        payment_id=obj["register_payment_output_payment"]["id"],
-    )
+        requester=requester,        payment_id=obj["register_payment_output_payment"]["id"],
+
+        )
+

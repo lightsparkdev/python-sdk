@@ -1,3 +1,4 @@
+
 # Copyright ©, 2022-present, Lightspark Group, Inc. - All Rights Reserved
 
 from enum import Enum
@@ -18,9 +19,14 @@ class CurrencyUnit(Enum):
     """United States Dollar."""
     MXN = "MXN"
     """Mexican Peso."""
+    PHP = "PHP"
+    """Philippine Peso."""
+    EUR = "EUR"
+    """Euro."""
     NANOBITCOIN = "NANOBITCOIN"
     """0.000000001 (10e-9) Bitcoin or a billionth of a Bitcoin. We recommend using the Satoshi unit instead when possible."""
     MICROBITCOIN = "MICROBITCOIN"
     """0.000001 (10e-6) Bitcoin or a millionth of a Bitcoin. We recommend using the Satoshi unit instead when possible."""
     MILLIBITCOIN = "MILLIBITCOIN"
     """0.001 (10e-3) Bitcoin or a thousandth of a Bitcoin. We recommend using the Satoshi unit instead when possible."""
+

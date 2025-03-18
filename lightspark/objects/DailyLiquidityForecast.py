@@ -1,3 +1,4 @@
+
 # Copyright ©, 2022-present, Lightspark Group, Inc. - All Rights Reserved
 
 from dataclasses import dataclass
@@ -13,7 +14,8 @@ from .LightningPaymentDirection import LightningPaymentDirection
 
 
 @dataclass
-class DailyLiquidityForecast:
+class DailyLiquidityForecast():
+    
     requester: Requester
 
     date: datetime
@@ -25,12 +27,17 @@ class DailyLiquidityForecast:
     amount: CurrencyAmount
     """The value of the forecast. It represents the amount of msats that we think will be moved for that specified direction, for that node, on that date."""
 
+
+
     def to_json(self) -> Mapping[str, Any]:
         return {
             "daily_liquidity_forecast_date": self.date,
             "daily_liquidity_forecast_direction": self.direction.value,
             "daily_liquidity_forecast_amount": self.amount.to_json(),
+
         }
+
+
 
 
 FRAGMENT = """
@@ -50,14 +57,13 @@ fragment DailyLiquidityForecastFragment on DailyLiquidityForecast {
 """
 
 
+
 def from_json(requester: Requester, obj: Mapping[str, Any]) -> DailyLiquidityForecast:
     return DailyLiquidityForecast(
-        requester=requester,
-        date=obj["daily_liquidity_forecast_date"],
-        direction=parse_enum(
-            LightningPaymentDirection, obj["daily_liquidity_forecast_direction"]
-        ),
-        amount=CurrencyAmount_from_json(
-            requester, obj["daily_liquidity_forecast_amount"]
-        ),
-    )
+        requester=requester,        date=obj["daily_liquidity_forecast_date"],
+
+        direction=parse_enum(LightningPaymentDirection, obj['daily_liquidity_forecast_direction']),
+        amount=CurrencyAmount_from_json(requester, obj["daily_liquidity_forecast_amount"]),
+
+        )
+

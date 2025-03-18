@@ -1,3 +1,4 @@
+
 # Copyright ©, 2022-present, Lightspark Group, Inc. - All Rights Reserved
 
 from dataclasses import dataclass
@@ -7,7 +8,8 @@ from lightspark.requests.requester import Requester
 
 from .Connection import Connection
 from .IncomingPaymentAttempt import IncomingPaymentAttempt
-from .IncomingPaymentAttempt import from_json as IncomingPaymentAttempt_from_json
+from .IncomingPaymentAttempt import \
+    from_json as IncomingPaymentAttempt_from_json
 from .PageInfo import PageInfo
 from .PageInfo import from_json as PageInfo_from_json
 
@@ -28,15 +30,17 @@ class IncomingPaymentToAttemptsConnection(Connection):
     """The incoming payment attempts for the current page of this connection."""
     typename: str
 
+
     def to_json(self) -> Mapping[str, Any]:
         return {
             "__typename": "IncomingPaymentToAttemptsConnection",
             "incoming_payment_to_attempts_connection_count": self.count,
             "incoming_payment_to_attempts_connection_page_info": self.page_info.to_json(),
-            "incoming_payment_to_attempts_connection_entities": [
-                e.to_json() for e in self.entities
-            ],
+            "incoming_payment_to_attempts_connection_entities": [e.to_json() for e in self.entities],
+
         }
+
+
 
 
 FRAGMENT = """
@@ -57,21 +61,14 @@ fragment IncomingPaymentToAttemptsConnectionFragment on IncomingPaymentToAttempt
 """
 
 
-def from_json(
-    requester: Requester, obj: Mapping[str, Any]
-) -> IncomingPaymentToAttemptsConnection:
+
+def from_json(requester: Requester, obj: Mapping[str, Any]) -> IncomingPaymentToAttemptsConnection:
     return IncomingPaymentToAttemptsConnection(
-        requester=requester,
-        typename="IncomingPaymentToAttemptsConnection",
-        count=obj["incoming_payment_to_attempts_connection_count"],
-        page_info=PageInfo_from_json(
-            requester, obj["incoming_payment_to_attempts_connection_page_info"]
-        ),
-        entities=list(
-            map(
-                # pylint: disable=unnecessary-lambda
-                lambda e: IncomingPaymentAttempt_from_json(requester, e),
-                obj["incoming_payment_to_attempts_connection_entities"],
-            )
-        ),
-    )
+        requester=requester,        typename="IncomingPaymentToAttemptsConnection",        count=obj["incoming_payment_to_attempts_connection_count"],
+        page_info=PageInfo_from_json(requester, obj["incoming_payment_to_attempts_connection_page_info"]),
+        entities=list(map(
+ # pylint: disable=unnecessary-lambda 
+ lambda e: IncomingPaymentAttempt_from_json(requester, e), obj["incoming_payment_to_attempts_connection_entities"])),
+
+        )
+

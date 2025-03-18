@@ -1,3 +1,4 @@
+
 # Copyright ©, 2022-present, Lightspark Group, Inc. - All Rights Reserved
 
 from enum import Enum
@@ -20,3 +21,4 @@ class IncentivesIneligibilityReason(Enum):
     """This invitation is not eligible for incentives because the receiving VASP is not part of the incentives program."""
     NOT_CROSS_BORDER = "NOT_CROSS_BORDER"
     """This invitation is not eligible for incentives because the sender and receiver are in the same region."""
+

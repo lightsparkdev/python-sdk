@@ -1,3 +1,4 @@
+
 # Copyright ©, 2022-present, Lightspark Group, Inc. - All Rights Reserved
 
 from dataclasses import dataclass
@@ -5,7 +6,9 @@ from typing import Any, Mapping, Optional
 
 
 @dataclass
-class SendPaymentInput:
+class SendPaymentInput():
+    
+
     node_id: str
     """The node from where you want to send the payment."""
 
@@ -24,6 +27,8 @@ class SendPaymentInput:
     idempotency_key: Optional[str]
     """The idempotency key of the request. The same result will be returned for the same idempotency key."""
 
+
+
     def to_json(self) -> Mapping[str, Any]:
         return {
             "send_payment_input_node_id": self.node_id,
@@ -32,7 +37,12 @@ class SendPaymentInput:
             "send_payment_input_amount_msats": self.amount_msats,
             "send_payment_input_maximum_fees_msats": self.maximum_fees_msats,
             "send_payment_input_idempotency_key": self.idempotency_key,
+
         }
+
+
+
+
 
 
 def from_json(obj: Mapping[str, Any]) -> SendPaymentInput:
@@ -43,4 +53,6 @@ def from_json(obj: Mapping[str, Any]) -> SendPaymentInput:
         amount_msats=obj["send_payment_input_amount_msats"],
         maximum_fees_msats=obj["send_payment_input_maximum_fees_msats"],
         idempotency_key=obj["send_payment_input_idempotency_key"],
-    )
+
+        )
+

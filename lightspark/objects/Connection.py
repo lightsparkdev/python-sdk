@@ -1,3 +1,4 @@
+
 # Copyright ©, 2022-present, Lightspark Group, Inc. - All Rights Reserved
 
 from dataclasses import dataclass
@@ -8,7 +9,8 @@ from .PageInfo import PageInfo
 
 
 @dataclass
-class Connection:
+class Connection():
+    
     requester: Requester
 
     count: int
@@ -17,6 +19,9 @@ class Connection:
     page_info: PageInfo
     """An object that holds pagination information about the objects in this connection."""
     typename: str
+
+
+
 
 
 FRAGMENT = """
@@ -272,3 +277,6 @@ fragment ConnectionFragment on Connection {
     }
 }
 """
+
+
+

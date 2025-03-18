@@ -1,3 +1,4 @@
+
 # Copyright ©, 2022-present, Lightspark Group, Inc. - All Rights Reserved
 
 from dataclasses import dataclass
@@ -14,6 +15,7 @@ from .PageInfo import from_json as PageInfo_from_json
 
 @dataclass
 class LightsparkNodeToChannelsConnection(Connection):
+    
     requester: Requester
 
     count: int
@@ -26,15 +28,17 @@ class LightsparkNodeToChannelsConnection(Connection):
     """The channels for the current page of this connection."""
     typename: str
 
+
     def to_json(self) -> Mapping[str, Any]:
         return {
             "__typename": "LightsparkNodeToChannelsConnection",
             "lightspark_node_to_channels_connection_count": self.count,
             "lightspark_node_to_channels_connection_page_info": self.page_info.to_json(),
-            "lightspark_node_to_channels_connection_entities": [
-                e.to_json() for e in self.entities
-            ],
+            "lightspark_node_to_channels_connection_entities": [e.to_json() for e in self.entities],
+
         }
+
+
 
 
 FRAGMENT = """
@@ -55,21 +59,14 @@ fragment LightsparkNodeToChannelsConnectionFragment on LightsparkNodeToChannelsC
 """
 
 
-def from_json(
-    requester: Requester, obj: Mapping[str, Any]
-) -> LightsparkNodeToChannelsConnection:
+
+def from_json(requester: Requester, obj: Mapping[str, Any]) -> LightsparkNodeToChannelsConnection:
     return LightsparkNodeToChannelsConnection(
-        requester=requester,
-        typename="LightsparkNodeToChannelsConnection",
-        count=obj["lightspark_node_to_channels_connection_count"],
-        page_info=PageInfo_from_json(
-            requester, obj["lightspark_node_to_channels_connection_page_info"]
-        ),
-        entities=list(
-            map(
-                # pylint: disable=unnecessary-lambda
-                lambda e: Channel_from_json(requester, e),
-                obj["lightspark_node_to_channels_connection_entities"],
-            )
-        ),
-    )
+        requester=requester,        typename="LightsparkNodeToChannelsConnection",        count=obj["lightspark_node_to_channels_connection_count"],
+        page_info=PageInfo_from_json(requester, obj["lightspark_node_to_channels_connection_page_info"]),
+        entities=list(map(
+ # pylint: disable=unnecessary-lambda 
+ lambda e: Channel_from_json(requester, e), obj["lightspark_node_to_channels_connection_entities"])),
+
+        )
+

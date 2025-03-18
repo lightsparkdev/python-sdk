@@ -1,3 +1,4 @@
+
 # Copyright ©, 2022-present, Lightspark Group, Inc. - All Rights Reserved
 
 from dataclasses import dataclass
@@ -14,6 +15,7 @@ from .PageInfo import from_json as PageInfo_from_json
 
 @dataclass
 class AccountToApiTokensConnection(Connection):
+    
     requester: Requester
 
     count: int
@@ -26,15 +28,17 @@ class AccountToApiTokensConnection(Connection):
     """The API tokens for the current page of this connection."""
     typename: str
 
+
     def to_json(self) -> Mapping[str, Any]:
         return {
             "__typename": "AccountToApiTokensConnection",
             "account_to_api_tokens_connection_count": self.count,
             "account_to_api_tokens_connection_page_info": self.page_info.to_json(),
-            "account_to_api_tokens_connection_entities": [
-                e.to_json() for e in self.entities
-            ],
+            "account_to_api_tokens_connection_entities": [e.to_json() for e in self.entities],
+
         }
+
+
 
 
 FRAGMENT = """
@@ -55,21 +59,14 @@ fragment AccountToApiTokensConnectionFragment on AccountToApiTokensConnection {
 """
 
 
-def from_json(
-    requester: Requester, obj: Mapping[str, Any]
-) -> AccountToApiTokensConnection:
+
+def from_json(requester: Requester, obj: Mapping[str, Any]) -> AccountToApiTokensConnection:
     return AccountToApiTokensConnection(
-        requester=requester,
-        typename="AccountToApiTokensConnection",
-        count=obj["account_to_api_tokens_connection_count"],
-        page_info=PageInfo_from_json(
-            requester, obj["account_to_api_tokens_connection_page_info"]
-        ),
-        entities=list(
-            map(
-                # pylint: disable=unnecessary-lambda
-                lambda e: ApiToken_from_json(requester, e),
-                obj["account_to_api_tokens_connection_entities"],
-            )
-        ),
-    )
+        requester=requester,        typename="AccountToApiTokensConnection",        count=obj["account_to_api_tokens_connection_count"],
+        page_info=PageInfo_from_json(requester, obj["account_to_api_tokens_connection_page_info"]),
+        entities=list(map(
+ # pylint: disable=unnecessary-lambda 
+ lambda e: ApiToken_from_json(requester, e), obj["account_to_api_tokens_connection_entities"])),
+
+        )
+

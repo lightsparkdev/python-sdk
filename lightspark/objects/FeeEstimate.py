@@ -1,3 +1,4 @@
+
 # Copyright ©, 2022-present, Lightspark Group, Inc. - All Rights Reserved
 
 from dataclasses import dataclass
@@ -10,20 +11,27 @@ from .CurrencyAmount import from_json as CurrencyAmount_from_json
 
 
 @dataclass
-class FeeEstimate:
+class FeeEstimate():
     """This object represents the estimated L1 transaction fees for the Bitcoin network. Fee estimates are separated by potential confirmation speeds for settlement."""
 
     requester: Requester
 
     fee_fast: CurrencyAmount
+    
 
     fee_min: CurrencyAmount
+    
+
+
 
     def to_json(self) -> Mapping[str, Any]:
         return {
             "fee_estimate_fee_fast": self.fee_fast.to_json(),
             "fee_estimate_fee_min": self.fee_min.to_json(),
+
         }
+
+
 
 
 FRAGMENT = """
@@ -49,9 +57,11 @@ fragment FeeEstimateFragment on FeeEstimate {
 """
 
 
+
 def from_json(requester: Requester, obj: Mapping[str, Any]) -> FeeEstimate:
     return FeeEstimate(
-        requester=requester,
-        fee_fast=CurrencyAmount_from_json(requester, obj["fee_estimate_fee_fast"]),
+        requester=requester,        fee_fast=CurrencyAmount_from_json(requester, obj["fee_estimate_fee_fast"]),
         fee_min=CurrencyAmount_from_json(requester, obj["fee_estimate_fee_min"]),
-    )
+
+        )
+

@@ -1,3 +1,4 @@
+
 # Copyright ©, 2022-present, Lightspark Group, Inc. - All Rights Reserved
 
 from dataclasses import dataclass
@@ -10,7 +11,7 @@ from .CurrencyAmount import from_json as CurrencyAmount_from_json
 
 
 @dataclass
-class PostTransactionData:
+class PostTransactionData():
     """This object represents post-transaction data that could be used to register payment for KYT."""
 
     requester: Requester
@@ -21,11 +22,16 @@ class PostTransactionData:
     amount: CurrencyAmount
     """The amount of funds transferred in the payment."""
 
+
+
     def to_json(self) -> Mapping[str, Any]:
         return {
             "post_transaction_data_utxo": self.utxo,
             "post_transaction_data_amount": self.amount.to_json(),
+
         }
+
+
 
 
 FRAGMENT = """
@@ -44,9 +50,11 @@ fragment PostTransactionDataFragment on PostTransactionData {
 """
 
 
+
 def from_json(requester: Requester, obj: Mapping[str, Any]) -> PostTransactionData:
     return PostTransactionData(
-        requester=requester,
-        utxo=obj["post_transaction_data_utxo"],
+        requester=requester,        utxo=obj["post_transaction_data_utxo"],
         amount=CurrencyAmount_from_json(requester, obj["post_transaction_data_amount"]),
-    )
+
+        )
+

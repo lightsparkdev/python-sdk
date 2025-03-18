@@ -1,3 +1,4 @@
+
 # Copyright ©, 2022-present, Lightspark Group, Inc. - All Rights Reserved
 
 from enum import Enum
@@ -14,3 +15,4 @@ class IncentivesStatus(Enum):
     """The incentives have been validated."""
     INELIGIBLE = "INELIGIBLE"
     """This invitation is not eligible for incentives. A more detailed reason can be found in the `incentives_ineligibility_reason` field."""
+
