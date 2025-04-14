@@ -15,6 +15,7 @@ from cryptography.hazmat.primitives.serialization import (
     PrivateFormat,
     PublicFormat,
 )
+
 from lightspark.exceptions import LightsparkException
 from lightspark.objects.Account import Account
 from lightspark.objects.Account import from_json as Account_from_json
@@ -180,6 +181,27 @@ class LightsparkSyncClient:
             "node_id": node_id,
             "memo": memo,
             "invoice_type": invoice_type,
+        }
+        if expiry_secs is not None:
+            variables["expiry_secs"] = expiry_secs
+        json = self._requester.execute_graphql(CREATE_INVOICE_MUTATION, variables)
+
+        return Invoice_from_json(self._requester, json["create_invoice"]["invoice"])
+
+    def create_hold_invoice(
+        self,
+        node_id: str,
+        amount_msats: int,
+        memo: Optional[str] = None,
+        payment_hash: Optional[str] = None,
+        expiry_secs: Optional[int] = None,
+    ) -> Invoice:
+        logger.info("Creating an invoice for node %s.", node_id)
+        variables = {
+            "amount_msats": amount_msats,
+            "node_id": node_id,
+            "payment_hash": payment_hash,
+            "memo": memo,
         }
         if expiry_secs is not None:
             variables["expiry_secs"] = expiry_secs
