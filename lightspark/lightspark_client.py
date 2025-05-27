@@ -63,6 +63,7 @@ from lightspark.objects.WithdrawalRequest import (
 from lightspark.requests.requester import Requester
 from lightspark.scripts.bitcoin_fee_estimate import BITCOIN_FEE_ESTIMATE_QUERY
 from lightspark.scripts.cancel_invoice import CANCEL_INVOICE_MUTATION
+from lightspark.scripts.cancel_uma_invitation import CANCEL_UMA_INVITATION_MUTATION
 from lightspark.scripts.claim_uma_invitation import (
     CLAIM_UMA_INVITATION_MUTATION,
     CLAIM_UMA_INVITATION_WITH_INCENTIVES_MUTATION,
@@ -1047,6 +1048,24 @@ class LightsparkSyncClient:
         )
         return UmaInvitation_from_json(
             self._requester, json["create_uma_invitation_with_payment"]["invitation"]
+        )
+
+    def cancel_uma_invitation(
+        self,
+        invite_code: str,
+    ) -> UmaInvitation:
+        """
+        Cancels a UMA invitation.
+
+        Args:
+            invite_code: The invitation code to cancel.
+        """
+        json = self._requester.execute_graphql(
+            CANCEL_UMA_INVITATION_MUTATION,
+            {"invite_code": invite_code},
+        )
+        return UmaInvitation_from_json(
+            self._requester, json["cancel_uma_invitation"]["invitation"]
         )
 
 
