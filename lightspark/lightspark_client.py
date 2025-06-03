@@ -1021,8 +1021,7 @@ class LightsparkSyncClient:
     def create_uma_invitation_with_payment(
         self,
         inviter_uma: str,
-        payment_amount: float,
-        payment_currency: Any,
+        amount_to_send: dict,
         expires_at: str,
     ) -> UmaInvitation:
         """
@@ -1030,19 +1029,20 @@ class LightsparkSyncClient:
 
         Args:
             inviter_uma: The UMA of the inviter.
-            payment_amount: The amount to be paid.
-            payment_currency: The currency object (should have code, symbol, name, decimals attributes).
+            amount_to_send: A dict with 'amount' and 'currency' keys. 'currency' should be a dict with code, symbol, name, decimals.
             expires_at: The expiration datetime as an ISO8601 string.
         """
+        payment_amount = amount_to_send["amount"]
+        payment_currency = amount_to_send["currency"]
         json = self._requester.execute_graphql(
             CREATE_UMA_INVITATION_WITH_PAYMENT_MUTATION,
             {
                 "inviter_uma": inviter_uma,
                 "payment_amount": payment_amount,
-                "payment_currency_code": payment_currency.code,
-                "payment_currency_symbol": payment_currency.symbol,
-                "payment_currency_name": payment_currency.name,
-                "payment_currency_decimals": payment_currency.decimals,
+                "payment_currency_code": payment_currency["code"],
+                "payment_currency_symbol": payment_currency["symbol"],
+                "payment_currency_name": payment_currency["name"],
+                "payment_currency_decimals": payment_currency["decimals"],
                 "expires_at": expires_at,
             },
         )
