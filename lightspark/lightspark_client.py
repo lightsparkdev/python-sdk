@@ -63,6 +63,7 @@ from lightspark.objects.WithdrawalRequest import (
 from lightspark.requests.requester import Requester
 from lightspark.scripts.bitcoin_fee_estimate import BITCOIN_FEE_ESTIMATE_QUERY
 from lightspark.scripts.cancel_invoice import CANCEL_INVOICE_MUTATION
+from lightspark.scripts.cancel_uma_invitation import CANCEL_UMA_INVITATION_MUTATION
 from lightspark.scripts.claim_uma_invitation import (
     CLAIM_UMA_INVITATION_MUTATION,
     CLAIM_UMA_INVITATION_WITH_INCENTIVES_MUTATION,
@@ -1020,8 +1021,7 @@ class LightsparkSyncClient:
     def create_uma_invitation_with_payment(
         self,
         inviter_uma: str,
-        payment_amount: float,
-        payment_currency: Any,
+        amount_to_send: dict,
         expires_at: str,
     ) -> UmaInvitation:
         """
@@ -1029,24 +1029,43 @@ class LightsparkSyncClient:
 
         Args:
             inviter_uma: The UMA of the inviter.
-            payment_amount: The amount to be paid.
-            payment_currency: The currency object (should have code, symbol, name, decimals attributes).
+            amount_to_send: A dict with 'amount' and 'currency' keys. 'currency' should be a dict with code, symbol, name, decimals.
             expires_at: The expiration datetime as an ISO8601 string.
         """
+        payment_amount = amount_to_send["amount"]
+        payment_currency = amount_to_send["currency"]
         json = self._requester.execute_graphql(
             CREATE_UMA_INVITATION_WITH_PAYMENT_MUTATION,
             {
                 "inviter_uma": inviter_uma,
                 "payment_amount": payment_amount,
-                "payment_currency_code": payment_currency.code,
-                "payment_currency_symbol": payment_currency.symbol,
-                "payment_currency_name": payment_currency.name,
-                "payment_currency_decimals": payment_currency.decimals,
+                "payment_currency_code": payment_currency["code"],
+                "payment_currency_symbol": payment_currency["symbol"],
+                "payment_currency_name": payment_currency["name"],
+                "payment_currency_decimals": payment_currency["decimals"],
                 "expires_at": expires_at,
             },
         )
         return UmaInvitation_from_json(
             self._requester, json["create_uma_invitation_with_payment"]["invitation"]
+        )
+
+    def cancel_uma_invitation(
+        self,
+        invitation_code: str,
+    ) -> UmaInvitation:
+        """
+        Cancels a UMA invitation.
+
+        Args:
+            invitation_code: The invitation code to cancel.
+        """
+        json = self._requester.execute_graphql(
+            CANCEL_UMA_INVITATION_MUTATION,
+            {"invitation_code": invitation_code},
+        )
+        return UmaInvitation_from_json(
+            self._requester, json["cancel_uma_invitation"]["invitation"]
         )
 
 
