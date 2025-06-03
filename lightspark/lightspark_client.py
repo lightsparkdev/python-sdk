@@ -1052,17 +1052,17 @@ class LightsparkSyncClient:
 
     def cancel_uma_invitation(
         self,
-        invite_code: str,
+        invitation_code: str,
     ) -> UmaInvitation:
         """
         Cancels a UMA invitation.
 
         Args:
-            invite_code: The invitation code to cancel.
+            invitation_code: The invitation code to cancel.
         """
         json = self._requester.execute_graphql(
             CANCEL_UMA_INVITATION_MUTATION,
-            {"invite_code": invite_code},
+            {"invitation_code": invitation_code},
         )
         return UmaInvitation_from_json(
             self._requester, json["cancel_uma_invitation"]["invitation"]
