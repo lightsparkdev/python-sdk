@@ -22,17 +22,14 @@ class WebhookEvent:
 
     @classmethod
     def verify_and_parse(
-        cls, data: bytes, hexdigest: str, webhook_secret: str
+        cls, data: bytes, hex_digest: str, webhook_secret: str
     ) -> "WebhookEvent":
-        """Verifies the signature and parses the message into a
-        WebhookEvent object.
+        """Verifies the signature and parses the message into a WebhookEvent object.
 
         Args:
           data: the POST message body received by the webhook.
-          hexdigest: the message signature sent in the
-            `lightspark-signature` header.
-          webhook_secret: the webhook secret configured at the
-            Lightspark API configuration.
+          hex_digest: the message signature sent in the `lightspark-signature` header.
+          webhook_secret: the webhook secret configured in the Lightspark API configuration.
 
         Returns:
           A parsed WebhookEvent object.
@@ -43,10 +40,11 @@ class WebhookEvent:
         if not isinstance(data, bytes):
             raise TypeError(f"'data' should be bytes, got {type(data)}")
 
-        sig = hmac.new(
+        mac = hmac.new(
             webhook_secret.encode("ascii"), msg=data, digestmod=hashlib.sha256
         )
-        if sig.hexdigest().lower() != hexdigest.lower():
+
+        if not hmac.compare_digest(mac.digest(), bytes.fromhex(hex_digest)):
             raise ValueError("Webhook message hash does not match signature")
 
         return cls.parse(data)
@@ -73,5 +71,5 @@ class WebhookEvent:
             event_id=event["event_id"],
             timestamp=datetime.fromisoformat(event["timestamp"]),
             entity_id=event["entity_id"],
-            wallet_id=event["wallet_id"] if "wallet_id" in event else None,
+            wallet_id=event.get("wallet_id", None),
         )
