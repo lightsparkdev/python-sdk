@@ -1,5 +1,10 @@
 # Changelog
 
+# 2.10.2
+
+- Properly escape backlashes in E614_REGEX
+- Improve webhook request validation and test coverage
+
 # 2.10.1
 
 - Removes default params on graphql mutations `PayUmaInvoice` and `CreateUmaInvoice`
