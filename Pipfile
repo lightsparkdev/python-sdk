@@ -19,5 +19,6 @@ libcst = "<1.2"  # Stopped supporting Python 3.8
 pylint = "*"
 pyre-check = "*"
 pytest = "*"
+setuptools = "*"
 typed-ast = "*"
 unidiff = "*"
