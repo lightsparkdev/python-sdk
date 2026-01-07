@@ -23,15 +23,15 @@ app = Flask(__name__)
 ##
 ## export LIGHTSPARK_API_TOKEN_CLIENT_ID=<client_id>
 ## export LIGHTSPARK_API_TOKEN_CLIENT_SECRET=<client_secret>
-API_TOKEN_CLIENT_ID = os.environ.get("LIGHTSPARK_API_TOKEN_CLIENT_ID")
-API_TOKEN_CLIENT_SECRET = os.environ.get("LIGHTSPARK_API_TOKEN_CLIENT_SECRET")
+API_TOKEN_CLIENT_ID = os.environ["LIGHTSPARK_API_TOKEN_CLIENT_ID"]
+API_TOKEN_CLIENT_SECRET = os.environ["LIGHTSPARK_API_TOKEN_CLIENT_SECRET"]
 ##
 ## This example also assumes you already know your node UUID. Generally, an LNURL API would serve
 ## many different usernames while maintaining some internal mapping from username to node UUID. For
 ## simplicity, this example works with a single username and node UUID.
 ##
 ## export LIGHTSPARK_LNURL_NODE_UUID=0187c4d6-704b-f96b-0000-a2e8145bc1f9
-LNURL_NODE_UUID = os.environ.get("LIGHTSPARK_LNURL_NODE_UUID")
+LNURL_NODE_UUID = os.environ["LIGHTSPARK_LNURL_NODE_UUID"]
 LNURL_USERNAME = os.environ.get("LIGHTSPARK_LNURL_USERNAME", "ls_test")
 ##
 ## To run the webserver, run this command from the root of the SDK folder:

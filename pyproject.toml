@@ -1,3 +1,54 @@
+[project]
+name = "lightspark"
+authors = [{ name = "Lightspark Group, Inc.", email = "info@lightspark.com" }]
+dynamic = ["version"]
+description = "Python SDK for the Lightspark API"
+license = { file = "LICENSE" }
+requires-python = ">=3.9"
+readme = 'README.md'
+dependencies = [
+    "cryptography>=46.0.6",
+    "lightspark-crypto-python",
+    "pyjwt",
+    "requests>=2.32.5",
+    "zstandard",
+]
+
+[project.urls]
+homepage = "https://lightspark.com"
+documentation = "https://docs.lightspark.com/lightspark-sdk/getting-started?language=Python"
+source = "https://github.com/lightsparkdev/python-sdk"
+
 [build-system]
 requires = ["setuptools"]
 build-backend = "setuptools.build_meta"
+
+[dependency-groups]
+dev = [
+    "ruff",
+    "flask",
+    "importlib_metadata",
+    "libcst",
+    "pylint",
+    "pytest",
+    "ty",
+    "typed-ast",
+    "unidiff",
+]
+
+[tool.setuptools]
+dynamic = { version = { attr = "lightspark.version.__version__" } }
+
+[tool.setuptools.packages.find]
+include = ["lightspark*"]
+
+[tool.uv]
+# Try to decrease the risk of supply-chain attacks like the LiteLLM attack by waiting at least a week before we
+# upgrade versions. If you need to apply an emergency update faster than this, you can run:
+#
+#   uv add $PACKAGE --exclude-newer-package $PACKAGE=false
+exclude-newer = "1 week"
+
+[[tool.uv.index]]
+name = "pypi"
+url = "https://pypi.org/simple"
