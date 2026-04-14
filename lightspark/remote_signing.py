@@ -1,5 +1,5 @@
 from typing import Any
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 import json
 import lightspark_crypto as lsc
 import lightspark
@@ -14,21 +14,14 @@ class PositiveValidator(lsc.Validation):
 @dataclass
 class RemoteSigningWebhookEventHandler:
     client: lightspark.LightsparkSyncClient
-    master_seed: bytes
+    master_seed: bytes = field(repr=False)
     validator: lsc.Validation
 
-    def __init__(
-        self,
-        client: lightspark.LightsparkSyncClient,
-        master_seed: bytes,
-        validator: lsc.Validation,
-    ):
-        self.client = client
-        self.master_seed = master_seed
-        self.validator = validator
-
     def handle_remote_signing_webhook_request(
-        self, data: bytes, hexdigest: str, webhook_secret: str
+        self,
+        data: bytes,
+        hexdigest: str,
+        webhook_secret: str,
     ):
         response = lsc.handle_remote_signing_webhook_event(
             data, hexdigest, webhook_secret, self.master_seed, self.validator
