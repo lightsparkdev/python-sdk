@@ -1,12 +1,13 @@
+from typing import Any
 from dataclasses import dataclass
 import json
-import lightspark_crypto as lsc  # pyre-ignore[21]
+import lightspark_crypto as lsc
 import lightspark
 
 
-class PositiveValidator(lsc.Validation):  # pyre-ignore[11]
+class PositiveValidator(lsc.Validation):
     @staticmethod
-    def should_sign(webhook):
+    def should_sign(webhook: Any) -> bool:  # ty:ignore[invalid-method-override]
         return True
 
 

@@ -2,12 +2,7 @@ import json
 from base64 import b64encode
 from abc import ABC, abstractmethod
 
-from lightspark_crypto import (  # pyre-ignore[21]
-    sign_ecdsa,
-    LightsparkSigner,
-    Network,
-    Seed,
-)
+from lightspark_crypto import sign_ecdsa, LightsparkSigner, Network, Seed
 
 from lightspark.objects.BitcoinNetwork import BitcoinNetwork
 from lightspark.utils.crypto import sign_payload
@@ -42,10 +37,10 @@ class Secp256k1SigningKey(SigningKey):
         else:
             raise LightsparkException("SIGNING_ERROR", "Invalid bitcoin network")
         signer = LightsparkSigner(seed, network)
-        self.key = signer.derive_private_key("m/5")
+        self.key = bytes.fromhex(signer.derive_private_key("m/5"))
 
     def sign_payload(self, payload: bytes) -> str:
-        sig = sign_ecdsa(payload, bytes.fromhex(self.key))
+        sig = sign_ecdsa(payload, self.key)
         return json.dumps(
             {
                 "v": 1,

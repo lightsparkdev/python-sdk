@@ -1,4 +1,5 @@
 # Copyright ©, 2022-present, Lightspark Group, Inc. - All Rights Reserved
+from __future__ import annotations
 
 import json
 import logging
@@ -10,12 +11,15 @@ from platform import python_version, release, system
 from typing import Any, Mapping, Optional
 from urllib.parse import urlparse
 
+from urllib3.connectionpool import ConnectionPool
+
 try:
     from zstandard import ZstdCompressor
 except ImportError:
-    ZstdCompressor = None
+    ZstdCompressor: None = None
 
 import requests
+import requests.adapters
 from requests.auth import HTTPBasicAuth
 from requests.utils import default_user_agent
 
@@ -61,7 +65,7 @@ class Requester:
                 "variables": variables or {},
                 "nonce": secrets.randbits(64) if signing_key else None,
                 "expires_at": (
-                    (datetime.utcnow() + timedelta(hours=1))
+                    (datetime.now(timezone.utc) + timedelta(hours=1))
                     .replace(tzinfo=timezone.utc)
                     .isoformat()
                     if signing_key
@@ -82,7 +86,7 @@ class Requester:
             "Content-Type": "application/json",
             "X-GraphQL-Operation": operation.group(1) if operation else None,
             "X-Lightspark-Signing": signing,
-            "User-Agent": user_agent + f" {default_user_agent()}",
+            "User-Agent": f"{user_agent} {default_user_agent()}",
             "X-Lightspark-SDK": user_agent,
         }
         if len(payload) > 1024:
@@ -120,7 +124,7 @@ class Requester:
                 pass
             raise e
 
-    def user_agent_string(self):
+    def user_agent_string(self) -> str:
         # Will produce something like: 	lightspark-python-sdk/0.5.1 python/3.11.2 Darwin/22.1.0
         return f"lightspark-python-sdk/{__version__} python/{python_version()} {system()}/{release()}"
 
@@ -130,7 +134,9 @@ class HTTPSAdapter(requests.adapters.HTTPAdapter):
         self.server_hostname = server_hostname
         super().__init__(*args, **kwargs)
 
-    def get_connection(self, url, proxies=None):
+    def get_connection(
+        self, url: str, proxies: Mapping[str, str] | None = None
+    ) -> ConnectionPool:
         url = urlparse(url).geturl()
         return self.poolmanager.connection_from_url(
             url, pool_kwargs={"server_hostname": self.server_hostname}

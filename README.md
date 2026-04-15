@@ -6,7 +6,7 @@ The Lightspark Python SDK provides a convenient way to interact with the Lightsp
 
 To install the SDK, simply run:
 
-```bash
+```shell
 pip install lightspark
 ```
 
@@ -19,16 +19,14 @@ The documentation for this SDK (installation, usage, etc.) is available at https
 For your convenience, we included an example that shows you how to use the SDK.
 Open the file `example.py` and make sure to update the variables at the top of the page with your information, then run it using pipenv:
 
-```python
-pipenv install
-pipenv run python -m examples.example
+```shell
+uv sync
+uv run python -m examples.example
 ```
 
 There are also a few examples of webservers for demonstrating webhooks and LNURLs. These can similarly be run through Flask:
 
-```python
-pipenv install -d
-pipenv run flask --app examples.flask_lnurl_server run
+```shell
+uv sync --dev
+uv run flask --app examples.flask_lnurl_server run
 ```
-
-Note that Flask requires Python >= 3.8, so these examples will not work if running Python 3.7.

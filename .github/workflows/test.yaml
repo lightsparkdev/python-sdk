@@ -11,31 +11,30 @@ jobs:
     runs-on: "ubuntu-22.04"
     strategy:
       matrix:
-        python_version: ["3.8", "3.10"]
+        python_version: ["3.8", "3.10", "3.12"]
     steps:
       - name: "Checkout"
-        uses: "actions/checkout@v3"
+        uses: "actions/checkout@v5"
         with:
           fetch-depth: 10
-      - name: "Setup Python"
-        uses: "actions/setup-python@v4"
+      - name: "Set up Python"
+        uses: "actions/setup-python@v5"
         with:
           python-version: "${{ matrix.python_version }}"
-          cache: "pipenv"
-          cache-dependency-path: "Pipfile.lock"
-      - name: "Install pipenv"
-        run: "pip install pipenv wheel"
-      - name: "Install dependencies"
-        run: "rm -rf $(pipenv --venv) && pipenv --python ${{ matrix.python_version }} install --dev"
-      - name: "Run pyre"
-        run: |
-          set -o pipefail
-          pipenv run pyre | tee >(sed 's, ,:,' | awk -F: '{sub(" ", "", $5); print "::error file=" ENVIRON["PWD"] "/" $1 ",line=" $2 ",col=" $3 ",title=" $4 "::" $5}')
+      - name: "Install uv and set the python version"
+        uses: "astral-sh/setup-uv@cec208311dfd045dd5311c1add060b2062131d57" # v8.0.0
+        with:
+          python-version: "${{ matrix.python-version }}"
+          version: "0.11.2"
+          working-directory: "lightspark"
+      - name: "Run ty"
+        working-directory: "lightspark"
+        run: "uv run ty check --output-format github ."
       - name: "Run pytest"
-        run: "PYTHONPATH=. pipenv run pytest"
+        run: "PYTHONPATH=. uv run pytest"
       - name: "Run pylint"
-        run: "PYTHONPATH=. pipenv run pylint --jobs 0 --score n --msg-template='::{category} file={abspath},line={line},col={column},title={msg_id} {symbol}::{msg}' lightspark"
-      - name: "Run black"
+        run: "PYTHONPATH=. uv run pylint --jobs 0 --score n --msg-template='::{category} file={abspath},line={line},col={column},title={msg_id} {symbol}::{msg}' lightspark"
+      - name: "Run ruff format"
         run: |
           set -o pipefail
-          pipenv run black --check --diff . | tee >(pipenv run ../scripts/diff2annotation.py)
+          uv run --frozen ruff format --diff . | tee >(uv run --frozen ./scripts/diff2annotation.py)
