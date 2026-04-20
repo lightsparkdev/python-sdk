@@ -15,6 +15,7 @@ from cryptography.hazmat.primitives.serialization import (
     PrivateFormat,
     PublicFormat,
 )
+
 from lightspark.exceptions import LightsparkException
 from lightspark.objects.Account import Account
 from lightspark.objects.Account import from_json as Account_from_json
@@ -79,6 +80,7 @@ from lightspark.scripts.create_test_mode_payment import (
 from lightspark.scripts.create_uma_invitation import (
     CREATE_UMA_INVITATION_MUTATION,
     CREATE_UMA_INVITATION_WITH_INCENTIVES_MUTATION,
+    CREATE_UMA_INVITATION_WITH_PAYMENT_MUTATION,
 )
 from lightspark.scripts.create_uma_invoice import CREATE_UMA_INVOICE_MUTATION
 from lightspark.scripts.current_account import CURRENT_ACCOUNT_QUERY
@@ -1014,6 +1016,38 @@ class LightsparkSyncClient:
         )
 
         return json["fail_htlcs"]["invoice"]["id"]
+
+    def create_uma_invitation_with_payment(
+        self,
+        inviter_uma: str,
+        payment_amount: float,
+        payment_currency: Any,
+        expires_at: str,
+    ) -> UmaInvitation:
+        """
+        Creates a new UMA invitation with payment.
+
+        Args:
+            inviter_uma: The UMA of the inviter.
+            payment_amount: The amount to be paid.
+            payment_currency: The currency object (should have code, symbol, name, decimals attributes).
+            expires_at: The expiration datetime as an ISO8601 string.
+        """
+        json = self._requester.execute_graphql(
+            CREATE_UMA_INVITATION_WITH_PAYMENT_MUTATION,
+            {
+                "inviter_uma": inviter_uma,
+                "payment_amount": payment_amount,
+                "payment_currency_code": payment_currency.code,
+                "payment_currency_symbol": payment_currency.symbol,
+                "payment_currency_name": payment_currency.name,
+                "payment_currency_decimals": payment_currency.decimals,
+                "expires_at": expires_at,
+            },
+        )
+        return UmaInvitation_from_json(
+            self._requester, json["create_uma_invitation_with_payment"]["invitation"]
+        )
 
 
 E614_REGEX = re.compile(r"^\+?[1-9]\d{1,14}$")
