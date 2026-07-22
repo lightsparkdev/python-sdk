@@ -25,6 +25,6 @@ jobs:
         with:
           version: "0.11.2"
       - name: "Build dist"
-        run: "uv run --frozen python setup.py sdist --format=zip"
+        run: "uv build"
       - name: Publish package distributions to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
